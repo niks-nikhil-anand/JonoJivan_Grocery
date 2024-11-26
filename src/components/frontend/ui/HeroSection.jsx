@@ -1,71 +1,80 @@
-"use client";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import HeroSection01 from "../../../../public/frontend/heroSection01.webp";
-import HeroSectionMobileView from "../../../../public/frontend/heroSectionMobile01.webp";
-import waveWhite from "../../../../public/frontend/SvgAssets/wave-white.svg";
-
-
+import React from 'react';
 
 const HeroSection = () => {
   return (
-    <div className="relative w-full h-[85vh]  sm:h-[55vh] md:h-[75vh] lg:h-[90vh] flex items-center justify-center bg-beige md:flex">
-      <motion.div
-        className="relative w-full h-full"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="hidden md:flex">
-        <Image
-          src={HeroSection01}
-          alt="Hero Image"
-          layout="fill"
-          objectFit="cover"
-          priority
-        />
-        </div>
-        <div className=" md:hidden">
-        <Image
-          src={HeroSectionMobileView}
-          alt="Hero Image"
-          layout="fill"
-          objectFit="cover"
-          priority
-        />
-        </div>
-        
+    <div className="bg-gradient-to-b from-green-50 to-green-100">
+      <section className="py-10 sm:py-16 lg:py-24">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
+            <div>
+              <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
+                Fresh Groceries Delivered to Your Doorstep
+                <div className="relative inline-flex">
+                  <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
+                  <h1 className="relative text-2xl font-bold text-black sm:text-2xl lg:text-3xl">
+                    JonoJivan Grocery.
+                  </h1>
+                </div>
+              </h1>
 
-        {/* Text overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-start top-7 sm:items-start sm:justify-center pl-0  sm:pl-12 md:pl-20 lg:pl-28 text-center sm:text-left">
-  <motion.div
-    className="flex flex-col items-center sm:items-start"
-    initial={{ opacity: 0, x: -50 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 1, delay: 0.5 }}
-  >
-    <div className="text-red-500 text-5xl text-[6rem] md:text-[12rem] lg:text-[18rem] font-bold italic leading-none">
-      50%
-      <span className="block text-[0.5em] sm:text-[0.7em] md:text-[1rem] lg:text-[2rem]">
-        Off
-      </span>
-    </div>
-  </motion.div>
+              <p className="mt-8 text-base text-black sm:text-xl">
+                Experience the convenience of fresh groceries, delivered to
+                your doorstep. We offer a wide range of quality products to
+                ensure your kitchen is always stocked with the best. From daily
+                essentials to premium items, we have everything you need for
+                your grocery shopping.
+              </p>
 
-  <motion.p
-    className="text-red-500 text-sm sm:text-xl md:text-3xl lg:text-4xl mt-4"
-    initial={{ opacity: 0, x: -50 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 1, delay: 1 }}
-  >
-    On Selected products
-  </motion.p>
-</div>
-      </motion.div>
-      {/* Wavy white image */}
-      <div className="absolute w-full md:bottom-[-4rem]  bottom-[-1.7rem] right-0 left-0 z-0">
-        <Image src={waveWhite} alt="Wave" layout="responsive" priority />
-      </div>
+              <div className="mt-10 sm:flex sm:items-center sm:space-x-8">
+                <a
+                  href="#"
+                  className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 focus:bg-orange-600"
+                  role="button"
+                >
+                  Start Shopping Now
+                </a>
+
+                <a
+                  href="#"
+                  className="inline-flex items-center mt-6 text-base font-semibold transition-all duration-200 sm:mt-0 hover:opacity-80"
+                >
+                  <svg
+                    className="w-10 h-10 mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      fill="#F97316"
+                      stroke="#F97316"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Watch How It Works
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <img
+                className="w-full"
+                 src="/frontend/slider/hero-img-1.webp"
+                alt="Hero Image"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
