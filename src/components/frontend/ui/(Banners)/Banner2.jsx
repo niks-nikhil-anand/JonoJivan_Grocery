@@ -7,7 +7,7 @@ import banner from '../../../../../public/frontend/slider/our-features-basket.pn
 
 const Banner2 = () => {
   return (
-    <section className="relative flex flex-col lg:flex-row items-center justify-between p-6 lg:p-16 bg-gradient-to-r from-green-500 via-green-400 to-green-300 shadow-2xl rounded-lg overflow-hidden">
+    <section className="relative flex flex-col lg:flex-row items-center justify-between p-6 lg:p-16 bg-gradient-to-r from-green-500 via-green-400 to-green-300 shadow-2xl  overflow-hidden">
       {/* Text and App Store Buttons Section */}
       <div className="relative z-10 text-center lg:text-left lg:w-1/2 space-y-6">
         <motion.h2
