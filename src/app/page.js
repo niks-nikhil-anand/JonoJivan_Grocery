@@ -15,7 +15,7 @@ export default function Home() {
     <>
       {/* Hero and Section components */}
       <HeroSection />
-      <WhoWeAre />
+      {/* <WhoWeAre /> */}
       <ProductCard />
       <CategoriesSection />
       <Marquee />
