@@ -38,7 +38,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-50 py-10 shadow-lg">
+    <footer className="bg-gray-100 py-10 shadow-lg">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
         <motion.div 
           className="space-y-4"
