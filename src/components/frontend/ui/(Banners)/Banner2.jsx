@@ -1,51 +1,51 @@
-"use client";
-import React, { useState, useEffect } from 'react';
-import banner1 from '../../../../../public/frontend/Banner/Banner2.webp';
-import banner2 from '../../../../../public/frontend/Banner/Group_520_mobile.webp'; 
-import waveWhite from '../../../../../public/frontend/SvgAssets/wave-white.svg'; 
-import Image from 'next/image';
+import React from "react";
+import { FaApple, FaGooglePlay } from "react-icons/fa"; // React Icons
+import Image from "next/image"; // If using Next.js
+import banner from "../../../../../public/frontend/Banner/app-thumbnail.webp";
 
 const Banner2 = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 768); 
-  };
-
-  useEffect(() => {
-    handleResize(); 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   return (
-    <div
-      className="relative w-full h-[110vh] overflow-hidden"
-      style={{
-        backgroundImage: `url(${isMobile ? banner2.src : banner1.src})`, 
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-        <div className="absolute inset-0 opacity-50" />
-      <div className="absolute md:top-1/2 top-[10rem] md:right-[3rem] transform -translate-y-1/2  p-5">
-      <h1 className="text-3xl md:text-7xl text-[#D07021]">Freshness</h1>
-        <h1 className="text-3xl md:text-4xl ml-5 text-[#D07021]">From the Farm</h1>
-        <p className="mt-10 text-lg md:text-xl w-[20rem] md:w-[40rem] lg:w-[50rem] text-black">
-          At JonoJivan Grocery, we believe in delivering the freshest produce and high-quality ingredients directly to your table. Our carefully curated selection ensures that you enjoy wholesome, delicious foods that nourish your body and support local farmers.
+    <section className="flex flex-col lg:flex-row items-center justify-between p-6 lg:p-16 bg-gray-100">
+      {/* Text Section */}
+      <div className="text-center lg:text-left lg:w-1/2 space-y-4">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">
+          Make your online shop easier with our mobile app
+        </h2>
+        <p className="text-gray-600 text-sm sm:text-base">
+          BoroBazar makes online grocery shopping fast and easy. Get groceries
+          delivered and order the best of seasonal farm fresh food.
         </p>
+        {/* App Store Buttons */}
+        <div className="flex justify-center lg:justify-start space-x-4 mt-4">
+          <a
+            href="#"
+            className="flex items-center justify-center space-x-2 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
+          >
+            <FaApple size={20} />
+            <span className="text-sm sm:text-base">App Store</span>
+          </a>
+          <a
+            href="#"
+            className="flex items-center justify-center space-x-2 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
+          >
+            <FaGooglePlay size={20} />
+            <span className="text-sm sm:text-base">Google Play</span>
+          </a>
+        </div>
       </div>
-      <div className="absolute w-full bottom-[-4rem] md:bottom-[-4rem] left-0 right-0 z-0">
+
+      {/* Image Section */}
+      <div className="lg:w-1/2 flex justify-center lg:justify-end mt-8 lg:mt-0">
         <Image
-          src={waveWhite}
-          alt="Wave"
-          layout="responsive"
-          priority
-          className="md:h-auto h-[3rem]" 
+          src={banner}
+          alt="Grocery Bag"
+          width={300}
+          height={300}
+          className="w-full max-w-sm"
         />
       </div>
-    </div>
+    </section>
   );
-}
+};
 
 export default Banner2;
