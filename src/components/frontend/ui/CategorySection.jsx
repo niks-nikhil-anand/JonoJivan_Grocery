@@ -38,7 +38,7 @@ const CategoriesSection = () => {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 p-4 md:p-8">
+    <div className="flex flex-col items-center gap-6 p-4 md:p-2">
     <h2 className="text-lg sm:text-xl md:text-4xl mb-4 font-bold text-red-500">
       Shop By Category
     </h2>
