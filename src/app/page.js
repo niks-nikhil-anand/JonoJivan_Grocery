@@ -16,10 +16,10 @@ export default function Home() {
     <>
       {/* Hero and Section components */}
       <HeroSection />
-      {/* <WhoWeAre /> */}
       <ProductCard />
       <ProductCardVegetables />
       <CategoriesSection />
+      <WhoWeAre />
       <Marquee />
       
       {/* Banner Components */}
