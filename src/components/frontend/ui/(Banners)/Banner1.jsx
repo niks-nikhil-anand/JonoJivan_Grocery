@@ -1,46 +1,32 @@
-"use client";
-import React, { useState, useEffect } from 'react';
-import banner1 from '../../../../../public/frontend/Banner/Banner1.webp';
-import banner2 from '../../../../../public/frontend/Banner/Banner12.webp'; 
-import waveWhite from '../../../../../public/frontend/SvgAssets/wave-white.svg'; 
-import Image from 'next/image';
+"use client"
+import React from 'react';
+import { motion } from 'framer-motion';
 
 const Banner1 = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 768); 
-  };
-
-  useEffect(() => {
-    handleResize(); // Set initial state
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   return (
     <div
-      className="relative w-full h-[110vh] overflow-hidden"
-      style={{
-        backgroundImage: `url(${isMobile ? banner2.src : banner1.src})`, 
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      className="relative flex items-center justify-center bg-cover bg-center h-[30vh] sm:h-[70vh] lg:h-[90vh]"
+      style={{ backgroundImage: `url('/frontend/Banner/slider-6-min.png')` }}
     >
-      
-      <div className="absolute inset-0 opacity-50" />
-      <div className="absolute md:top-1/2 top-[10rem] md:left-[3rem] transform -translate-y-1/2 text-blue-400 p-5">
-      <h1 className="text-3xl md:text-6xl">Quality</h1>
-        <h1 className="text-3xl md:text-4xl ml-5">from Nature</h1>
-        <p className="mt-10 text-lg md:text-xl w-[20rem] md:w-[40rem] lg:w-[50rem]">
-          JonoJivan Grocery was founded with a passion for providing fresh, natural foods to our community. We bring together quality produce and everyday essentials so you can shop confidently, knowing you&apos;re getting the best nature has to offer.
+      {/* Overlay for better text visibility */}
+      <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+
+      {/* Text content */}
+      <motion.div
+        className="relative z-10 text-center text-white"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4">
+          Fresh Vegetables
+        </h1>
+        <p className="text-lg sm:text-xl lg:text-2xl font-medium">
+          Don't miss the grocer deals
         </p>
-      </div>
-      <div className="absolute w-full md:bottom-[-4rem]  bottom-[-1.7rem] right-0 left-0 z-0">
-        <Image src={waveWhite} alt="Wave" layout="responsive" priority />
-      </div>
+      </motion.div>
     </div>
   );
-}
+};
 
 export default Banner1;

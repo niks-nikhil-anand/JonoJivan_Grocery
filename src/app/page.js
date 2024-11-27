@@ -21,8 +21,6 @@ export default function Home() {
       <CategoriesSection />
       <WhoWeAre />
       <Marquee />
-      
-      {/* Banner Components */}
       <Banner1 />
       <BannerText01 />
       <Banner2 />
