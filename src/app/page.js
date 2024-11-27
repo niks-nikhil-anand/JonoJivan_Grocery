@@ -25,8 +25,8 @@ export default function Home() {
       {/* Banner Components */}
       <Banner1 />
       <BannerText01 />
-      <BannerText02 />
       <Banner2 />
+      <BannerText02 />
     </>
   );
 }
