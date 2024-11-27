@@ -20,9 +20,12 @@ export default function Home() {
       <ProductCardVegetables />
       <CategoriesSection />
       <WhoWeAre />
+      <ProductCardVegetables />
       <Marquee />
       <Banner1 />
+      <ProductCardVegetables />
       <BannerText01 />
+      <ProductCardVegetables />
       <Banner2 />
       <BannerText02 />
     </>
