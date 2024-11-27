@@ -22,7 +22,7 @@ const Banner1 = () => {
           Fresh Vegetables
         </h1>
         <p className="text-lg sm:text-xl lg:text-2xl font-medium">
-          Don't miss the grocer deals
+          Don&apos;t miss the grocer deals
         </p>
       </motion.div>
     </div>
