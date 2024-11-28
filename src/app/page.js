@@ -14,7 +14,6 @@ import ProductCardVegetables from "@/components/frontend/ui/ProductSectionVegeta
 export default function Home() {
   return (
     <>
-      {/* Hero and Section components */}
       <HeroSection />
       <ProductCard />
       <ProductCardVegetables />
