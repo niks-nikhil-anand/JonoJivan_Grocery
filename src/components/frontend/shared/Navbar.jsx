@@ -29,7 +29,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md w-full py-4 px-6 md:px-12 relative z-50">
+    <nav className="bg-white shadow-md w-full  md:py-2 px-6 md:px-12 relative z-50">
       <div className="flex justify-between items-center">
   {/* Mobile Menu Icon */}
   <div className="md:hidden">
@@ -42,7 +42,7 @@ const Navbar = () => {
   {/* Logo */}
   <div className="flex justify-center md:hidden z-50">
   <Link href={"/"}>
-    <Image src={logo} alt="Logo" width={50} height={50} />
+    <Image src={logo} alt="Logo" width={100} height={100} />
   </Link>
 </div>
 
@@ -331,7 +331,7 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-      <div className="absolute w-full md:bottom-[-2rem]  bottom-[-1.7rem] right-0 left-0 z-0">
+      <div className="absolute w-full md:bottom-[-2rem] hidden md:block  bottom-[-1.7rem] right-0 left-0 z-0">
         <Image src={waveNav} alt="wave-navbar" />
       </div>
     </nav>
