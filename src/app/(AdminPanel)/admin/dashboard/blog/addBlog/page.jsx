@@ -75,11 +75,6 @@ const BlogFormComponent = () => {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0, x: '100vw' },
-    visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 120 } },
-    exit: { opacity: 0, x: '-100vw', transition: { ease: 'easeInOut' } },
-  };
 
   return (
     <div className="max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll">

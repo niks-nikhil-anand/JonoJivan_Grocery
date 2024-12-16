@@ -91,11 +91,8 @@ const SidebarAdmin = () => {
           </Link>
 
           {isOpen && <h3 className="text-sm font-medium mt-4 mb-2 text-black">Users</h3>}
-          <Link href="/admin/dashboard/user/tableView" passHref>
+          <Link href="/admin/dashboard/users" passHref>
             <SidebarItem icon={<FaTable />} label="Table View" isOpen={isOpen} selected={selectedItem === 'Table View'} onClick={() => setSelectedItem('Table View')} />
-          </Link>
-          <Link href="/admin/dashboard/user/cardView" passHref>
-            <SidebarItem icon={<FaIdCard />} label="Card View" isOpen={isOpen} selected={selectedItem === 'Card View'} onClick={() => setSelectedItem('Card View')} />
           </Link>
           <Link href="/admin/dashboard/user/search" passHref>
             <SidebarItem icon={<FaSearch />} label="Search Users" isOpen={isOpen} selected={selectedItem === 'Search Users'} onClick={() => setSelectedItem('Search Users')} />
