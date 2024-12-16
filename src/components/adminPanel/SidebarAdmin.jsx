@@ -106,20 +106,6 @@ const SidebarAdmin = () => {
             <SidebarItem icon={<MdOutlineRateReview />} label="Review" isOpen={isOpen} />
           </Link>
 
-          {isOpen && <h3 className="text-sm font-medium mt-4 mb-2 text-black">Policies</h3>}
-          <Link href="/admin/dashboard/policy/termsAndCondition" passHref>
-            <SidebarItem icon={<IoDocumentAttach />} label="Terms & Conditions" isOpen={isOpen} selected={selectedItem === 'Terms & Conditions'} onClick={() => setSelectedItem('Terms & Conditions')} />
-          </Link>
-          <Link href="/admin/dashboard/policy/privacyPolicy" passHref>
-            <SidebarItem icon={<IoDocuments />} label="Privacy Policy" isOpen={isOpen} selected={selectedItem === 'Privacy Policy'} onClick={() => setSelectedItem('Privacy Policy')} />
-          </Link>
-          <Link href="/admin/dashboard/policy/returnPolicy" passHref>
-            <SidebarItem icon={<IoDocumentText />} label="Return Policy" isOpen={isOpen} selected={selectedItem === 'Return Policy'} onClick={() => setSelectedItem('Return Policy')} />
-          </Link>
-          <Link href="/admin/dashboard/policy/shippingPolicy" passHref>
-            <SidebarItem icon={<GiTruck />} label="Shipping Policy" isOpen={isOpen} selected={selectedItem === 'Shipping Policy'} onClick={() => setSelectedItem('Shipping Policy')} />
-          </Link>
-
           {isOpen && <h3 className="text-sm font-medium mt-4 mb-2 text-black">Account</h3>}
           <Link href="/admin/dashboard/profile" passHref>
             <SidebarItem icon={<ImProfile />} label="Profile" isOpen={isOpen} selected={selectedItem === 'Profile'} onClick={() => setSelectedItem('Profile')} />
