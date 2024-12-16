@@ -45,7 +45,7 @@ const Users = () => {
   }
 
   return (
-    <div className="max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll">
+    <div className="max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll overflow-x-scroll">
       {/* Display users in a table */}
       <table className="w-full border-collapse border border-gray-300">
         <thead>
