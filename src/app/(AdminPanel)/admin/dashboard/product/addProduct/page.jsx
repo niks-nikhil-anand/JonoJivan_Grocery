@@ -93,6 +93,12 @@ const ProductForm = () => {
     setImages(newImages);
   };
 
+  const removeImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImageInputs((prevInputs) => prevInputs.filter((_, i) => i !== index));
+  };
+  
+
   
 
   const handleSubcategorySelect = (subcategoryId) => {
@@ -183,8 +189,11 @@ const handleSubmit = async (e) => {
   };
 
   return (
-    <div className="max-w-full mx-auto p-4 bg-white shadow-lg rounded-lg w-full h-screen overflow-y-scroll">
-      <h2 className="text-2xl font-bold mb-6 underline">Add New Product</h2>
+    <div className="max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll">
+
+    <h1 className="text-4xl font-extrabold mb-8 text-center text-blue-700 underline">
+        Add New Product
+      </h1>
       <form onSubmit={handleSubmit} className="w-full">
         <motion.div
           key={currentStep}
@@ -421,15 +430,15 @@ const handleSubmit = async (e) => {
                      type="file"
                      onChange={(e) => handleFileChange(e, index)}
                    />
-                   <motion.button
-                     type="button"
-                     onClick={() => removeImage(index)}
-                     className="ml-3 text-red-500 text-xl"
-                     whileHover={{ scale: 1.2, color: '#ff4d4d' }}
-                     whileTap={{ scale: 0.9 }}
-                   >
-                     <AiOutlineMinusCircle />
-                   </motion.button>
+                  <motion.button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="text-red-500 hover:text-red-700"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <AiOutlineMinusCircle size={20} />
+                    </motion.button>
                  </motion.div>
                ))}
                <motion.button
@@ -586,9 +595,8 @@ const handleSubmit = async (e) => {
                 <motion.button
                   type="button"
                   onClick={prevStep}
-                  className="w-40 p-3 bg-gray-500 text-white font-bold rounded hover:bg-gray-700"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="w-40 rounded-lg bg-orange-500 text-white font-bold  hover:bg-orange-600"
+                 
                 >
                   Previous
                 </motion.button>
