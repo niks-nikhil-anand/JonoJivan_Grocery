@@ -5,7 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaTrash } from 'react-icons/fa';
 
-const Page = () => {
+const AddSubCategory = () => {
   const [fetchingCategories, setFetchingCategories] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -97,8 +97,7 @@ const Page = () => {
 
   return (
     <div className="bg-white p-4 w-full mx-auto">
-      <h2 className="text-3xl font-bold mb-4 text-black">Sub-Categories</h2>
-      <hr className="my-4 border-black w-full" />
+      <h2 className="text-2xl font-extrabold mb-8  text-purple-600 underline">Sub-Categories</h2>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="flex flex-wrap gap-4 flex-col">
           <div className="flex">
@@ -204,4 +203,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default AddSubCategory;

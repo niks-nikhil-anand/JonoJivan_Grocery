@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import AddSubCategory from '../addSubCategory/page';
 
 
 const AddCategoryForm = () => {
@@ -10,13 +11,6 @@ const AddCategoryForm = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   
-
-
-
-  
- 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -54,10 +48,10 @@ const AddCategoryForm = () => {
 
   
   return (
-    <div className="flex flex-col  min-h-[90vh]  w-full justify-center items-center ">
-      <hr className="my-4 border-gray-300 w-full" />
+    <div className="max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll">
+         <div className="flex flex-col w-full justify-center items-center border-t-black-100 border-2 ">
       <div className="bg-white p-4  w-full mx-auto ">
-  <h2 className="text-3xl font-bold mb-4  text-black">Add Categories</h2>
+  <h2 className="text-2xl font-extrabold mb-8 text-blue-700 underline">Add Categories</h2>
   <form className="space-y-6" onSubmit={handleSubmit}>
     <div className="flex flex-wrap gap-4">
       <div className="flex-1">
@@ -102,12 +96,13 @@ const AddCategoryForm = () => {
     </div>
   </form>
 </div>
-
-
-<hr className="my-4 border-gray-300 w-full" />
-
-
     </div>
+
+<div className=' border-t-black-100 border-2'>
+  <AddSubCategory/>
+</div>
+    </div>
+   
 
     
     
