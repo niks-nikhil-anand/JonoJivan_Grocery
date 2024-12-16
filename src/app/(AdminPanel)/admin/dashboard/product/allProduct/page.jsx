@@ -52,62 +52,69 @@ const Products = () => {
   };
 
   return (
-    <div>
-      {/* Display products */}
-      <div className="flex flex-wrap justify-start gap-4">
-        {currentProducts.map((product) => (
-          <motion.div
-            key={product._id}
-            className="flex flex-col items-center bg-gray-300 px-4 py-6 w-64 h-80 rounded-2xl" // Fixed width and height
-           
-          >
-            <div className="h-[10rem] overflow-hidden shadow-lg rounded-lg hover:cursor-pointer">
-              <img
-                src={product.featuredImage}
-                alt={product.name} // Use product name for alt text
-                className="w-full h-full object-cover"
-                onError={(e) => (e.target.src = '/path/to/fallback-image.jpg')} // Fallback image
-              />
-            </div>
-            <p className="mt-5 text-center text-xl font-medium">
-              {truncateName(product.name)}
-            </p>
-            <p className="text-center text-2xl font-bold text-green-500 mt-2">
-              ${product.salePrice}
-            </p>
-            <div className="mt-4 flex justify-between w-full">
-              <button 
-                onClick={() => handleView(product._id)} 
-                className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              >
-                View
-              </button>
-              <button 
-                onClick={() => handleDelete(product._id)} 
-                className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+    <div className='max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll'>
+  {/* Display products in a table */}
+  <table className="w-full border-collapse border border-gray-300">
+    <thead>
+      <tr className="bg-gray-200">
+        <th className="border border-gray-300 px-4 py-2 text-left">Image</th>
+        <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
+        <th className="border border-gray-300 px-4 py-2 text-left">Price</th>
+        <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {currentProducts.map((product) => (
+        <tr key={product._id} className="hover:bg-gray-100">
+          <td className="border border-gray-300 px-4 py-2">
+            <img
+              src={product.featuredImage}
+              alt={product.name}
+              className="w-16 h-16 object-cover rounded-md"
+              onError={(e) => (e.target.src = '/path/to/fallback-image.jpg')} // Fallback image
+            />
+          </td>
+          <td className="border border-gray-300 px-4 py-2">
+            {truncateName(product.name)}
+          </td>
+          <td className="border border-gray-300 px-4 py-2 text-green-500 font-bold">
+            ${product.salePrice}
+          </td>
+          <td className="border border-gray-300 px-4 py-2 text-center">
+            <button
+              onClick={() => handleView(product._id)}
+              className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 mr-2"
+            >
+              View
+            </button>
+            <button
+              onClick={() => handleDelete(product._id)}
+              className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 
-      {/* Pagination controls */}
-      <div className="mt-8 flex justify-center space-x-4">
-        {[...Array(Math.ceil(products.length / itemsPerPage)).keys()].map((number) => (
-          <button
-            key={number}
-            className={`px-3 py-1 rounded-md ${
-              currentPage === number + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'
-            }`}
-            onClick={() => paginate(number + 1)}
-          >
-            {number + 1}
-          </button>
-        ))}
-      </div>
-    </div>
+  {/* Pagination controls */}
+  <div className="mt-8 flex justify-center space-x-4">
+    {[...Array(Math.ceil(products.length / itemsPerPage)).keys()].map((number) => (
+      <button
+        key={number}
+        className={`px-3 py-1 rounded-md ${
+          currentPage === number + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'
+        }`}
+        onClick={() => paginate(number + 1)}
+      >
+        {number + 1}
+      </button>
+    ))}
+  </div>
+</div>
+
   );
 };
 
