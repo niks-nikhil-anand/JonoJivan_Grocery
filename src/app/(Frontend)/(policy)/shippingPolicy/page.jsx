@@ -45,7 +45,7 @@ const Page = () => {
     }
 
     // Sanitize the HTML content before rendering
-    const sanitizedContent = DOMPurify.sanitize(data.content);
+    const sanitizedContent = DOMPurify.sanitize(data?.content);
 
     return (
         <motion.div
