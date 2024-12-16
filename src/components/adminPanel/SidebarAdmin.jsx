@@ -78,9 +78,6 @@ const SidebarAdmin = () => {
           <Link href="/admin/dashboard/category/addCategory" passHref>
             <SidebarItem icon={<MdAdd />} label="Add Categories" isOpen={isOpen} selected={selectedItem === 'Add Categories'} onClick={() => setSelectedItem('Add Categories')} />
           </Link>
-          <Link href="/admin/dashboard/category/addSubCategory" passHref>
-            <SidebarItem icon={<MdAdd />} label="Add SubCategories" isOpen={isOpen} selected={selectedItem === 'Add SubCategories'} onClick={() => setSelectedItem('Add SubCategories')} />
-          </Link>
           <Link href="/admin/dashboard/category/allCategory" passHref>
             <SidebarItem icon={<FaListUl />} label="All Categories" isOpen={isOpen} selected={selectedItem === 'All Categories'} onClick={() => setSelectedItem('All Categories')} />
           </Link>
@@ -159,7 +156,7 @@ const SidebarItem = ({ icon, label, isOpen, selected, onClick }) => {
       }`}
     >
       <div className=" w-4 h-4">{icon}</div>
-      {isOpen && <span className="font-semibold text-base">{label}</span>}
+      {isOpen && <span className="font-semibold text-sm">{label}</span>}
     </motion.div>
   );
 };

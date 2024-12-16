@@ -82,15 +82,14 @@ const BlogFormComponent = () => {
   };
 
   return (
-    <div className="w-full p-6 max-w-[70rem] mx-auto bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-6">Add Blog</h1>
+    <div className="max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll">
+      <h1 className="text-2xl font-extrabold mb-8  text-blue-700 underline">Add Blog</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <motion.div
           className="flex flex-col space-y-4"
           initial="hidden"
           animate="visible"
           exit="exit"
-          variants={containerVariants}
         >
           {step === 1 && (
             <>
