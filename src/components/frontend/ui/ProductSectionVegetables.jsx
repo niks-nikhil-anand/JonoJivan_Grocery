@@ -56,7 +56,7 @@ const ProductCardVegetables = () => {
     };
 
     return (
-        <div className="flex flex-col mt-5 mb-4 md:px-7">
+        <div className="flex flex-col mt-5 mb-4 md:px-7 ">
         <h2 className="text-xl md:text-4xl mb-4 text-center font-bold text-red-500">Fresh Vegetables</h2>
         <div className="flex gap-5 hover:cursor-pointer justify-start px-2 py-3 overflow-x-auto">
             <div className="flex gap-5">
