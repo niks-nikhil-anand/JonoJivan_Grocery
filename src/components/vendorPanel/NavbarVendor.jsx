@@ -18,6 +18,23 @@ const NavbarVendor = () => {
     };
 
 
+    const handleLogout = async () => {
+      try {
+        const response = await fetch('/api/vendor/auth/logout', {
+          method: 'POST',
+        });
+        const data = await response.json();
+        if (response.ok) {
+          router.push('/');
+        } else {
+          alert(`Logout failed: ${data.message}`);
+        }
+      } catch (error) {
+        alert(`Logout failed: ${error.message}`);
+      }
+    };
+
+
 
 
   return (
@@ -40,6 +57,7 @@ const NavbarVendor = () => {
     <div className="hidden lg:flex items-center space-x-4">
       <button
         className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors duration-200"
+        onClick={handleLogout}
       >
         <IoMdLogOut className="text-xl" />
         <span className="hidden md:inline">Logout</span>
