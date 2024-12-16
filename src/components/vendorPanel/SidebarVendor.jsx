@@ -52,7 +52,7 @@ const SidebarVendor = () => {
           onClick={toggleSidebar}
           className="bg-white text-green-700 p-2 rounded mb-4 shadow-md transition-transform transform hover:scale-110"
         >
-          <RiDashboardHorizontalFill className='w-6 h-6' />
+          <RiDashboardHorizontalFill className='w-6 h-6 shadow-lg ' />
         </button>
         <div className="flex flex-col space-y-4">
           <h2 className={`text-lg font-semibold mb-4 ${isOpen ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}>
@@ -105,11 +105,14 @@ const SidebarVendor = () => {
             <SidebarItem icon={<FaCog />} label="Settings" isOpen={isOpen} selected={selectedItem === 'Settings'} onClick={() => setSelectedItem('Settings')} />
           </Link>
 
+
+          
+
           <button
             className="mt-6 flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-red-700 shadow-md"
             onClick={handleLogout}
           >
-            <MdOutlineLogout className="h-4 w-4" aria-hidden="true" />
+            <MdOutlineLogout className="h-5 w-5" aria-hidden="true" />
             {isOpen && <span className="ml-2">Logout</span>}
           </button>
         </div>

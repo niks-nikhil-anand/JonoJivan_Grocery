@@ -39,7 +39,7 @@ const NavbarVendor = () => {
 
   return (
     <nav className="bg-white dark:bg-gray-800 text-white transition-colors duration-300 shadow-lg">
-  <div className="flex justify-between items-center px-4 ">
+    <div className="flex justify-between items-center px-4 ">
     {/* Logo Section */}
     <div className="flex items-center">
       <Image src={logo} alt="Logo" className="w-[80px] h-auto mr-4" />

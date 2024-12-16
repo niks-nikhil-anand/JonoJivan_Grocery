@@ -48,13 +48,13 @@ const SidebarAdmin = () => {
           onClick={toggleSidebar}
           className="bg-white text-green-700 p-2 rounded mb-4 shadow-md transition-transform transform hover:scale-110"
         >
-          <RiDashboardHorizontalFill className='w-6 h-6' />
+          <RiDashboardHorizontalFill className='w-6 h-6 shadow-lg' />
         </button>
         <div className="flex flex-col space-y-4">
           <h2 className={`text-lg font-semibold mb-4 ${isOpen ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}>
             {isOpen ? "Dashboard" : ""}
           </h2>
-          <Link href="/admin/dashboard/property/AddProperty" passHref>
+          <Link href="/admin/dashboard" passHref>
             <SidebarItem icon={<FaHome />} label="Home" isOpen={isOpen} selected={selectedItem === 'Home'} onClick={() => setSelectedItem('Home')} />
           </Link>
 
