@@ -41,7 +41,7 @@ const SidebarAdmin = () => {
     <div className="flex">
       <motion.div
         animate={{ width: isOpen ? "250px" : "90px" }}
-        className="bg-green-100 dark:bg-gray-900 text-gray-900 dark:text-white h-screen p-5 transition-width duration-300 shadow-lg overflow-y-auto"
+        className="bg-green-100 text-gray-900 dark:text-white h-screen p-5 transition-width duration-300 shadow-lg overflow-y-auto"
         style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.3)" }}
       >
         <button
@@ -154,7 +154,7 @@ const SidebarItem = ({ icon, label, isOpen, selected, onClick }) => {
       whileHover={{ scale: 1.05 }}
       className={`flex items-center space-x-4 p-3 rounded-lg transition-all duration-300 shadow-sm cursor-pointer ${
         selected
-          ? "bg-green-600 text-white"
+          ? "bg-gray-600 text-white"
           : " hover:bg-green-500 border-gray-200 border-2 hover:text-white"
       }`}
     >
