@@ -47,10 +47,6 @@ const Categories = () => {
 
   return (
 <div className="flex flex-col items-center gap-4 p-6 md:p-10 w-full h-screen ">
-  <h2 className="text-lg sm:text-xl md:text-3xl mb-3 font-bold text-red-500">
-    JonoJivan Categories
-  </h2>
-
   {/* Category Cards Container with Fixed Height and Scrollbar */}
   <div className="flex gap-4 sm:gap-6 justify-center p-4 md:p-6 overflow-y-auto flex-wrap w-full h-[85vh] md:h-[75vh]">
     {categories.map((category) => (
