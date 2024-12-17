@@ -79,6 +79,15 @@ const productSchema = new mongoose.Schema({
     tags: [{
         type: String,
     }],
+    users: [{
+         type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+     }],
+    status: {
+        type: String,
+        enum: ['active', 'inactive', 'out of stock'],
+        default: 'inactive',  
+    }
 }, {
     timestamps: true
 });
