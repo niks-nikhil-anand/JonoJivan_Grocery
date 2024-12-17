@@ -94,7 +94,7 @@ export const POST = async (req) => {
         }
 
          // Check if the user has the correct role and status
-    if (user.role !== "SuperAdmin") {
+    if (user.role !== "Vendor") {
         return NextResponse.json({ msg: "Only vendors are allowed to add products." }, { status: 403 });
       }
   

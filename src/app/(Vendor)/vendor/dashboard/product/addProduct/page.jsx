@@ -160,7 +160,7 @@ const handleSubmit = async (e) => {
 
   try {
     console.log('Sending data to API:', Array.from(data.entries())); // Log FormData entries
-    await axios.post('/api/admin/dashboard/product/addProduct', data);
+    await axios.post('/api/vendor/dashboard/addProduct', data);
     console.log('Product created successfully:', data);
   } catch (error) {
     console.error('Error creating product:', error);
