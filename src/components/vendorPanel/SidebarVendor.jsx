@@ -71,14 +71,14 @@ const SidebarVendor = () => {
           </Link>
 
           {isOpen && <h3 className="text-sm font-medium mt-4 mb-2 text-black">Products</h3>}
-          <Link href="/admin/dashboard/product/addProduct" passHref>
+          <Link href="/vendor/dashboard/product/addProduct" passHref>
             <SidebarItem icon={<MdAdd />} label="Add Product" isOpen={isOpen} selected={selectedItem === 'Add Product'} onClick={() => setSelectedItem('Add Product')} />
           </Link>
-          <Link href="/admin/dashboard/product/allProduct" passHref>
+          <Link href="/vendor/dashboard/product/allProduct" passHref>
             <SidebarItem icon={<FaProductHunt />} label="Products" isOpen={isOpen} selected={selectedItem === 'Products'} onClick={() => setSelectedItem('Products')} />
           </Link>
 
-          <Link href="/admin/dashboard/review/addReview" passHref>
+          <Link href="/vendor/dashboard/product/review" passHref>
             <SidebarItem icon={<MdOutlineRateReview />} label="Review" isOpen={isOpen} />
           </Link>
 
