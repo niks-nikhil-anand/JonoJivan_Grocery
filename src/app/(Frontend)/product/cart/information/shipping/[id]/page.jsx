@@ -5,7 +5,7 @@ import axios from "axios";
 import { MdArrowBackIos } from "react-icons/md";
 import Loader from "@/components/loader/loader";
 import { useRouter } from "next/navigation";
-import { FaMoneyBillWave } from "react-icons/fa";
+import { FaMoneyBillWave, FaCreditCard } from "react-icons/fa";
 
 const CheckoutPage = () => {
   const router = useRouter();
@@ -188,22 +188,48 @@ const CheckoutPage = () => {
     </div>
   </div>
 
+
+  {/* Payment Method Fields */}
+
   <div className="w-full p-4 border border-gray-300 rounded-lg">
-    <div className="mb-6">
-      <h3 className="text-lg font-semibold">Payment method</h3>
-      <div className="flex items-center p-4 mb-2 border rounded-lg cursor-pointer" onClick={() => setPaymentMethod("Cash on Delivery")}>
-        <FaMoneyBillWave className="text-purple-600 mr-4" size={24} />
-        <input 
-          type="radio" 
-          name="paymentMethod" 
-          checked={paymentMethod === "Cash on Delivery"} 
-          className="form-radio text-purple-600 mr-2" 
-          readOnly 
-        />
-        <label className="cursor-pointer">Cash on Delivery</label>
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold">Payment method</h3>
+        
+        {/* Cash on Delivery Option */}
+        <div
+          className="flex items-center p-4 mb-2 border rounded-lg cursor-pointer"
+          onClick={() => setPaymentMethod("Cash on Delivery")}
+        >
+          <FaMoneyBillWave className="text-purple-600 mr-4" size={24} />
+          <input
+            type="radio"
+            name="paymentMethod"
+            checked={paymentMethod === "Cash on Delivery"}
+            className="form-radio text-purple-600 mr-2"
+            readOnly
+          />
+          <label className="cursor-pointer">Cash on Delivery</label>
+        </div>
+
+        {/* Online Payment Option */}
+        <div
+          className="flex items-center p-4 border rounded-lg cursor-pointer"
+          onClick={() => setPaymentMethod("Online Payment")}
+        >
+          <FaCreditCard className="text-purple-600 mr-4" size={24} />
+          <input
+            type="radio"
+            name="paymentMethod"
+            checked={paymentMethod === "Online Payment"}
+            className="form-radio text-purple-600 mr-2"
+            readOnly
+          />
+          <label className="cursor-pointer">Online Payment</label>
+        </div>
       </div>
     </div>
-  </div>
+
+
 
   <div className="mb-4">
     <h3 className="text-lg font-semibold">Remember me</h3>
@@ -247,11 +273,11 @@ const CheckoutPage = () => {
                   <img src={product.featuredImage} alt={product.name} className="w-12 md:w-16 h-12 md:h-16 object-cover mr-2 md:mr-4 rounded-lg hover:cursor-pointer" />
                   <div className="flex flex-col">
                     <h3 className="text-xs md:text-base">{product.name}</h3>
-                    <p className="text-xs md:text-sm text-gray-500">${product.salePrice}</p>
+                    <p className="text-xs md:text-sm text-gray-500">₹{product.salePrice}</p>
                   </div>
                 </td>
                 <td className="px-2 md:px-4 py-2 text-center hidden md:table-cell">{product.quantity}</td>
-                <td className="px-2 md:px-4 py-2 text-right">${totalPriceForProduct(product)}</td>
+                <td className="px-2 md:px-4 py-2 text-right">₹{totalPriceForProduct(product)}</td>
               </tr>
             ))}
           </tbody>
@@ -259,7 +285,7 @@ const CheckoutPage = () => {
 
         <div className="flex justify-between py-2 mt-8 border-t border-b">
           <span className="text-gray-600">Subtotal</span>
-          <span>${estimatedTotal()}</span>
+          <span>₹{estimatedTotal()}</span>
         </div>
         <div className="flex justify-between py-2 border-b">
           <span className="text-gray-600">Shipping</span>
@@ -267,7 +293,7 @@ const CheckoutPage = () => {
         </div>
         <div className="flex justify-between py-4 font-bold text-lg">
           <span>Total</span>
-          <span>${estimatedTotal()}</span>
+          <span>₹{estimatedTotal()}</span>
         </div>
       </div>
     </div>

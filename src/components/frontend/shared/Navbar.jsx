@@ -29,7 +29,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-200 shadow-md w-full  md:py-2 px-6 md:px-12 relative z-50">
+    <nav className="bg-white shadow-md w-full  md:py-2 px-6 md:px-12 relative z-50">
       <div className="flex justify-between items-center">
   {/* Mobile Menu Icon */}
   <div className="md:hidden">
@@ -182,7 +182,7 @@ const Navbar = () => {
 
 
       {/* Desktop Menu */}
-      <div className="mx-auto hidden md:flex justify-between items-center px-8 bg-gray-200 ">
+      <div className="mx-auto hidden md:flex justify-between items-center px-8 bg-white py-4 ">
         {/* Left Side - Menu Links */}
         <div className="flex items-center space-x-10 relative z-50 ">
           {/* Shop Dropdown */}
@@ -330,9 +330,6 @@ const Navbar = () => {
           </div>
           </Link>
         </div>
-      </div>
-      <div className="absolute w-full md:bottom-[-2rem] hidden md:block  bottom-[-1.7rem] right-0 left-0 z-0">
-        <Image src={waveNav} alt="wave-navbar" />
       </div>
     </nav>
   );
