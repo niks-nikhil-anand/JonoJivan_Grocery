@@ -198,7 +198,7 @@ const ProductDetail = () => {
 
 
 {/* Product Details */}
-<div className="w-full max-w-lg md:max-w-2xl lg:max-w-3xl bg-white rounded-3xl px-6 sm:px-10 py-10">
+<div className="w-full max-w-lg md:max-w-xl lg:max-w-xl bg-white rounded-3xl px-6 sm:px-10 py-10 ">
 <motion.div 
   className="flex flex-col justify-start mb-2"
   initial={{ opacity: 0, y: 50 }}

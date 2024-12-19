@@ -4,6 +4,7 @@ import ProductCard from "@/components/frontend/ui/ProductForSale";
 import CategoriesSection from "@/components/frontend/ui/CategorySection";
 import Marquee from "@/components/frontend/ui/Marquee";
 
+
 // Banner Components
 import Banner1 from "@/components/frontend/ui/(Banners)/Banner1";
 import Banner2 from "@/components/frontend/ui/(Banners)/Banner2";

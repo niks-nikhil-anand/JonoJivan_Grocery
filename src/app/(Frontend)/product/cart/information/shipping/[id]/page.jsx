@@ -106,125 +106,138 @@ const CheckoutPage = () => {
 
 
   const initiateRazorpayPayment = async () => {
-    if (!amount || isNaN(amount) || amount <= 0) {
-      toast.error("Please enter a valid donation amount.");
-      return false;
+    const totalAmount = parseFloat(estimatedTotal()) * 100; // Convert to paise
+    console.log("Total Amount (in paise):", totalAmount); // Debugging: log totalAmount
+  
+    if (!totalAmount || isNaN(totalAmount) || totalAmount <= 0) {
+      toast.error("Invalid total amount for payment.");
+      console.log("Invalid total amount:", totalAmount); // Debugging: log when totalAmount is invalid
+      return;
     }
+  
     const payload = {
-      amount: amount * 100, // Convert to smallest currency unit (paise)
+      amount: totalAmount,
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
-
+    console.log("Payload for Razorpay:", payload); // Debugging: log payload
+  
     try {
-      const response = await fetch("/api/create-razorpay-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(`Error: ${errorData.message}`);
-        return false;
+      const response = await axios.post(
+        "/api/pendingOrder/create-razorpay-order",
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+  
+      console.log("Razorpay order creation response:", response); // Debugging: log Razorpay order response
+  
+      if (response.status !== 200) {
+        toast.error("Failed to create Razorpay order. Please try again.");
+        console.log("Failed to create Razorpay order, status:", response.status); // Debugging: log failure status
+        return;
       }
-
-      const { order } = await response.json();
-
+  
+      const { order } = response.data;
+      console.log("Order details:", order); // Debugging: log order details
+  
       const options = {
-        key: "rzp_live_9ZTzDG6fFahGrR",
+        key: "rzp_test_RB3ZDnS1cbdLJ7", // Replace with your live key
         amount: order.amount,
         currency: order.currency,
-        name: "Donation",
-        description: "Donation for the cause",
+        name: "JonoJivan Grocery Checkout",
+        description: "Complete your purchase with Razorpay",
         order_id: order.id,
-        handler: async function (response) {
-          const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
-
-          router.push("/donation/success");
-
+        handler: async (razorpayResponse) => {
+          const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+            razorpayResponse;
+          console.log("Razorpay response:", razorpayResponse); // Debugging: log Razorpay response
+  
           try {
-            const verificationResponse = await fetch("/api/verify-payment", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ razorpay_order_id, razorpay_payment_id, razorpay_signature }),
-            });
+            // Verify payment
+            const verificationResponse = await axios.post(
+              "/api/pendingOrder/verify-payment",
+              {
+                razorpay_order_id,
+                razorpay_payment_id,
+                razorpay_signature,
+              }
+            );
+            console.log("Payment verification response:", verificationResponse); // Debugging: log verification response
+  
+            // Prepare data for placeOnlineOrder API call
+            const checkoutData = {
+              orderId: order.id,
+              cartId,
+              addressId,
+              paymentMethod: "Online",
+              rememberMe,
+              contactInfo,
+              products: cart.map((item) => ({
+                productId: item.id,
+                quantity: item.quantity,
+              })),
+              totalAmount: estimatedTotal(),
+              razorpay_order_id,
+              razorpay_payment_id,
+            };
 
-            if (!verificationResponse.ok) {
-              const errorData = await verificationResponse.json();
-              console.error("Payment verification failed:", errorData);
-              toast.error(`Payment verification failed: ${errorData.message}`);
-              return;
-            }
-
-            const verificationResult = await verificationResponse.json();
-            console.log("Payment verification successful:", verificationResult);
-
-            // Record donation after successful verification
-            try {
-              console.log("Preparing data for donation API call...");
-
-              const requestData = {
-                amount: payload.amount / 100, // Convert to rupees
-                fullName: formData.fullName,
-                emailaddress: formData.email,
-                panCard: formData.panCard,
-                phonenumber: formData.phone,
-                paymentMethod: "Online", // Specify the payment method
-                razorpay_order_id, // Optional, include only if your API handles it
-                razorpay_payment_id, // Optional, include only if your API handles it
-                cardId
-              };
-
-              console.log("Request data:", requestData);
-
-              const donationResponse = await fetch("/api/campaignSuccess", {
+            console.log("Checkout data:", checkoutData); // Debugging: log checkout data
+  
+            // Call placeOnlineOrder API
+            const placeOrderResponse = await fetch(
+              "/api/pendingOrder/placeOnlineOrder",
+              {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestData),
-              });
-
-              console.log("API response status:", donationResponse.status);
-
-              if (!donationResponse.ok) {
-                const errorData = await donationResponse.json();
-                console.error("Error details:", errorData);
-                toast.error(`Error recording donation: ${errorData.message}`);
-                setIsLoading(false); // Set loading to false after donation API failure
-                return;
+                body: JSON.stringify(checkoutData),
               }
-
-              const donationResult = await donationResponse.json();
-              console.log("Donation API response data:", donationResult);
-
-              toast.success("Donation successful! Thank you for your support.");
-              } catch (donationError) {
-              console.error("Failed to record donation:", donationError);
-              toast.error("Failed to record donation. Please try again.");
+            );
+  
+            if (placeOrderResponse.ok) {
+              const result = await placeOrderResponse.json();
+              console.log("Order placed successfully:", result); // Debugging: log result after placing order
+  
+              // Navigate to success page
+              router.push(
+                `/product/cart/information/shipping/${order.id}/success`
+              );
+              toast.success("Order placed successfully!");
+            } else {
+              const errorData = await placeOrderResponse.json();
+              console.error("Error placing order:", errorData); // Debugging: log error data if order placement fails
+              toast.error("Failed to place order. Please try again.");
             }
-          } catch (verificationError) {
-            console.error("Failed to verify payment:", verificationError);
-            toast.error("Payment verification failed. Please try again.");
+          } catch (error) {
+            console.error("Verification or order placement error:", error); // Debugging: log error
+            toast.error("Something went wrong during payment processing.");
           }
         },
         prefill: {
-          name: formData.fullName,
-          email: formData.email,
-          contact: formData.phone,
+          name: contactInfo.name,
+          email: contactInfo.email,
+          contact: contactInfo.mobileNumber,
         },
-        notes: { address: "Razorpay Donation" },
-        theme: { color: "#FF0080" },
+        notes: {
+          address: contactInfo.address,
+        },
+        theme: {
+          color: "#FF0080",
+        },
       };
-
+  
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (error) {
-      console.error("Error initiating Razorpay payment:", error);
-      toast.error("Failed to create Razorpay order. Please try again.");
+      console.error("Error initiating Razorpay payment:", error); // Debugging: log error during payment initiation
+      toast.error("Failed to initiate payment. Please try again.");
     }
   };
+
+  
+  
+  
 
 
 
@@ -258,11 +271,13 @@ const CheckoutPage = () => {
         });
   
         if (response.status === 200) {
-          router.push(`/product/cart/information/shipping/${orderId}/cashOnDelivery`);
+          router.push(`/product/cart/information/shipping/${orderId}/success`);
         }
       } else if (paymentMethod === "Online Payment") {
         // Call Razorpay initiation method
         await initiateRazorpayPayment(checkoutData);
+        
+
       }
     } catch (error) {
       console.error("Error submitting checkout:", error);

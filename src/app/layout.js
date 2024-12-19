@@ -4,6 +4,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import ogImage from '../../public/logo/og-image.jpg'; // Local image import
 import EgoisticNavbar from "@/components/utils/EgosticNavbar";
 import EgoisticFooter from "@/components/utils/EgosticFooter";
+import Script from 'next/script'
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,6 +52,7 @@ export default function RootLayout({ children }) {
         {children}
         <EgoisticFooter />
         <Toaster />
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       </body>
     </html>
   );
