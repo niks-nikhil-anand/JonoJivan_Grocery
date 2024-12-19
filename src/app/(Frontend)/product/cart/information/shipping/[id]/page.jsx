@@ -207,11 +207,9 @@ const CheckoutPage = () => {
             } else {
               const errorData = await placeOrderResponse.json();
               console.error("Error placing order:", errorData); // Debugging: log error data if order placement fails
-              toast.error("Failed to place order. Please try again.");
             }
           } catch (error) {
             console.error("Verification or order placement error:", error); // Debugging: log error
-            toast.error("Something went wrong during payment processing.");
           }
         },
         prefill: {

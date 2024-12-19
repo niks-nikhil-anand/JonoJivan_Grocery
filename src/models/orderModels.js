@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['Credit Card', 'Debit Card', 'PayPal', 'Cash on Delivery'],
+        enum: ['Cash on Delivery' , 'Online'],
         required: [true, 'Payment method is required'],
     },
     paymentStatus: {
@@ -43,7 +43,13 @@ const orderSchema = new mongoose.Schema({
     isPaid: {
         type: Boolean,
         default: false,
-    }
+    },
+    azorpay_order_id: {
+        type: String, // Changed from Boolean to String
+    },
+    razorpay_payment_id: {
+        type: String, // Changed from Boolean to String
+    },
 }, {
     timestamps: true
 });
