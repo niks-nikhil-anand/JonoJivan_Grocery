@@ -103,14 +103,137 @@ const CheckoutPage = () => {
     return <Loader />;
   }
 
+
+
+  const initiateRazorpayPayment = async () => {
+    if (!amount || isNaN(amount) || amount <= 0) {
+      toast.error("Please enter a valid donation amount.");
+      return false;
+    }
+    const payload = {
+      amount: amount * 100, // Convert to smallest currency unit (paise)
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`,
+    };
+
+    try {
+      const response = await fetch("/api/create-razorpay-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(`Error: ${errorData.message}`);
+        return false;
+      }
+
+      const { order } = await response.json();
+
+      const options = {
+        key: "rzp_live_9ZTzDG6fFahGrR",
+        amount: order.amount,
+        currency: order.currency,
+        name: "Donation",
+        description: "Donation for the cause",
+        order_id: order.id,
+        handler: async function (response) {
+          const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
+
+          router.push("/donation/success");
+
+          try {
+            const verificationResponse = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ razorpay_order_id, razorpay_payment_id, razorpay_signature }),
+            });
+
+            if (!verificationResponse.ok) {
+              const errorData = await verificationResponse.json();
+              console.error("Payment verification failed:", errorData);
+              toast.error(`Payment verification failed: ${errorData.message}`);
+              return;
+            }
+
+            const verificationResult = await verificationResponse.json();
+            console.log("Payment verification successful:", verificationResult);
+
+            // Record donation after successful verification
+            try {
+              console.log("Preparing data for donation API call...");
+
+              const requestData = {
+                amount: payload.amount / 100, // Convert to rupees
+                fullName: formData.fullName,
+                emailaddress: formData.email,
+                panCard: formData.panCard,
+                phonenumber: formData.phone,
+                paymentMethod: "Online", // Specify the payment method
+                razorpay_order_id, // Optional, include only if your API handles it
+                razorpay_payment_id, // Optional, include only if your API handles it
+                cardId
+              };
+
+              console.log("Request data:", requestData);
+
+              const donationResponse = await fetch("/api/campaignSuccess", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData),
+              });
+
+              console.log("API response status:", donationResponse.status);
+
+              if (!donationResponse.ok) {
+                const errorData = await donationResponse.json();
+                console.error("Error details:", errorData);
+                toast.error(`Error recording donation: ${errorData.message}`);
+                setIsLoading(false); // Set loading to false after donation API failure
+                return;
+              }
+
+              const donationResult = await donationResponse.json();
+              console.log("Donation API response data:", donationResult);
+
+              toast.success("Donation successful! Thank you for your support.");
+              } catch (donationError) {
+              console.error("Failed to record donation:", donationError);
+              toast.error("Failed to record donation. Please try again.");
+            }
+          } catch (verificationError) {
+            console.error("Failed to verify payment:", verificationError);
+            toast.error("Payment verification failed. Please try again.");
+          }
+        },
+        prefill: {
+          name: formData.fullName,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        notes: { address: "Razorpay Donation" },
+        theme: { color: "#FF0080" },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.error("Error initiating Razorpay payment:", error);
+      toast.error("Failed to create Razorpay order. Please try again.");
+    }
+  };
+
+
+
   const handlePlaceOrder = async () => {
     if (!orderId || !cartId || !addressId) {
       console.error("Order ID, Cart ID, or Address ID missing.");
       return;
     }
-  
     setPlacingOrder(true); // Start placing order
-  
     const checkoutData = {
       orderId,
       cartId,
@@ -126,14 +249,20 @@ const CheckoutPage = () => {
     };
   
     try {
-      const response = await axios.post("/api/pendingOrder/placeCodOrder", checkoutData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      if (paymentMethod === "Cash on Delivery") {
+        // Call COD API
+        const response = await axios.post("/api/pendingOrder/placeCodOrder", checkoutData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
   
-      if (response.status === 200) {
-        router.push(`/product/cart/information/shipping/${orderId}/cashOnDelivery`);
+        if (response.status === 200) {
+          router.push(`/product/cart/information/shipping/${orderId}/cashOnDelivery`);
+        }
+      } else if (paymentMethod === "Online Payment") {
+        // Call Razorpay initiation method
+        await initiateRazorpayPayment(checkoutData);
       }
     } catch (error) {
       console.error("Error submitting checkout:", error);
@@ -141,6 +270,11 @@ const CheckoutPage = () => {
       setPlacingOrder(false); // Reset placing order state
     }
   };
+  
+
+
+
+
   
 
   return (
