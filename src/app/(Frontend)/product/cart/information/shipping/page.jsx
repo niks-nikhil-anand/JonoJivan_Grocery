@@ -152,7 +152,7 @@ const CheckoutPage = () => {
       console.log("Order details:", order); // Debugging: log order details
   
       const options = {
-        key: "rzp_test_RB3ZDnS1cbdLJ7", // Replace with your live key
+        key: process.env.RAZORPAY_KEY_ID, // Replace with your live key
         amount: order.amount,
         currency: order.currency,
         name: "JonoJivan Grocery Checkout",
