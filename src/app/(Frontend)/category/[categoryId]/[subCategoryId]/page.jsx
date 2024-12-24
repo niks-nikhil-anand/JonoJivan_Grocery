@@ -1,5 +1,8 @@
 "use client";
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
+import { FaRegHeart } from "react-icons/fa";
+
 
 const Page = () => {
   const [data, setData] = useState(null); // State to store fetched data
@@ -8,140 +11,157 @@ const Page = () => {
   const [products, setProducts] = useState([]); // State to store product data
   const [currentPage, setCurrentPage] = useState(1); // Current page state
   const [totalPages, setTotalPages] = useState(1); // Total pages state
+  const [sortOption, setSortOption] = useState('priceAsc'); // Sorting option state
+  const [filterPrice, setFilterPrice] = useState([0, 10000]); // Price range filter
+  const router = useRouter();
+
 
   useEffect(() => {
-    // Ensure this code runs only in the browser (client-side)
     if (typeof window !== "undefined") {
       const fetchData = async () => {
         try {
           const urlPath = window.location.pathname;
-          // Split the URL and extract the category ID and subcategory ID
           const urlParts = urlPath.split('/');
-          const categoryId = urlParts[2]; // Extract category ID
-          const subcategoryId = urlParts[3]; // Extract subcategory ID
+          const categoryId = urlParts[2];
+          const subcategoryId = urlParts[3];
 
-          // Check if both IDs exist, otherwise throw an error
           if (!categoryId || !subcategoryId) {
             throw new Error('Category ID or Subcategory ID is missing in the URL');
           }
 
-          console.log('Category ID:', categoryId); // Debugging: log category ID
-          console.log('Subcategory ID:', subcategoryId); // Debugging: log subcategory ID
-
-          const response = await fetch(`/api/admin/dashboard/category/subCategory/${categoryId}/${subcategoryId}?page=${currentPage}`);
+          const response = await fetch(`/api/admin/dashboard/category/subCategory/${categoryId}/${subcategoryId}?page=${currentPage}&sort=${sortOption}&minPrice=${filterPrice[0]}&maxPrice=${filterPrice[1]}`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
 
           const result = await response.json();
-          console.log('Fetched data:', result); // Debugging: log fetched data
-          setData(result); // Store fetched data
-          setProducts(result || []); // If products exist in the response, store them
-          setTotalPages(result.totalPages); // Set the total number of pages
+          setData(result);
+          setProducts(result || []);
+          setTotalPages(result.totalPages);
         } catch (error) {
-          console.error('Error fetching data:', error); // Debugging: log any errors
-          setError(error.message); // Set error message if fetch fails
+          setError(error.message);
         } finally {
-          setLoading(false); // Set loading to false after fetch attempt
-          console.log('Loading complete'); // Debugging: log when loading is finished
+          setLoading(false);
         }
       };
 
-      fetchData(); // Call the fetchData function
+      fetchData();
     }
-  }, [currentPage]); // Re-fetch when currentPage changes
-
-  if (loading) {
-    console.log('Loading data...'); // Debugging: log when still loading
-    return <div>Loading...</div>; // Show loading indicator while data is being fetched
-  }
-
-  if (error) {
-    console.log('Error occurred:', error); // Debugging: log error
-    return <p>Error: {error}</p>; // Show error message if there is an error
-  }
-
-  console.log('Data loaded successfully:', data); // Debugging: log the data once it’s loaded
+  }, [currentPage, sortOption, filterPrice]);
 
   const handleCardClick = (id) => {
-    // Handle card click (you can add the logic for redirection or any other functionality)
-    console.log(`Card with ID ${id} clicked`);
+    router.push(`/product/${id}`);
   };
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page); // Change the page
+      setCurrentPage(page);
     }
   };
 
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
+  const handleFilterPriceChange = (e) => {
+    setFilterPrice([e[0], e[1]]);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div>
+      {/* Title */}
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6">Products</h1>
+
+      {/* Sort and Filter Controls */}
+      <div className="flex justify-between items-center mb-6 flex-wrap">
+        <div className="flex gap-4">
+          <select
+            value={sortOption}
+            onChange={handleSortChange}
+            className="border px-4 py-2 rounded-md"
+          >
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="nameAsc">Name: A to Z</option>
+            <option value="nameDesc">Name: Z to A</option>
+          </select>
+        </div>
+        
+      </div>
+
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-        {products.length > 0 ? (
-          products.map((product) => {
-            const { _id, name, originalPrice, featuredImage, salePrice, weight } = product;
-
-            return (
-              <div
-                key={_id}
-                className="relative flex flex-col items-center border border-gray-200 rounded-lg shadow-lg p-4 cursor-pointer"
-                onClick={() => handleCardClick(_id)}
-              >
-                {/* SALE Badge */}
-                <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
-                  SALE
-                </div>
-
-                {/* Time Estimate Badge */}
-                <div className="absolute top-2 left-2 bg-white text-gray-500 text-xs flex items-center gap-1 p-1 rounded">
-                  <span>⏱ 6 mins</span>
-                </div>
-
-                {/* Product Image */}
-                <img
-                  src={featuredImage}
-                  alt={name}
-                  className="w-full h-32 object-contain mb-3 rounded-md"
-                />
-
-                {/* Product Name */}
-                <h3 className="text-center font-semibold text-gray-800 text-sm mb-2">
-                  {name}
-                </h3>
-
-                {/* Product Weight */}
-                <span className="text-gray-500 text-xs mb-3">
-                  {weight.value} {weight.unit}
-                </span>
-
-                {/* Pricing and Add to Cart */}
-                <div className="flex justify-between items-center w-full mt-auto">
-                  <div className="flex gap-1">
-                    <span className="text-sm font-bold text-gray-400 line-through">
-                      ₹{originalPrice}
-                    </span>
-                    <span className="text-sm font-bold text-gray-800">
-                      ₹{salePrice}
-                    </span>
-                  </div>
-
-                  <button
-                    className="text-green-600 border border-green-600 rounded px-3 py-1 text-xs font-semibold hover:bg-green-100 transition"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Add to cart logic here
-                    }}
-                  >
-                    ADD
-                  </button>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <p>No products found</p> // Display if no products are available
-        )}
+       {products.map((product) => {
+           const { _id, name, originalPrice, featuredImage, salePrice, weight } = product;
+       
+           return (
+             <div
+             key={_id}
+             className="relative flex flex-col items-center border border-gray-200 rounded-lg shadow-md  bg-white hover:shadow-lg transition-shadow w-full sm:w-[48%] md:w-full"
+             onClick={() => handleCardClick(_id)}
+           >
+       
+           
+             {/* Wishlist Icon */}
+             <button
+               onClick={(e) => {
+                 e.stopPropagation();
+                 handleWishlistClick();
+               }}
+               className="absolute top-2 left-2 text-red-500 hover:text-red-600"
+             >
+               <FaRegHeart size={18} />
+             </button>
+           
+             {/* Product Image */}
+               
+               <div className="flex px-5">
+                 <div>
+                 <img
+               src={featuredImage}
+               alt={name}
+               className="w-28 h-28 object-contain flex-shrink-0 mb-4"
+             />
+                 </div>
+       
+                 <div className="flex flex-col  items-center text-center w-full pt-5 pl-5">
+               
+               {/* Product Name */}
+               <h3 className="font-semibold text-gray-800 text-sm mb-2">
+                 {name}
+               </h3>
+           
+               {/* Product Weight */}
+               <span className="text-gray-500 text-xs mb-3">
+                 {weight.value} {weight.unit}
+               </span>
+           
+               {/* Pricing */}
+               <div className="flex gap-2 items-center justify-center mb-1">
+                 <span className="text-sm font-bold text-gray-400 line-through">
+                   ₹{originalPrice}
+                 </span>
+                 <span className="text-sm font-bold text-gray-800">
+                   ₹{salePrice}
+                 </span>
+               </div>
+             </div>
+               </div>
+           
+             {/* Product Details */}
+             
+           </div>
+           
+           );
+         })}
       </div>
 
       {/* Pagination Controls */}
