@@ -36,30 +36,37 @@ const Page = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className="flex flex-col items-center gap-6 p-4 md:p-8 my-8">
-            {/* Display Category Name at the Top */}
-            <h1 className="text-lg sm:text-xl md:text-4xl mb-4 font-bold text-red-500 underline">{data?.name || "Category"}</h1>
+        <div className="flex flex-col items-center gap-6 p-4 md:p-6 my-8">
+  {/* Display Category Name at the Top */}
+  <h1 className="text-lg sm:text-xl md:text-4xl mb-4 font-bold text-red-500 underline">
+    {data?.name || "Category"}
+  </h1>
 
-
-                
-            <div className="flex gap-4 sm:gap-6 justify-center p-1 md:p-6 overflow-x-auto snap-x snap-mandatory flex-wrap">
-                {/* Map through subcategories and display each as a card */}
-                {data?.subcategories?.map((subcategory) => (
-                    <div key={subcategory._id} className="flex-shrink-0 snap-center flex flex-col items-center w-32 h-36 sm:w-36 sm:h-44 md:w-56 md:h-64 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300  sm:p-4 cursor-pointer"
-                    onClick={() => router.push(`/category/${subcategory._id}/products`)}
-                    >
-                        {/* Subcategory Image */}
-                        <img 
-                            src={subcategory.image} 
-                            alt={subcategory.name} 
-                            className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32  rounded-2xl overflow-hidden flex items-center justify-center mb-2 sm:mb-3 shadow-lg p-3"
-                        />
-                        {/* Subcategory Name */}
-                        <h2 className="text-center text-base sm:text-base md:text-lg font-medium text-red-500 mt-1 sm:mt-2 px-2">{subcategory.name}</h2>
-                    </div>
-                ))}
-            </div>
+  <div className="flex gap-4 sm:gap-6 justify-center p-1 md:p-4 overflow-x-auto snap-x snap-mandatory flex-wrap">
+    {/* Map through subcategories and display each as a card */}
+    {data?.subcategories?.map((subcategory) => (
+      <div
+        key={subcategory._id}
+        className="flex-shrink-0 snap-center flex flex-col items-center w-28 h-32 sm:w-32 sm:h-36 md:w-48 md:h-52 bg-gray-50 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+        onClick={() => router.push(`/category/${subcategory._id}/products`)}
+      >
+        {/* Subcategory Image */}
+        <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-gray-100 flex items-center justify-center shadow-md mb-2 sm:mb-3">
+          <img
+            src={subcategory.image}
+            alt={subcategory.name}
+            className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full"
+          />
         </div>
+        {/* Subcategory Name */}
+        <h2 className="text-center text-sm sm:text-base md:text-lg font-medium text-red-500 mt-1 sm:mt-2 px-2">
+          {subcategory.name}
+        </h2>
+      </div>
+    ))}
+  </div>
+</div>
+
     );
 };
 
