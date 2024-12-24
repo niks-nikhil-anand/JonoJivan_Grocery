@@ -59,7 +59,7 @@ const SidebarAdmin = () => {
           </Link>
 
           {isOpen && <h3 className="text-sm font-medium mt-4 mb-2 text-black">Orders</h3>}
-          <Link href="/admin/dashboard/orders/allOrders" passHref>
+          <Link href="/admin/dashboard/orders" passHref>
             <SidebarItem icon={<FaShoppingCart />} label="All Orders" isOpen={isOpen} selected={selectedItem === 'All Orders'} onClick={() => setSelectedItem('All Orders')} />
           </Link>
           <Link href="/admin/dashboard/orders/pendingOrders" passHref>
