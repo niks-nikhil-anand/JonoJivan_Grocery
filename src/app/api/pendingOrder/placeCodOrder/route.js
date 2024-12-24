@@ -126,6 +126,8 @@ export const POST = async (req) => {
             cart: cart._id,
             address: address._id,
             paymentMethod,
+            paymentStatus: "Completed",
+
         });
         await newOrder.save();
         console.log("New order created:", newOrder);

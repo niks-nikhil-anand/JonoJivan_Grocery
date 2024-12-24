@@ -25,7 +25,6 @@ export const POST = async (req) => {
         } = await req.json();
 
         console.log("Request data:", {
-            orderId,
             cartId,
             addressId,
             paymentMethod,
@@ -132,6 +131,10 @@ export const POST = async (req) => {
                     cart: cart._id,
                     address: address._id,
                     paymentMethod,
+                    paymentStatus: "Completed",
+                    isPaid: true,
+                    razorpay_order_id,
+                    razorpay_payment_id,
                 });
                 await newOrder.save();
                 console.log("New order created:", newOrder);
