@@ -16,6 +16,7 @@ const Products = () => {
       .get('/api/admin/dashboard/product/addProduct')
       .then((response) => {
         if (Array.isArray(response.data)) {
+          console.log(response)
           setProducts(response.data);
         } else {
           console.error('Unexpected response format:', response);
@@ -52,7 +53,7 @@ const Products = () => {
   };
 
   return (
-    <div className="w-full p-4 bg-gray-100 shadow-lg rounded-lg h-[80vh] ">
+    <div className="w-full p-4 pr-[5rem] bg-gray-100 shadow-lg rounded-lg h-[80vh] ">
   {/* Wrapper with horizontal and vertical scrollbars */}
   <div className="overflow-x-auto overflow-y-auto max-h-[70vh] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
     <table className="border-collapse border border-gray-300 min-w-[1400px] text-sm">
@@ -87,8 +88,15 @@ const Products = () => {
               {product.weight.value} {product.weight.unit}
             </td>
             <td className="border border-gray-300 px-2 py-1 truncate">{product.category?.name}</td>
-            <td className="border border-gray-300 px-2 py-1 truncate">{product.subCategory?.name}</td>
-            <td className="border border-gray-300 px-2 py-1 truncate">{product.vendor || "N/A"}</td>
+            <td className="border border-gray-300 px-2 py-1 truncate">
+            {product.subCategory?.name || "N/A"}
+            </td>
+            <td className="border border-gray-300 px-2 py-1 truncate">
+          {product.users && product.users.length > 0
+            ? `${product.users[0].fullName} (${product.users[0].role})`
+            : "N/A"}
+        </td>
+
             
             <td className="border border-gray-300 px-2 py-1">
               ₹{product.salePrice}
