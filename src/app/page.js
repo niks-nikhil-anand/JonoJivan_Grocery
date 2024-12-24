@@ -11,6 +11,7 @@ import Banner2 from "@/components/frontend/ui/(Banners)/Banner2";
 import BannerText01 from "@/components/frontend/ui/(Banners)/BannerText01";
 import BannerText02 from "@/components/frontend/ui/(Banners)/BannerText02";
 import ProductCardVegetables from "@/components/frontend/ui/ProductSectionVegetables";
+import LatestProducts from "@/components/frontend/ui/LatestProduct";
 
 export default function Home() {
   return (
@@ -24,7 +25,7 @@ export default function Home() {
       <Banner1 />
       <ProductCardVegetables />
       <BannerText01 />
-      <ProductCardVegetables />
+      <LatestProducts />
       <Banner2 />
       <BannerText02 />
     </>
