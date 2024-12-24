@@ -13,8 +13,7 @@ export const POST = async (req) => {
         await connectDB();
         
         const { 
-            orderId, 
-            cartId, 
+           cartId, 
             addressId, 
             paymentMethod, 
             rememberMe, 
@@ -24,7 +23,6 @@ export const POST = async (req) => {
         } = await req.json();
         
         console.log("Request data:", {
-            orderId,
             cartId,
             addressId,
             paymentMethod,
@@ -131,10 +129,6 @@ export const POST = async (req) => {
         });
         await newOrder.save();
         console.log("New order created:", newOrder);
-
-        // Delete the specific pending order
-        await pendingOrder.deleteOne({ _id: orderId });
-        console.log("Deleted specific pending order with orderId:", orderId);
 
         return response;
 

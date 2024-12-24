@@ -11,17 +11,14 @@ export const GET = async (req) => {
 
     const cookieStore = cookies();
     const cartAndAddress = cookieStore.get("cartAndAddress");
-    console.log("Retrieved cookies:", cookieStore);
 
     if (!cartAndAddress) {
       console.error("User authentication token is missing.");
       throw new Error("User authentication token is missing.");
     }
 
-    console.log("Pending order cookie found:", cartAndAddress.value);
 
     const decodedToken = jwt.decode(cartAndAddress.value); // Use cartAndAddress instead of pendingOrder
-    console.log("Decoded token:", decodedToken);
 
     if (!decodedToken || !decodedToken.cartId || !decodedToken.addressId) {
       console.error("Invalid token. No order ID found.");

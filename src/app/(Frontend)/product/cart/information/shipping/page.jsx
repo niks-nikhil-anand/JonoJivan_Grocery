@@ -21,30 +21,37 @@ const CheckoutPage = () => {
     address: "",
     name:""
   });
-  const [orderId, setOrderId] = useState(null);
   const [cartId, setCartId] = useState(null);
   const [addressId, setAddressId] = useState(null);
 
   useEffect(() => {
     const fetchOrderAndAddress = async () => {
       try {
+        console.log("Fetching decoded token...");
         const decodedTokenResponse = await axios.get("/api/pendingOrder/checkout/cookies");
-        const { orderId, cartId, addressId, userId } = decodedTokenResponse.data;
-
-        setOrderId(orderId);
+        const { cartId, addressId } = decodedTokenResponse.data;
+  
+        console.log("Decoded token response:", decodedTokenResponse.data);
+        console.log("Cart ID:", cartId, "Address ID:", addressId);
+  
         setCartId(cartId);
         setAddressId(addressId);
-
-        if (orderId && addressId) {
+  
+        if (cartId && addressId) {
+          console.log("Fetching address details...");
           const addressResponse = await axios.get(`/api/admin/dashboard/pendingOrder/address/${addressId}`);
-          const { email, mobileNumber, address , firstName , lastName   } = addressResponse.data.data;
-
+          const { email, mobileNumber, address, firstName, lastName } = addressResponse.data.data;
+  
+          console.log("Address details:", addressResponse.data.data);
+  
           setContactInfo({
             name: `${firstName || ''} ${lastName || ''}`,
             email: email || '',
             mobileNumber: mobileNumber || '',
             address: address || ''
           });
+  
+          console.log("Fetching shipping details...");
           await axios.get(`/api/pendingOrder/shipping/${orderId}`);
         } else {
           console.error("Order ID or Address ID not found.");
@@ -52,9 +59,11 @@ const CheckoutPage = () => {
       } catch (error) {
         console.error("Error fetching order or address details:", error.response || error.message);
       }
-    };  
+    };
+  
     fetchOrderAndAddress();
   }, [router]);
+  
 
   useEffect(() => {
     const fetchCartFromLocalStorage = () => {
@@ -240,13 +249,12 @@ const CheckoutPage = () => {
 
 
   const handlePlaceOrder = async () => {
-    if (!orderId || !cartId || !addressId) {
+    if (!cartId || !addressId) {
       console.error("Order ID, Cart ID, or Address ID missing.");
       return;
     }
     setPlacingOrder(true); // Start placing order
     const checkoutData = {
-      orderId,
       cartId,
       addressId,
       paymentMethod,
@@ -269,7 +277,7 @@ const CheckoutPage = () => {
         });
   
         if (response.status === 200) {
-          router.push(`/product/cart/information/shipping/${orderId}/success`);
+          router.push(`/product/cart/information/shipping/${cartId}/success`);
         }
       } else if (paymentMethod === "Online Payment") {
         // Call Razorpay initiation method
