@@ -48,7 +48,7 @@ const Page = () => {
       <div
         key={subcategory._id}
         className="w-full flex items-center gap-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 cursor-pointer"
-        onClick={() => router.push(`/category/${data._id}/${subcategory.name}`)} // Update the URL
+        onClick={() => router.push(`/category/${data._id}/${subcategory._id}`)} // Update the URL
       >
         {/* Subcategory Image */}
         <img
