@@ -68,27 +68,27 @@ export const POST = async (req) => {
             path: '/'
         });
 
-        // Fetch or create the cart
-        let cart = await cartModels.findById(cartId);
-        console.log("Fetched cart:", cart);
-        
-        if (cart) {
-            cart.userId = user._id;
-            await cart.save();
-            console.log("Updated existing cart with userId:", cart);
-        } else {
-            console.log("Creating a new cart...");
-            cart = new cartModels({ 
-                userId: user._id,
-                items: products.map(product => ({
-                    productId: product.productId,
-                    quantity: product.quantity,
-                    price: product.price,
-                })) 
-            });
-            await cart.save();
-            console.log("New cart created:", cart);
-        }
+                // Fetch or create the cart
+                let cart = await cartModels.findById(cartId);
+                console.log("Fetched cart:", cart);
+                
+                if (cart) {
+                    cart.userId = user._id;
+                    await cart.save();
+                    console.log("Updated existing cart with userId:", cart);
+                } else {
+                    console.log("Creating a new cart...");
+                    cart = new cartModels({ 
+                        userId: user._id,
+                        items: products.map(product => ({
+                            productId: product.productId,
+                            quantity: product.quantity,
+                            price: product.price,
+                        })) 
+                    });
+                    await cart.save();
+                    console.log("New cart created:", cart);
+                }
 
         // Fetch or create the address
         let address = await addressModels.findById(addressId);

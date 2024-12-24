@@ -52,7 +52,7 @@ const CheckoutPage = () => {
           });
   
           console.log("Fetching shipping details...");
-          await axios.get(`/api/pendingOrder/shipping/${orderId}`);
+          await axios.get(`/api/pendingOrder/shipping/${cartId}`);
         } else {
           console.error("Order ID or Address ID not found.");
         }
@@ -177,7 +177,6 @@ const CheckoutPage = () => {
   
             // Prepare data for placeOnlineOrder API call
             const checkoutData = {
-              orderId: order.id,
               cartId,
               addressId,
               paymentMethod: "Online",
