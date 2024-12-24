@@ -12,6 +12,7 @@ import BannerText01 from "@/components/frontend/ui/(Banners)/BannerText01";
 import BannerText02 from "@/components/frontend/ui/(Banners)/BannerText02";
 import ProductCardVegetables from "@/components/frontend/ui/ProductSectionVegetables";
 import LatestProducts from "@/components/frontend/ui/LatestProduct";
+import VeticalScrollProducts from "@/components/frontend/ui/VeticalScrollProducts";
 
 export default function Home() {
   return (
@@ -20,7 +21,7 @@ export default function Home() {
       <ProductCardVegetables />
       <CategoriesSection />
       <WhoWeAre />
-      <ProductCardVegetables />
+      <VeticalScrollProducts />
       <Marquee />
       <Banner1 />
       <ProductCardVegetables />
