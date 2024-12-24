@@ -3,8 +3,8 @@ import cartModels from "@/models/cartModels";
 import orderModels from "@/models/orderModels";
 import pendingOrder from "@/models/pendingOrder";
 import userModels from "@/models/userModels";
-import addressModels from "@/models/addressModels"; // Import the address model
-import jwt from "jsonwebtoken"; // Ensure you have jwt imported
+import addressModels from "@/models/addressModels";
+import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 export const POST = async (req) => {
@@ -34,22 +34,27 @@ export const POST = async (req) => {
             totalAmount
         });
 
-        // Find the user based on provided contact info or create a new user if not found
+        // Check if the user already exists
         let user = await userModels.findOne({ email: contactInfo.email });
-        
         console.log("Found user:", user);
 
-        if (!user) {
-            console.log("Creating a new user...");
-            user = new userModels({
-                fullName: contactInfo.name,
-                email: contactInfo.email,
-                mobileNumber: contactInfo.mobileNumber,
-                password: null, // Use null or a hashed default password if required
-            });
-            await user.save();
-            console.log("New user created:", user);
+        if (user) {
+            console.log("User already exists with this email. Sign in to place the order.");
+            return NextResponse.json({ 
+                msg: "User already found with this email ID. Please sign in to place the order." 
+            }, { status: 400 });
         }
+
+        // Create a new user
+        console.log("Creating a new user...");
+        user = new userModels({
+            fullName: contactInfo.name,
+            email: contactInfo.email,
+            mobileNumber: contactInfo.mobileNumber,
+            password: null,
+        });
+        await user.save();
+        console.log("New user created:", user);
 
         // Generate a JWT token for the user
         const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: rememberMe ? '30d' : '7d' });
@@ -65,21 +70,20 @@ export const POST = async (req) => {
             path: '/'
         });
 
-        // Fetch the existing cart and update the userId
+        // Fetch or create the cart
         let cart = await cartModels.findById(cartId);
         console.log("Fetched cart:", cart);
         
         if (cart) {
-            cart.userId = user._id; // Update userId to the current user
+            cart.userId = user._id;
             await cart.save();
             console.log("Updated existing cart with userId:", cart);
         } else {
-            // Create a new cart if it doesn't exist
             console.log("Creating a new cart...");
             cart = new cartModels({ 
                 userId: user._id,
                 items: products.map(product => ({
-                    productId: product.productId, // Ensure this field is available in the product object
+                    productId: product.productId,
                     quantity: product.quantity,
                     price: product.price,
                 })) 
@@ -88,17 +92,15 @@ export const POST = async (req) => {
             console.log("New cart created:", cart);
         }
 
-        // Fetch the existing address and update the User field
+        // Fetch or create the address
         let address = await addressModels.findById(addressId);
         console.log("Fetched address:", address);
         
         if (address) {
-            // Update existing address
-            address.User = user._id; // Update User field with the current user's ID
+            address.User = user._id;
             await address.save();
             console.log("Updated existing address with User ID:", address);
         } else {
-            // Create a new address if it doesn't exist
             console.log("Creating a new address...");
             address = new addressModels({
                 firstName: contactInfo.firstName,
@@ -117,7 +119,7 @@ export const POST = async (req) => {
             console.log("New address created:", address);
         }
 
-        // Create the new order
+        // Create the order
         console.log("Creating a new order...");
         const newOrder = new orderModels({
             user: user._id,
@@ -130,11 +132,9 @@ export const POST = async (req) => {
         await newOrder.save();
         console.log("New order created:", newOrder);
 
-        
-       // Delete only the specific pending order associated with this orderId
+        // Delete the specific pending order
         await pendingOrder.deleteOne({ _id: orderId });
         console.log("Deleted specific pending order with orderId:", orderId);
-
 
         return response;
 
