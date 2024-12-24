@@ -110,11 +110,10 @@ const CheckoutPage = () => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-
   const handleContinueToShipping = async () => {
-
     const urlPath = window.location.pathname;
-  const userId = urlPath.split('/')[2]; 
+    const userId = urlPath.split('/')[2]; // Extract user ID from the URL
+  
     // Data object for the checkout API
     const checkoutData = {
       email: formData.email,
@@ -122,60 +121,43 @@ const CheckoutPage = () => {
       lastName: formData.lastName,
       address: formData.address,
       apartment: formData.apartment,
-      mobileNumber: formData.mobileNumber, 
+      mobileNumber: formData.mobileNumber,
       state: formData.state,
       landmark: formData.landmark,
       city: formData.city,
       pinCode: formData.pinCode,
-      subscribeChecked: formData.subscribeChecked, 
-      cart
+      subscribeChecked: formData.subscribeChecked,
+      cart,
     };
   
     try {
-      // Submit checkout data
+      // Start loading
       setLoadingButton(true);
       console.log("Submitting checkout data:", checkoutData);
+  
+      // Submit checkout data
       const checkoutResponse = await axios.post(`/api/users/pendingOrder/${userId}/checkout`, checkoutData, {
         headers: {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
         },
       });
-      console.log("Checkout successful!", checkoutResponse.data);
-    
-      if (checkoutResponse.status >= 200 && checkoutResponse.status < 300) {
-        
-        // Fetch order ID from cookies
-        console.log("Fetching order ID from cookies...");
-            const decodedTokenResponse = await axios.get("/api/pendingOrder/checkout/cookies");
-            const decodedToken = decodedTokenResponse.data; 
-    
-            console.log("Order ID response received:", decodedToken);
-
-            // Access the properties from the decoded token
-            const { orderId } = decodedToken;
-          
-            // Redirect to the shipping page with the orderId if it exists
-            if (orderId) {
-              console.log(`Redirecting to shipping page with Order ID: ${orderId}`);
-              router.push(`/users/${userId}/product/cart/information/shipping/${orderId}`);
-            } else {
-              console.error("Order ID not found.");
-            }
-    
-            console.log(`Cart ID: ${cartId}, Address ID: ${addressId}, User ID: ${userId}`);
-
-       
+  
+      // Handle successful checkout
+      if (checkoutResponse.status === 200) {
+        console.log("Checkout successful!", checkoutResponse.data);
+        // Handle navigation or any additional logic
       } else {
         console.error("Checkout failed with status:", checkoutResponse.status);
       }
     } catch (error) {
-      console.error("Error during checkout or fetching order ID:", error);
-    }finally {
-      setLoadingButton(false); // Stop loading
+      // Handle error during checkout
+      console.error("Error during checkout or fetching order ID:", error.response?.data || error.message);
+    } finally {
+      // Stop loading
+      setLoadingButton(false);
     }
-    
-     
   };
+  
   
   
   

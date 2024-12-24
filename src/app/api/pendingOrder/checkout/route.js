@@ -7,8 +7,10 @@ import jwt from 'jsonwebtoken';
 
 export const POST = async (req) => {
   try {
+    console.log("Connecting to the database...");
     await connectDB();
 
+    console.log("Parsing request body...");
     const body = await req.json();
     const {
       email,
@@ -24,26 +26,33 @@ export const POST = async (req) => {
       cart,
     } = body;
 
+    console.log("Request body received:", body);
+
     // Validate required fields
     if (!email || !firstName || !lastName || !address || !mobileNumber || !state || !city || !pinCode || !cart) {
+      console.log("Validation failed: Missing required fields");
       return NextResponse.json({ msg: "Please provide all the required fields." }, { status: 400 });
     }
 
+    console.log("Checking if user already exists...");
     // Check if the user exists
     const existingUser = await userModels.findOne({ email });
-
     if (existingUser) {
-      console.log("User already exists with this email. Sign in to place the order.");
+      console.log("User already exists with email:", email);
       return NextResponse.json({ 
         msg: "User already found with this email ID. Please sign in to place the order." 
-      }, { status: 400 });
+      }, { status: 400 }); // Stop further execution
     }
 
+    console.log("Validating cart...");
     // Validate cart length
     if (cart.length === 0) {
+      console.log("Validation failed: Cart is empty");
       return NextResponse.json({ msg: "Cart cannot be empty." }, { status: 400 });
     }
+    console.log(cart)
 
+    console.log("Creating new cart...");
     // Create new cart
     const newCart = new cartModels({
       items: cart.map(item => ({
@@ -53,7 +62,9 @@ export const POST = async (req) => {
       })),
     });
     await newCart.save();
+    console.log("New cart created with ID:", newCart._id);
 
+    console.log("Creating new address...");
     // Create new address
     const newAddress = new addressModels({
       firstName,
@@ -68,13 +79,16 @@ export const POST = async (req) => {
       mobileNumber,
     });
     await newAddress.save();
+    console.log("New address created with ID:", newAddress._id);
 
+    console.log("Generating JWT token...");
     // Generate JWT token
     const token = generateToken({   
       cartId: newCart._id,
       addressId: newAddress._id,
     });
 
+    console.log("Setting cookie with token...");
     // Set the cookie with the token
     const response = NextResponse.json({ 
       msg: "Order processed successfully.", 
@@ -89,6 +103,7 @@ export const POST = async (req) => {
       path: '/'
     });
 
+    console.log("Response successfully created. Returning response.");
     return response;
   } catch (error) {
     console.error("Error processing request:", error);
@@ -97,5 +112,6 @@ export const POST = async (req) => {
 };
 
 function generateToken(payload) {
+  console.log("Payload for JWT:", payload);
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1w' });
 }

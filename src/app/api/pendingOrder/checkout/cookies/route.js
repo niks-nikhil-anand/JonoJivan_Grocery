@@ -10,26 +10,25 @@ export const GET = async (req) => {
     console.log("Database connection successful.");
 
     const cookieStore = cookies();
-    const pendingOrder = cookieStore.get("pendingOrder");
+    const cartAndAddress = cookieStore.get("cartAndAddress");
     console.log("Retrieved cookies:", cookieStore);
 
-    if (!pendingOrder) {
+    if (!cartAndAddress) {
       console.error("User authentication token is missing.");
       throw new Error("User authentication token is missing.");
     }
 
-    console.log("Pending order cookie found:", pendingOrder.value);
+    console.log("Pending order cookie found:", cartAndAddress.value);
 
-    const decodedToken = jwt.decode(pendingOrder.value);
+    const decodedToken = jwt.decode(cartAndAddress.value); // Use cartAndAddress instead of pendingOrder
     console.log("Decoded token:", decodedToken);
 
-    if (!decodedToken || !decodedToken.orderId) {
+    if (!decodedToken || !decodedToken.cartId || !decodedToken.addressId) {
       console.error("Invalid token. No order ID found.");
       throw new Error("Invalid token.");
     }
 
-
-    return NextResponse.json(decodedToken , {
+    return NextResponse.json(decodedToken, {
       status: 200,
     });
     
