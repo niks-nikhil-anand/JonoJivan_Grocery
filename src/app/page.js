@@ -16,7 +16,6 @@ export default function Home() {
   return (
     <>
       <HeroSection />
-      <ProductCard />
       <ProductCardVegetables />
       <CategoriesSection />
       <WhoWeAre />

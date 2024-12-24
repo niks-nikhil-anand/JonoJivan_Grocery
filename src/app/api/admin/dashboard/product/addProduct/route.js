@@ -70,7 +70,7 @@ export const POST = async (req) => {
 
 
     const cookieStore = cookies();
-        const authToken = cookieStore.get("vendorAuthToken");
+        const authToken = cookieStore.get("adminAuthToken");
         console.log("Cookie authToken:", authToken);
     
         // Check if either token from NextAuth or cookie exists
@@ -94,7 +94,7 @@ export const POST = async (req) => {
         }
 
          // Check if the user has the correct role and status
-    if (user.role !== "SuperAdmin") {
+        if (user.role !== "SuperAdmin") {
         return NextResponse.json({ msg: "Only vendors are allowed to add products." }, { status: 403 });
       }
   

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
+import { toast } from 'react-hot-toast';
+
 const ProductForm = () => {
   const [categories, setCategories] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
@@ -129,51 +131,72 @@ const ProductForm = () => {
     const file = e.target.files[0]; 
     setFeaturedImage(file); 
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
   
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    const data = new FormData();
   
-  const data = new FormData();
-
-  // Log formData for debugging
-  console.log('Form Data:', formData);
-
-  // Append basic product details from formData
-  data.append('name', formData.name);
-  data.append('description', formData.description);
-  data.append('salePrice', formData.salePrice);
-  data.append('originalPrice', formData.originalPrice);
-  data.append('category', formData.category);
-  data.append('subcategories', selectedSubcategories); 
-  data.append('stock', formData.stock);
-  data.append('isFanFavourites', formData.isFanFavourites);
-  data.append('isOnSale', formData.isOnSale);
-  data.append('tags', formData.tags);
-  data.append('weight', formData.weight); 
-  data.append('unit', formData.unit);
-
-  // Append images
-  images.forEach((file) => {
-    if (file) {
-      data.append('images', file);
+    // Log formData for debugging
+    console.log('Form Data:', formData);
+  
+    // Append basic product details from formData
+    data.append('name', formData.name);
+    data.append('description', formData.description);
+    data.append('salePrice', formData.salePrice);
+    data.append('originalPrice', formData.originalPrice);
+    data.append('category', formData.category);
+    data.append('subcategories', selectedSubcategories);
+    data.append('stock', formData.stock);
+    data.append('isFanFavourites', formData.isFanFavourites);
+    data.append('isOnSale', formData.isOnSale);
+    data.append('tags', formData.tags);
+    data.append('weight', formData.weight);
+    data.append('unit', formData.unit);
+  
+    // Append images
+    images.forEach((file) => {
+      if (file) {
+        data.append('images', file);
+      }
+    });
+  
+    if (featuredImage) {
+      data.append('featuredImage', featuredImage);
     }
-  });
-
-  if (featuredImage) {
-    data.append('featuredImage', featuredImage);
-  }
-
-  try {
-    console.log('Sending data to API:', Array.from(data.entries())); // Log FormData entries
-    await axios.post('/api/admin/dashboard/product/addProduct', data);
-    console.log('Product created successfully:', data);
-  } catch (error) {
-    console.error('Error creating product:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+  
+    try {
+      console.log('Sending data to API:', Array.from(data.entries())); // Log FormData entries
+      await axios.post('/api/admin/dashboard/product/addProduct', data);
+  
+      // Show success notification
+      toast.success('Product created successfully!');
+  
+      // Clear the form
+      setFormData({
+        name: '',
+        description: '',
+        salePrice: '',
+        originalPrice: '',
+        category: '',
+        tags: '',
+        stock: '',
+        weight: '',
+        unit: '',
+        isFanFavourites: false,
+        isOnSale: false,
+      });
+      setSelectedSubcategories([]);
+      setImages([]);
+      setFeaturedImage(null);
+    } catch (error) {
+      console.error('Error creating product:', error);
+      toast.error('Failed to create the product. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
 
   const addMoreImages = () => {
