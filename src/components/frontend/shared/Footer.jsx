@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+import logo from '../../../../public/logo/logo.png'
+
 
 const Footer = () => {
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,32 @@ const Footer = () => {
   return (
     <footer className="relative bg-gray-100 py-10 shadow-lg border-t-2 border-gray-400">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+
+         {/* Logo & Address */}
+         <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Image src={logo} alt="Logo" width={100} height={100} />
+            <div className='flex flex-col'>
+            <h3 className="text-xl font-bold text-[#4ADE80]"> Jonojivan Grocery</h3>
+            <div className="w-16 h-1 bg-purple-600 mb-4"></div>
+            </div>
+           
+          </div>
+          <p>Email: <a href="mailto:support@bringsmile.org" className="hover:underline">support@bringsmile.org</a></p>
+          <p>Tel: <a href="tel:+9195993 22679" className="hover:underline">+91 95993 22679</a></p>
+          <p>Singhi Kalan, PO- Ara, District- Bhojpur, Bihar, Pin- 802301.</p>
+          <div className="mt-10 sm:flex sm:items-center sm:space-x-8">
+                <a
+                  href="#"
+                  className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 focus:bg-orange-600 rounded-2xl"
+                  role="button"
+                >
+                  Start Shopping Now
+                </a>
+              </div>
+            </div>
+
+
         <motion.div
           className="space-y-4"
           initial={{ opacity: 0, y: 10 }}
@@ -86,49 +114,8 @@ const Footer = () => {
           </ul>
         </motion.div>
 
-        <motion.div
-          className="space-y-4"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <h3 className="text-2xl font-bold text-black text-center">Get 15% Off</h3>
-          <p className="text-sm text-black font-medium text-center">
-            Subscribe to receive the latest updates, offers, and more from JonoJivan Grocery!
-          </p>
-
-          <form className="space-y-4" onSubmit={handleSubscribe}>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Name"
-              className="w-full border border-black p-4 rounded-md focus:ring-2"
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full border border-black p-4 rounded-md focus:ring-2"
-              required
-            />
-            <button
-              type="submit"
-              className="w-full bg-purple-600 text-white p-3 rounded-md font-bold shadow-lg hover:bg-purple-700"
-              disabled={loading}
-            >
-              {loading ? 'Subscribing...' : 'Subscribe'}
-            </button>
-          </form>
-        </motion.div>
-      </div>
-
-      {/* Footer Banner Image */}
-      
+        
+      </div>      
 
       <div className="mt-10 text-center text-sm text-black">
         <p>
