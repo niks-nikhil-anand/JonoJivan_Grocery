@@ -6,6 +6,7 @@ import CategoriesSection from '@/components/frontend/ui/CategorySection'
 import HeroSection from '@/components/frontend/ui/HeroSection'
 import Marquee from '@/components/frontend/ui/Marquee'
 import WhoWeAre from '@/components/frontend/ui/WhoWeAre'
+import FruitsVegetablesUser from '@/components/users/ui/FruitsVegetablesUser'
 import ProductCardUser from '@/components/users/ui/ProductForSaleUser'
 import React from 'react'
 
@@ -13,7 +14,8 @@ const page = () => {
   return (
     <div>
     <HeroSection/>
-    
+    <Marquee />
+    <FruitsVegetablesUser/>
     <WhoWeAre/>
     <ProductCardUser/>
     <CategoriesSection/>
