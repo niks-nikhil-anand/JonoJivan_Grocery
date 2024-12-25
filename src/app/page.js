@@ -18,6 +18,8 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <Marquee />
+
       <ProductCardVegetables />
       <CategoriesSection />
       <WhoWeAre />
