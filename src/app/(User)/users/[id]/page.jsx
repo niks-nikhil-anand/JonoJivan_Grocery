@@ -7,7 +7,8 @@ import HeroSection from '@/components/frontend/ui/HeroSection'
 import Marquee from '@/components/frontend/ui/Marquee'
 import WhoWeAre from '@/components/frontend/ui/WhoWeAre'
 import FruitsVegetablesUser from '@/components/users/ui/FruitsVegetablesUser'
-import ProductCardUser from '@/components/users/ui/ProductForSaleUser'
+import LatestProductUser from '@/components/users/ui/LatestProductUser'
+import ProductCardUser from '@/components/users/ui/LatestProductUser'
 import React from 'react'
 
 const page = () => {
@@ -21,6 +22,7 @@ const page = () => {
     <CategoriesSection/>
     <Marquee/>
     <Banner1/>
+    <LatestProductUser/>
     <BannerText01/>
     <BannerText02/>
     <Banner2/>
