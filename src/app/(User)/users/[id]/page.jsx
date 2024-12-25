@@ -2,10 +2,10 @@ import Banner1 from '@/components/frontend/ui/(Banners)/Banner1'
 import Banner2 from '@/components/frontend/ui/(Banners)/Banner2'
 import BannerText01 from '@/components/frontend/ui/(Banners)/BannerText01'
 import BannerText02 from '@/components/frontend/ui/(Banners)/BannerText02'
-import CategoriesSection from '@/components/frontend/ui/CategorySection'
 import HeroSection from '@/components/frontend/ui/HeroSection'
 import Marquee from '@/components/frontend/ui/Marquee'
 import WhoWeAre from '@/components/frontend/ui/WhoWeAre'
+import CategorySectionUser from '@/components/users/ui/CategorySectionUser'
 import FruitsVegetablesUser from '@/components/users/ui/FruitsVegetablesUser'
 import LatestProductUser from '@/components/users/ui/LatestProductUser'
 import ProductCardUser from '@/components/users/ui/LatestProductUser'
@@ -17,7 +17,7 @@ const page = () => {
     <HeroSection/>
     <Marquee />
     <FruitsVegetablesUser/>
-    <CategoriesSection/>
+    <CategorySectionUser/>
     <WhoWeAre/>
     <ProductCardUser/>
     <Marquee/>
