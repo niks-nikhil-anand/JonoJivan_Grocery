@@ -10,7 +10,29 @@ const LatestProductUser = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [userId, setUserId] = useState(null);
+  
   const router = useRouter();
+
+
+   useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const response = await fetch("/api/users/userDetails/cookies");
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          setUserId(data._id);
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
+        }
+      };
+  
+      fetchUser();
+    }, []);
+
+    
 
   useEffect(() => {
     // Handle loading progress animation
