@@ -17,9 +17,9 @@ const page = () => {
     <HeroSection/>
     <Marquee />
     <FruitsVegetablesUser/>
+    <CategoriesSection/>
     <WhoWeAre/>
     <ProductCardUser/>
-    <CategoriesSection/>
     <Marquee/>
     <Banner1/>
     <LatestProductUser/>
