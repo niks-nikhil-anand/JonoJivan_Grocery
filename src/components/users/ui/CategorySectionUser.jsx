@@ -8,7 +8,28 @@ import { useRouter } from 'next/navigation';
 const CategorySectionUser = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
+  
   const router = useRouter();
+
+
+  // Fetch user details
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const response = await fetch("/api/users/userDetails/cookies");
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          setUserId(data._id);
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
+        }
+      };
+  
+      fetchUser();
+    }, []);
 
 
   useEffect(() => {
@@ -50,7 +71,7 @@ const CategorySectionUser = () => {
       whileHover={{
         boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.3)",
       }}
-      onClick={() => router.push(`/category/${category._id}`)}
+      onClick={() => router.push(`${userId}/category/${category._id}`)}
     >
       {/* Circular Image Container */}
       <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center mb-4 shadow-md">
