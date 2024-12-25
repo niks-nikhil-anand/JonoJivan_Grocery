@@ -13,6 +13,30 @@ const Page = () => {
   const [sortOption, setSortOption] = useState("priceAsc"); // Sorting option state
   const [filterPrice, setFilterPrice] = useState([0, 10000]); // Price range filter
   const router = useRouter();
+  const [userId, setUserId] = useState(null);
+
+
+
+   // Fetch user details
+      useEffect(() => {
+        const fetchUser = async () => {
+          try {
+            const response = await fetch("/api/users/userDetails/cookies");
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            setUserId(data._id);
+          } catch (error) {
+            console.error("Failed to fetch user details:", error);
+          }
+        };
+    
+        fetchUser();
+      }, []);
+  
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,8 +78,13 @@ const Page = () => {
   }, [currentPage, sortOption, filterPrice]);
 
   const handleCardClick = (id) => {
-    router.push(`/product/${id}`);
+    if (!userId) {
+      alert("User information is still being fetched. Please try again in a moment.");
+      return;
+    }
+    router.push(`/users/${userId}/product/${id}`);
   };
+  
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
