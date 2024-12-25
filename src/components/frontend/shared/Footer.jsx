@@ -48,8 +48,8 @@ const Footer = () => {
           <div className="flex items-center space-x-2">
             <Image src={logo} alt="Logo" width={100} height={100} />
             <div className='flex flex-col'>
-            <h3 className="text-xl font-bold text-[#4ADE80]"> Jonojivan Grocery</h3>
-            <div className="w-16 h-1 bg-purple-600 mb-4"></div>
+            <h3 className="text-xl font-bold text-black"> Jonojivan Grocery</h3>
+            <div className="w-16 h-1 bg-[#4ADE80] "></div>
             </div>
            
           </div>
@@ -75,7 +75,7 @@ const Footer = () => {
           transition={{ duration: 0.5 }}
         >
           <h3 className="text-lg font-bold text-orange-500">Useful Links</h3>
-          <div className="w-16 h-1 bg-purple-600 mb-4"></div>
+          <div className="w-16 h-1 bg-[#4ADE80] mb-2"></div>
           <ul className="space-y-2">
             {[
               { name: 'Shop', url: '/product/shopAllProducts' },
@@ -98,7 +98,7 @@ const Footer = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <h3 className="text-lg font-bold text-orange-500">Resources</h3>
-          <div className="w-16 h-1 bg-purple-600 mb-4"></div>
+          <div className="w-16 h-1 bg-[#4ADE80] mb-4"></div>
           <ul className="space-y-3">
             {[
               { name: 'Home', url: '/' },
@@ -118,13 +118,7 @@ const Footer = () => {
       </div>      
 
       <div className="mt-10 text-center text-sm text-black">
-        <p>
-          © 2024,{' '}
-          <a href="#" className="text-black underline">
-            JonoJivan Grocery
-          </a>
-          . All Rights Reserved.
-        </p>
+       
         <div className="mt-4 p-4 flex justify-center items-center flex-col">
           <div className="md:w-[50rem] w-[20rem] rounded-lg border border-gray-200 px-5 md:py-8 py-5">
             <p className="text-center">
@@ -139,6 +133,15 @@ const Footer = () => {
               prevent any disease. Always consult with a healthcare professional for specific
               dietary or health-related guidance.
             </p>
+          </div>
+          <div className='mt-5'>
+          <p>
+          © 2024,{' '}
+          <a href="#" className="text-black underline">
+            JonoJivan Grocery
+          </a>
+          . All Rights Reserved.
+        </p>
           </div>
         </div>
       </div>
