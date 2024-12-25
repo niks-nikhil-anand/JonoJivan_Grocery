@@ -402,9 +402,6 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-      <div className="absolute w-full md:bottom-[-2rem]  bottom-[-1.7rem] right-0 left-0 z-0">
-        <Image src={waveNav} alt="wave-navbar" />
-      </div>
     </nav>
   );
 };
