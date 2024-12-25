@@ -1,35 +1,24 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { FaEye, FaTrash } from 'react-icons/fa'; 
-
-import { AiOutlineClose } from 'react-icons/ai';
-
-
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const News = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedArticle, setSelectedArticle] = useState(null); // State to hold the selected article content
-  const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
   const articlesPerPage = 5;
   const router = useRouter();
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        console.log('Fetching articles...');
-        const response = await axios.get('/api/admin/dashboard/blog');
-        console.log('Articles fetched:', response.data);
+        const response = await axios.get("/api/admin/dashboard/blog");
         setArticles(response.data);
       } catch (error) {
-        console.error('Error fetching articles:', error);
+        console.error("Error fetching articles:", error);
       } finally {
         setLoading(false);
-        console.log('Loading state set to false');
       }
     };
 
@@ -42,138 +31,117 @@ const News = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleCardClick = (id) => {
-    console.log('Card clicked with ID:', id);
-    router.push(`/blog/${id}`);
-  };
-
-  const handleViewClick = async (id) => {
+  const handleView = async (id) => {
     try {
       const response = await axios.get(`/api/admin/dashboard/blog/${id}`);
-      setSelectedArticle(response.data);
-      setShowPopup(true);
+      alert(`Blog Title: ${response.data.title}`);
     } catch (error) {
-      console.error('Error fetching full blog content:', error);
+      console.error("Error fetching blog details:", error);
     }
   };
 
-  const handleDeleteClick = async (id) => {
+  const handleDelete = async (id) => {
     try {
-      const confirmed = confirm('Are you sure you want to delete this article?');
+      const confirmed = confirm("Are you sure you want to delete this article?");
       if (!confirmed) return;
 
       await axios.delete(`/api/admin/dashboard/blog/${id}`);
-      setArticles(articles.filter(article => article._id !== id));
+      setArticles(articles.filter((article) => article._id !== id));
     } catch (error) {
-      console.error('Error deleting article:', error);
+      console.error("Error deleting article:", error);
     }
   };
 
-  const closePopup = () => {
-    setShowPopup(false);
-    setSelectedArticle(null);
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+
+  const truncateWords = (text, wordLimit) => {
+    if (!text) return "";
+    const words = text.split(" ");
+    return words.length > wordLimit
+      ? words.slice(0, wordLimit).join(" ") + "..."
+      : text;
   };
 
   return (
-    <div className="flex flex-col mb-10 mt-5 px-10">
-      <h1 className="text-3xl font-bold mb-2 text-center underline"> ALL BLOGS</h1>
-      {loading ? (
-        <motion.div
-          className="flex justify-center items-center h-64"
-        >
-          <div className="loader"></div>
-        </motion.div>
-      ) : (
-        <>
-          <div className="space-y-4">
-            {currentArticles.map((article) => (
-              <motion.div
-                key={article._id}
-                className="flex bg-white rounded-lg shadow-md cursor-pointer p-4 relative"
-              >
-                <img
-                  src={article.featuredImage}
-                  alt={article.title}
-                  className="w-24 h-24 object-cover rounded-lg mr-4"
-                />
-                <div className="flex flex-col justify-between flex-grow">
-                  <h3 className="text-xl font-semibold mb-1">{article.title}</h3>
-                  <p className="text-gray-600 mb-1">{article.subtitle}</p>
-                  <div className="text-sm text-gray-500">
-                    By {article.author} in {article.category}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    Published on {new Date(article.createdAt).toLocaleDateString()}
-                  </div>
-                  <div className="flex justify-end space-x-2 absolute bottom-4 right-4">
-                    {/* View Button */}
+    <div className="w-full p-4 pr-[5rem] bg-gray-100 shadow-lg rounded-lg h-[80vh]">
+      <div className="overflow-x-auto overflow-y-auto max-h-[70vh] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+        <table className="border-collapse border border-gray-300 min-w-[1200px] text-sm">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-300 px-2 py-1 text-left">Featured Image</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Title</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Subtitle</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Content</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Category</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Author</th>
+              <th className="border border-gray-300 px-2 py-1 text-left">Created At</th>
+              <th className="border border-gray-300 px-2 py-1 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentArticles.map((blog) => (
+              <tr key={blog._id} className="hover:bg-gray-100">
+                <td className="border border-gray-300 px-2 py-1 text-center flex justify-center">
+                  <img
+                    src={blog.featuredImage}
+                    alt={blog.title}
+                    className="w-12 h-12 object-cover rounded-2xl"
+                  />
+                </td>
+                <td className="border border-gray-300 px-2 py-1 truncate">{blog.title}</td>
+                    <td className="border border-gray-300 px-2 py-1 truncate">
+                      {truncateWords(blog.subtitle, 10)}
+                    </td>
+                    <td
+                        className="border border-gray-300 px-2 py-1 truncate"
+                        dangerouslySetInnerHTML={{
+                          __html: truncateWords(blog.content, 10),
+                        }}
+                      ></td>
+                    <td className="border border-gray-300 px-2 py-1 truncate">{blog.category}</td>
+                    <td className="border border-gray-300 px-2 py-1 truncate">{blog.author}</td>
+                <td className="border border-gray-300 px-2 py-1 text-center">
+                  {new Date(blog.createdAt).toLocaleDateString()}
+                </td>
+                <td className="border border-gray-300 px-2 py-1 text-center">
+                  <div className="flex justify-center space-x-2">
                     <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleViewClick(article._id);
-                  }}
-                  className="bg-blue-500 text-white px-2 py-1 text-sm rounded-md shadow-md hover:bg-blue-600 flex items-center"
-                >
-                  <FaEye className="mr-1" /> {/* View icon */}
-                  View
-                </button>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteClick(article._id);
-                  }}
-                  className="bg-red-500 text-white px-2 py-1 text-sm rounded-md shadow-md hover:bg-red-600 flex items-center"
-                >
-                  <FaTrash className="mr-1" /> {/* Delete icon */}
-                  Delete
-                </button>
+                      onClick={() => handleView(blog._id)}
+                      className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleDelete(blog._id)}
+                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                    >
+                      Delete
+                    </button>
                   </div>
-                </div>
-              </motion.div>
+                </td>
+              </tr>
             ))}
-          </div>
-
-          {/* Pagination Controls */}
-          <div className="flex justify-center mt-6">
-            {Array.from({ length: Math.ceil(articles.length / articlesPerPage) }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => paginate(i + 1)}
-                className={`mx-1 px-3 py-1 border rounded ${
-                  currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-
-      {/* Popup for Full Blog Content */}
-      {showPopup && selectedArticle && (
-        <motion.div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full h-96 overflow-y-auto relative">
-            <h2 className="text-2xl font-bold mb-4">{selectedArticle.title}</h2>
-            <div
-              className="prose prose-sm md:prose-lg mx-auto"
-              dangerouslySetInnerHTML={{ __html: selectedArticle.content }}
-            />
-            <button
-              onClick={closePopup}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-            >
-              <AiOutlineClose size={24} /> {/* Close icon from React Icons */}
-            </button>
-          </div>
-        </motion.div>
-      )}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4 flex justify-center space-x-2">
+        {[...Array(Math.ceil(articles.length / articlesPerPage)).keys()].map((number) => (
+          <button
+            key={number}
+            className={`px-2 py-1 rounded-md text-xs ${
+              currentPage === number + 1
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => paginate(number + 1)}
+          >
+            {number + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
