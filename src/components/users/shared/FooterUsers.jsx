@@ -1,153 +1,141 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import Image from 'next/image';
+import logo from '../../../../public/logo/logo.png'
+import playstoreIcon from '../../../../public/icons/playstore.png';
+import appleStoreIcon from '../../../../public/icons/app-store.png';
+
+
 
 const Footer = () => {
-  const [userId, setUserId] = useState(null);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '' });
 
-  useEffect(() => {
-    // Fetch user details from the API
-    const fetchUser = async () => {
-      try {
-        const response = await fetch('/api/users/userDetails/cookies');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        console.log(data)
-        setUserId(data._id); // Assuming the API returns an object with the `_id` field
-      } catch (error) {
-        console.error('Failed to fetch user details:', error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const handleLinkClick = (link) => {
-    console.log('User ID:', userId); // Debugging line
-    if (userId) {
-      // Redirect to the user-specific route
-      router.push(`/users/${userId}${link}`);
-    } else {
-      console.log('Redirecting to default link:', link); // Debugging line
-      // Fallback to the default URL
-      router.push(link);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-  
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    // Implement subscription logic here
-    if (!name || !email) {
-      setError('Both fields are required!');
-      return;
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch('/api/admin/dashboard/newsLetter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast.success('Subscription successful!');
+        setFormData({ name: '', email: '' });
+      } else {
+        toast.error('Failed to subscribe. Please try again.');
+      }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
     }
-    // Reset error and handle the submission logic here
-    setError('');
-    console.log('Submitting:', { name, email });
-    // You can add the API call to subscribe the user here
+    setLoading(false);
   };
 
   return (
-    <footer className="bg-gray-50 py-10 shadow-lg">
+    <footer className="relative bg-gray-100 py-10 shadow-lg border-t-2 border-gray-400">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
-        <motion.div 
+
+      <div className="space-y-6">
+  {/* Logo and Brand Title */}
+  <div className="flex items-center space-x-3">
+    <Image src={logo} alt="JonoJivan Grocery Logo" width={80} height={80} />
+    <div className='flex flex-col'>
+    <h1 className="text-xl md:text-2xl font-bold text-black">JonoJivan Grocery</h1>
+    <div className="w-16 h-1 bg-[#4ADE80] mb-2"></div>
+    </div>
+   
+
+  </div>
+
+  {/* Description */}
+  <p className="text-gray-700">
+    Stay connected with us on social media and explore our platform for the latest updates, offers, and products!
+  </p>
+
+  {/* Mobile App Links */}
+  <div className="flex space-x-4 mt-6">
+    <button className="flex items-center px-2 py-3  bg-black text-white rounded-lg shadow hover:bg-gray-800 transition">
+      <Image src={playstoreIcon} alt="Google Play Store Icon" width={20} height={20} />
+      <span className="text-base font-medium">Google Play</span>
+    </button>
+    <button className="flex items-center space-x-2 px-4 py-3  bg-black text-white rounded-lg shadow hover:bg-gray-800 transition">
+      <Image src={appleStoreIcon} alt="Apple App Store Icon" width={20} height={20} />
+      <span className="text-base font-medium">App Store</span>
+    </button>
+  </div>
+</div>
+
+     <motion.div
           className="space-y-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <h3 className="text-lg font-bold text-orange-500">Useful Links</h3>
-          <div className="w-16 h-1 bg-purple-600 mb-4"></div>
+          <div className="w-16 h-1 bg-[#4ADE80] mb-2"></div>
           <ul className="space-y-2">
             {[
               { name: 'Shop', url: '/product/shopAllProducts' },
-              { name: 'ContactUs', url: '/ContactUs' },
+              { name: 'Contact', url: '/contactUs' },
               { name: 'Blog', url: '/blog' },
-              { name: 'About Us', url: '/AboutUs' },
-              { name: 'Feedback', url: '/feedback' }
+              { name: 'About Us', url: '/aboutUs' },
+              { name: 'Feedback', url: '/feedback' },
             ].map((link) => (
               <li key={link.name} className="hover:underline cursor-pointer">
-                <a href="#" onClick={(e) => { e.preventDefault(); handleLinkClick(link.url); }}>{link.name}</a>
+                <a href={link.url}>{link.name}</a>
               </li>
             ))}
           </ul>
         </motion.div>
 
-        {/* Resources */}
-        <motion.div 
+        <motion.div
           className="space-y-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <h3 className="text-lg font-bold text-orange-500">Resources</h3>
-          <div className="w-16 h-1 bg-purple-600 mb-4"></div>
+          <div className="w-16 h-1 bg-[#4ADE80] mb-4"></div>
           <ul className="space-y-3">
             {[
               { name: 'Home', url: '/' },
-              { name: 'Shipping and Return Policies', url: '/returnPolicy' },
-              { name: '60-Day Satisfaction Guarantee', url: '/guarantee' },
+              { name: 'Cancellation and Return Policies', url: '/returnPolicy' },
+              { name: 'Shipping And Delivery', url: '/shippingPolicy' },
               { name: 'Privacy Policy', url: '/privacyPolicy' },
               { name: 'Terms & Condition', url: '/termsAndConditions' },
             ].map((link) => (
               <li key={link.name} className="hover:underline cursor-pointer">
-                <a href="#" onClick={(e) => { e.preventDefault(); handleLinkClick(link.url); }}>{link.name}</a>
+                <a href={link.url}>{link.name}</a>
               </li>
             ))}
           </ul>
         </motion.div>
 
-        {/* Subscription Form */}
-        <motion.div 
-          className="space-y-4"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <h3 className="text-2xl font-bold text-black text-center">Get 15% Off</h3>
-          <p className="text-sm text-black font-medium text-center">Sign up to get 15% off your first order and other great promos, giveaways, and news!</p>
-          
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <input 
-              type="text" 
-              placeholder="Name" 
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border border-black p-4 rounded-md focus:ring-2"
-              required
-            />
-            <input 
-              type="email" 
-              placeholder="Email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-black p-4 rounded-md focus:ring-2"
-              required
-            />
-            {error && <p className="text-red-500">{error}</p>}
-            <button 
-              type="submit" 
-              className="w-full bg-purple-600 text-white p-3 rounded-md font-bold shadow-lg hover:bg-purple-700"
-            >
-              Subscribe
-            </button>
-          </form>
-        </motion.div>
-      </div>
+        
+      </div>      
+
       <div className="mt-10 text-center text-sm text-black">
-        <p>Copyright © 2024, <a href="#" className="text-black underline">BlushBelle Nutrition</a></p>
+       
         <div className="mt-4 p-4 flex justify-center items-center flex-col">
-          <div className='md:w-[50rem] w-[20rem] rounded-lg border border-gray-200 px-5 md:py-8 py-5'>
-            <p className='text-center'>50% OFF discount valid on Superfruit Max Gummies at BlushBelle.com. Discount not applicable on repeating subscription orders. Discount automatically applied at checkout. Offer valid until 11/15/24 at 11:59 PM MST. Offer may be modified or terminated at any time. Exclusions apply.</p>
-            <p className="mt-2 text-center">**These statements have not been evaluated by the Food and Drug Administration. These products are not intended to diagnose, treat, cure or prevent any disease.</p>
+          <div className='mt-5'>
+          <p>
+          © 2024,{' '}
+          <a href="#" className="text-black underline">
+            JonoJivan Grocery
+          </a>
+          . All Rights Reserved.
+        </p>
           </div>
         </div>
       </div>

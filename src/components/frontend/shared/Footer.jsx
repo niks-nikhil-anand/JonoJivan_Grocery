@@ -4,8 +4,6 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import logo from '../../../../public/logo/logo.png'
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGooglePlay, FaApple } from 'react-icons/fa';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import playstoreIcon from '../../../../public/icons/playstore.png';
 import appleStoreIcon from '../../../../public/icons/app-store.png';
 
@@ -64,14 +62,6 @@ const Footer = () => {
   <p className="text-gray-700">
     Stay connected with us on social media and explore our platform for the latest updates, offers, and products!
   </p>
-
-  {/* Social Media Links */}
-  <div className="flex space-x-4 text-2xl text-gray-600">
-    <FaInstagram className="hover:text-orange-500" aria-label="Instagram" />
-    <FaTwitter className="hover:text-blue-400" aria-label="Twitter" />
-    <FaFacebook className="hover:text-blue-600" aria-label="Facebook" />
-    <FaLinkedin className="hover:text-blue-700" aria-label="LinkedIn" />
-  </div>
 
   {/* Mobile App Links */}
   <div className="flex space-x-4 mt-6">
