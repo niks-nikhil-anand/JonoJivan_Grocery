@@ -51,8 +51,13 @@ const Footer = () => {
       <div className="space-y-6">
   {/* Logo and Brand Title */}
   <div className="flex items-center space-x-3">
-    <Image src={logo} alt="JonoJivan Grocery Logo" width={50} height={50} />
-    <h1 className="text-2xl font-bold text-black">JonoJivan Grocery</h1>
+    <Image src={logo} alt="JonoJivan Grocery Logo" width={80} height={80} />
+    <div className='flex flex-col'>
+    <h1 className="text-xl md:text-2xl font-bold text-black">JonoJivan Grocery</h1>
+    <div className="w-16 h-1 bg-[#4ADE80] mb-2"></div>
+    </div>
+   
+
   </div>
 
   {/* Description */}
