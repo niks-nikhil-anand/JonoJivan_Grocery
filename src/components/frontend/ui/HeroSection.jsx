@@ -73,11 +73,11 @@ const HeroSection = () => {
         />
       </div>
       {/* Mobile View - bg_image Centered and Bigger */}
-      <div className="absolute top-0 right-4 transform -translate-x-1/2 z-10 sm:block md:hidden">
+      <div className="absolute top-0 right-0 h-auto w-[50%]  object-contain z-10 sm:block md:hidden">
         <Image
           src={bg_image}
           alt="Grocery"
-          className="w-[80%] h-auto object-contain"
+          className=""
         />
       </div>
     </div>
