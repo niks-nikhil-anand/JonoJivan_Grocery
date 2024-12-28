@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import axios from "axios"; 
+import axios from "axios";
 import { MdArrowBackIos } from "react-icons/md";
 import Loader from "@/components/loader/loader";
 import { useRouter } from "next/navigation";
-import { FaMoneyBillWave, FaCreditCard } from "react-icons/fa";
-import { FaMoneyBillWave } from "react-icons/fa";
+import { FaMoneyBillWave, FaCreditCard } from "react-icons/fa"; 
+
 
 
 const CheckoutPage = () => {
