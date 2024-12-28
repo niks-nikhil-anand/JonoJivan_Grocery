@@ -192,6 +192,7 @@ const CheckoutPage = () => {
   
             // Prepare data for placeOnlineOrder API call
             const checkoutData = {
+              userId,
               cartId,
               addressId,
               paymentMethod: "Online",
@@ -210,7 +211,7 @@ const CheckoutPage = () => {
   
             // Call placeOnlineOrder API
             const placeOrderResponse = await fetch(
-              "/api/pendingOrder/placeOnlineOrder",
+              `/api/users/pendingOrder/${userId}/placeOnlineOrder`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
