@@ -1,112 +1,94 @@
 import connectDB from "@/lib/dbConnect";
 import cartModels from "@/models/cartModels";
 import orderModels from "@/models/orderModels";
-import pendingOrder from "@/models/pendingOrder";
-import userModels from "@/models/userModels";
 import addressModels from "@/models/addressModels";
+import userModels from "@/models/userModels";
 import { NextResponse } from "next/server";
 
-export const POST = async (req, { params }) => {
-    try {
-        console.log("Connecting to the database...");
-        await connectDB();
+export const POST = async (req) => {
+  try {
+    console.log("Connecting to the database...");
+    await connectDB();
 
-        const { id } = params; // Use id as user ID from params
-        console.log('User ID from params:', id);
+    // Parse JSON from the request
+    const body = await req.json();
+    const {
+      userId, // Pass userId directly from the request body or headers
+      cartId,
+      addressId,
+      paymentMethod,
+      contactInfo,
+      products,
+      totalAmount,
+    } = body;
 
-        const { 
-            orderId, 
-            cartId, 
-            addressId, 
-            paymentMethod, 
-            rememberMe, 
-            contactInfo, 
-            products, 
-            totalAmount 
-        } = await req.json();
+    console.log("Received request data:", {
+      userId,
+      cartId,
+      addressId,
+      paymentMethod,
+      contactInfo,
+      products,
+      totalAmount,
+    });
 
-        console.log("Request data:", {
-            orderId,
-            cartId,
-            addressId,
-            paymentMethod,
-            rememberMe,
-            contactInfo,
-            products,
-            totalAmount
-        });
-
-        // Fetch the user by ID
-        let user = await userModels.findById(id);
-        console.log("Found user:", user);
-
-        if (!user) {
-            return NextResponse.json({ msg: "User not found" }, { status: 404 });
-        }
-
-        // Fetch the existing cart by cartId
-        let cart = await cartModels.findById(cartId);
-        if (cart) {
-            console.log("Fetched cart:", cart);
-        } else {
-            // Create a new cart if it doesn't exist
-            console.log("Creating a new cart...");
-            cart = new cartModels({ 
-                userId: user._id,
-                items: products.map(product => ({
-                    productId: product.productId,
-                    quantity: product.quantity,
-                    price: product.price,
-                })) 
-            });
-            await cart.save();
-            console.log("New cart created:", cart);
-        }
-
-        // Fetch the existing address by addressId
-        let address = await addressModels.findById(addressId);
-        if (!address) {
-            console.log("Creating a new address...");
-            address = new addressModels({
-                firstName: contactInfo.firstName,
-                lastName: contactInfo.lastName,
-                address: contactInfo.address,
-                apartment: contactInfo.apartment,
-                email: contactInfo.email,
-                mobileNumber: contactInfo.mobileNumber,
-                state: contactInfo.state,
-                city: contactInfo.city,
-                landmark: contactInfo.landmark,
-                typeOfAddress: contactInfo.typeOfAddress || 'Home',
-                User: user._id,
-            });
-            await address.save();
-            console.log("New address created:", address);
-        } else {
-            console.log("Fetched existing address:", address);
-        }
-
-        // Create the new order
-        console.log("Creating a new order...");
-        const newOrder = new orderModels({
-            user: user._id,
-            contactInfo,
-            totalAmount,
-            cart: cart._id,
-            address: address._id,
-            paymentMethod,
-        });
-        await newOrder.save();
-        console.log("New order created:", newOrder);
-
-        // Delete the specific pending order associated with orderId
-        await pendingOrder.deleteOne({ _id: orderId });
-        console.log("Deleted specific pending order with orderId:", orderId);
-
-        return NextResponse.json({ msg: "Order processed successfully", order: newOrder });
-
-    } catch (error) {
-        console.error('Error processing order:', error);
-        return NextResponse.json({ msg: "Error processing order", error: error.message || error }, { status: 500 });
+    // Validate required fields
+    if (!userId || !cartId || !addressId || !paymentMethod || !contactInfo || !products || !totalAmount) {
+      return NextResponse.json(
+        { msg: "Please provide all required fields." },
+        { status: 400 }
+      );
     }
+
+    // Fetch the user
+    const user = await userModels.findById(userId);
+    if (!user) {
+      return NextResponse.json({ msg: "User not found." }, { status: 404 });
+    }
+    console.log("User found:", user);
+
+    // Fetch the cart
+    const cart = await cartModels.findById(cartId);
+    if (!cart) {
+      return NextResponse.json(
+        { msg: "Cart not found. Please ensure the cartId is valid." },
+        { status: 404 }
+      );
+    }
+    console.log("Cart found:", cart);
+
+    // Fetch the address
+    const address = await addressModels.findById(addressId);
+    if (!address) {
+      return NextResponse.json(
+        { msg: "Address not found. Please ensure the addressId is valid." },
+        { status: 404 }
+      );
+    }
+    console.log("Address found:", address);
+
+    // Create a new order
+    const newOrder = new orderModels({
+      user: user._id,
+      contactInfo,
+      totalAmount,
+      cart: cart._id,
+      address: address._id,
+      paymentMethod,
+      paymentStatus: "Pending", // Update as needed
+    });
+    await newOrder.save();
+    console.log("New order created:", newOrder);
+
+    return NextResponse.json(
+      { msg: "Order created successfully.", order: newOrder },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Error processing order:", error);
+    return NextResponse.json(
+      { msg: "Error processing order", error: error.message || error },
+      { status: 500 }
+    );
+  }
 };

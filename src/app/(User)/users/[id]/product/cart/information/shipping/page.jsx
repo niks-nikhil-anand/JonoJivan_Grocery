@@ -1,38 +1,38 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import axios from "axios"; 
+import axios from "axios";
 import { MdArrowBackIos } from "react-icons/md";
 import Loader from "@/components/loader/loader";
 import { useRouter } from "next/navigation";
 import { FaMoneyBillWave, FaCreditCard } from "react-icons/fa";
-import { FaMoneyBillWave } from "react-icons/fa";
 
 
 const CheckoutPage = () => {
   const router = useRouter();
   const [cart, setCart] = useState([]);
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [placingOrder, setPlacingOrder] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery"); // Change this line
+  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [rememberMe, setRememberMe] = useState(false);
   const [contactInfo, setContactInfo] = useState({
     email: "",
     mobileNumber: "",
     address: "",
-    name:""
+    name: ""
   });
+  const [orderId, setOrderId] = useState(null);
   const [cartId, setCartId] = useState(null);
   const [addressId, setAddressId] = useState(null);
+  const [userId, setUserId] = useState(null); // Add userId state
 
   useEffect(() => {
     const fetchOrderAndAddress = async () => {
       try {
         console.log("Fetching decoded token...");
-        const decodedTokenResponse = await axios.get("/api/pendingOrder/checkout/cookies");
+        const decodedTokenResponse = await axios.get("/api/users/pendingOrder/cookies");
         const { cartId, addressId } = decodedTokenResponse.data;
-  
         console.log("Decoded token response:", decodedTokenResponse.data);
         console.log("Cart ID:", cartId, "Address ID:", addressId);
   
@@ -65,31 +65,45 @@ const CheckoutPage = () => {
   
     fetchOrderAndAddress();
   }, [router]);
-  
 
   useEffect(() => {
-    const fetchCartFromLocalStorage = () => {
-      const cartData = JSON.parse(localStorage.getItem("cart")); 
-      if (cartData) {
-        setCart(cartData);
+    const urlPath = window.location.pathname;
+    const extractedUserId = urlPath.split('/')[2];
+    setUserId(extractedUserId); // Save userId in state
+
+    const fetchCart = async () => {
+      if (extractedUserId) {
+        try {
+          const response = await axios.get(`/api/users/cart/${extractedUserId}`);
+          const fetchedCart = response.data.items;
+          setCart(fetchedCart);
+        } catch (error) {
+          console.error('Error fetching cart:', error);
+        }
       }
     };
-    fetchCartFromLocalStorage();
+
+    fetchCart();
   }, []);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
+      if (cart.length === 0) return;
       setLoading(true);
       try {
         const productDetails = await Promise.all(
           cart.map(async (item) => {
-            const response = await axios.get(`/api/admin/dashboard/product/${item.id}`);
-            return { ...response.data, quantity: item.quantity }; 
+            if (!item.productId) {
+              console.warn('Missing productId in cart item:', item);
+              return null;
+            }
+            const response = await axios.get(`/api/admin/dashboard/product/${item.productId}`);
+            return { ...response.data, quantity: item.quantity || 1 };
           })
         );
-        setProducts(productDetails);
+        setProducts(productDetails.filter(Boolean));
       } catch (error) {
-        console.error("Error fetching product details:", error);
+        console.error('Error fetching product details:', error);
       } finally {
         setLoading(false);
       }
@@ -112,9 +126,7 @@ const CheckoutPage = () => {
 
   if (loading) {
     return <Loader />;
-    
   }
-
 
 
   const initiateRazorpayPayment = async () => {
@@ -244,19 +256,20 @@ const CheckoutPage = () => {
     }
   };
 
-  
-  
-  
 
 
 
   const handlePlaceOrder = async () => {
     if (!cartId || !addressId) {
-      console.error("Order ID, Cart ID, or Address ID missing.");
+      console.error("Cart ID or Address ID is missing.");
       return;
     }
-    setPlacingOrder(true); // Start placing order
+  
+    setPlacingOrder(true); // Indicate that the order is being placed
+  
+    // Prepare checkout data
     const checkoutData = {
+      userId,
       cartId,
       addressId,
       paymentMethod,
@@ -271,33 +284,36 @@ const CheckoutPage = () => {
   
     try {
       if (paymentMethod === "Cash on Delivery") {
-        // Call COD API
-        const response = await axios.post("/api/pendingOrder/placeCodOrder", checkoutData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        // Place order for Cash on Delivery
+        const response = await axios.post(
+          `/api/users/pendingOrder/${userId}/placeCodOrder`,
+          checkoutData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }
+        );
   
-        if (response.status === 200) {
+        if (response.status === 201) {
+          console.log("Order placed successfully with Cash on Delivery.");
           router.push(`/product/cart/information/shipping/${cartId}/success`);
+        } else {
+          console.error("Failed to place Cash on Delivery order:", response.data);
         }
       } else if (paymentMethod === "Online Payment") {
-        // Call Razorpay initiation method
+        // Initiate Razorpay payment
+        console.log("Initiating online payment...");
         await initiateRazorpayPayment(checkoutData);
-        
-
+      } else {
+        console.error("Unsupported payment method:", paymentMethod);
       }
     } catch (error) {
-      console.error("Error submitting checkout:", error);
+      console.error("Error submitting checkout:", error.response?.data || error.message);
     } finally {
       setPlacingOrder(false); // Reset placing order state
     }
   };
-  
-
-
-
-
   
 
   return (

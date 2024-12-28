@@ -145,6 +145,8 @@ const CheckoutPage = () => {
       // Handle successful checkout
       if (checkoutResponse.status === 200) {
         console.log("Checkout successful!", checkoutResponse.data);
+        console.log("Checkout successful! Response data:", checkoutResponse.data);
+        router.push("information/shipping"); // Absolute path
         // Handle navigation or any additional logic
       } else {
         console.error("Checkout failed with status:", checkoutResponse.status);

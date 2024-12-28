@@ -52,13 +52,6 @@ const ProductDetail = () => {
               });
       }
   }, []);
-
-
-
- 
-
-
-
   const handleAddToCart = async () => {
       const cartData = {
           id: idFromURL,
@@ -228,8 +221,6 @@ const ProductDetail = () => {
 
 
 </div>
-
-
 {/* Review Section */}
 <div className=" p-6 bg-gray-100 w-full h-full">
   <ReviewProductPage />
