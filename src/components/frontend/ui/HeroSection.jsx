@@ -1,51 +1,78 @@
+"use client"
 import React from 'react';
+import Image from 'next/image';
+import grocery from '../../../../public/heroSection/grocery.png';
+import bg_image from '../../../../public/heroSection/bg_image.png';
+import Rectangle from '../../../../public/heroSection/Rectangle.jpg';
+import vegtable from '../../../../public/heroSection/vegtable.png';
+import { motion } from 'framer-motion';
 
 const HeroSection = () => {
+  const sentence = "Buy your groceries and have it delivered to your doorstep with ease.";
+
   return (
-    <div className="bg-gradient-to-b from-green-50 to-green-100">
-      <section className="py-10 sm:py-16 lg:py-24">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
-            <div>
-              <h1 className="text-2xl font-bold text-black sm:text-4xl lg:text-5xl">
-                Fresh Groceries Delivered to Your Doorstep
-                <div className="relative inline-flex">
-                  <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-                  <h1 className="relative text-2xl font-bold text-black sm:text-2xl lg:text-5xl">
-                    JonoJivan Grocery.
-                  </h1>
-                </div>
-              </h1>
+    <div className="relative h-screen w-full flex items-center justify-center">
+      {/* Rectangle Image as Background */}
+      <div className="absolute top-0 left-0 w-full h-full z-0">
+        <Image
+          src={Rectangle}
+          alt="Rectangle Background"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-              <p className="mt-8 text-base text-black sm:text-xl">
-                Experience the convenience of fresh groceries, delivered to
-                your doorstep. We offer a wide range of quality products to
-                ensure your kitchen is always stocked with the best. From daily
-                essentials to premium items, we have everything you need for
-                your grocery shopping.
-              </p>
-
-              <div className="mt-10 sm:flex sm:items-center sm:space-x-8">
-                <a
-                  href="#"
-                  className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 focus:bg-orange-600 rounded-2xl"
-                  role="button"
-                >
-                  Start Shopping Now
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <img
-                className="w-full"
-                 src="/frontend/slider/hero-img-1.webp"
-                alt="Hero Image"
-              />
-            </div>
-          </div>
+      {/* Circular Arcs */}
+      <div className="absolute w-full h-full flex items-center justify-center">
+        <div className="relative w-[400px] h-[400px] md:w-[500px] md:h-[500px]">
+          <div className="absolute w-full h-full border-[2px] border-white rounded-full" />
+          <div className="absolute w-full h-full border-[2px] border-orange-400 rounded-full -top-4 -left-4" />
         </div>
-      </section>
+      </div>
+      
+
+      {/* Text Content with Typing Effect */}
+      <div className="absolute top-1/3 left-10 z-10 w-4/5 md:w-1/2 lg:w-1/3">
+        <motion.h1
+          className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          {sentence.split('').map((char, index) => (
+            <motion.span
+              key={index}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                delay: index * 0.05,
+                type: 'spring',
+                stiffness: 300,
+                damping: 30,
+              }}
+            >
+              {char}
+            </motion.span>
+          ))}
+        </motion.h1>
+      </div>
+
+      {/* Resized Grocery Image */}
+      <div className="absolute bottom-0 right-10 z-10">
+        <Image
+          src={grocery}
+          alt="Grocery"
+          className="w-2/5 h-auto object-contain sm:w-3/5 md:w-2/4 lg:w-2/5 xl:w-1/4"
+        />
+      </div>
+
+      {/* Large bg_image */}
+      <div className="absolute bottom-30 right-5 z-10 hidden sm:block">
+        <Image
+          src={bg_image}
+          alt="Grocery"
+          className="w-[400px] h-auto object-contain"
+          />
+      </div>
     </div>
   );
 };

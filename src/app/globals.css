@@ -346,3 +346,16 @@
 
   /*  END of Footer*/
 }
+
+/* Add typing cursor effect */
+.cursor-blink {
+  display: inline-block;
+  animation: blink 0.75s step-end infinite;
+}
+
+/* Blinking effect for cursor */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

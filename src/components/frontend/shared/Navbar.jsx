@@ -10,9 +10,13 @@ import logo from "../../../../public/logo/logo.png";
 const Navbar = () => {
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
 
   const toggleShopDropdown = () => setIsShopOpen((prev) => !prev);
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+  const toggleSearchBar = () => setIsSearchOpen((prev) => !prev);
+
 
   return (
     <nav className="bg-white shadow-md w-full md:py-3 px-6 md:px-12 relative z-50">
@@ -41,6 +45,27 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
+
+      {/* Search Bar */}
+      {isSearchOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full bg-gray-100 p-4 flex justify-center items-center space-x-4 mt-4"
+        >
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full md:w-3/4 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          <button
+            onClick={toggleSearchBar}
+            className="p-2 bg-red-500 text-white rounded-md"
+          >
+            Close
+          </button>
+        </motion.div>
+      )}
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
