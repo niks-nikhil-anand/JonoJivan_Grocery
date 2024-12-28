@@ -5,13 +5,9 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Loader from '@/components/loader/loader';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import { FaRegArrowAltCircleRight , FaRegArrowAltCircleLeft  } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { useRouter } from 'next/navigation';
 import ReviewProductPage from '@/components/frontend/ui/ReviewProductPage';
-
-
-
 
 
 const ProductDetail = () => {
@@ -42,6 +38,7 @@ const ProductDetail = () => {
             axios.get(`/api/admin/dashboard/product/${id}`)
                 .then(response => {
                     clearInterval(interval);
+                    console.log(response.data);
                     setProduct(response.data);
                     setLoading(false);
                 })
@@ -139,155 +136,138 @@ const ProductDetail = () => {
 
     const currentImage = images[currentImageIndex];
 
+    const discountPercentage = Math.round(
+      ((product.originalPrice - product.salePrice) / product.originalPrice) * 100
+    );
+  
+
 
     
 
     return (
       <div>
-      <motion.div 
-            className="flex flex-col lg:flex-row  p-4 sm:p-6 bg-[#e0d2ff] w-full h-full mt-5"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
->
-      {/* Product Images */}
-      <div className="w-full md:w-[49%] h-full flex flex-col items-center ">
-        {/* Preview Image */}
-        <div className="w-full md:w-[30rem] h-[20rem] md:h-[40rem] flex justify-center items-center overflow-hidden mb-4  rounded-lg relative">
-          <img
-            src={currentImage}
-            alt={name}
-            className="object-contain w-full h-full cursor-pointer"
-            
-            onClick={toggleFullScreen} // Open full-screen on click
-            
-          />
-        </div>
-
-        {/* Manual Image Slider Controls */}
-                  <div className="flex justify-between w-full md:hidden absolute top-1/2 transform -translate-y-1/2 left-0 right-0">
-          <button onClick={prevImage} className="p-2 rounded-l text-black text-2xl">
-            <FaRegArrowAltCircleLeft />
-          </button>
-          <button onClick={nextImage} className="p-2 rounded-l text-black text-2xl">
-            <FaRegArrowAltCircleRight />
-          </button>
-        </div>
-
-
-        {/* Thumbnail Images (Optional) */}
-        <div className="md:flex gap-2 overflow-x-auto w-full hidden">
-          {images.length > 0 ? (
-            images.map((image, index) => (
-              <div key={index} className="w-[5rem] h-[5rem] sm:w-[6rem] sm:h-[6rem] overflow-hidden rounded-lg shadow-lg cursor-pointer">
-                <img
-                  src={image}
-                  alt={`Product Image ${index + 1}`}
-                  className="w-full h-full object-cover rounded"
-                  onClick={() => setCurrentImageIndex(index)}
-                />
-              </div>
-            ))
-          ) : (
-            <div className="col-span-5 flex items-center justify-center text-gray-500">
-              No images available
-            </div>
-          )}
-        </div>
-      </div>
-
-
-{/* Product Details */}
-<div className="w-full max-w-lg md:max-w-xl lg:max-w-xl bg-white rounded-3xl px-6 sm:px-10 py-10 ">
-<motion.div 
-  className="flex flex-col justify-start mb-2"
-  initial={{ opacity: 0, y: 50 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
->
-  <motion.h1 
-    className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4"
-    initial={{ opacity: 0, x: -50 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    {name}
-  </motion.h1>
-
-  <div className="flex items-center mb-2  bg-white rounded-3xl">
-    <span className="text-green-500 text-lg font-bold">★ ★ ★ ★ ★</span>
-    <span className="text-gray-500 ml-2">{ratings.numberOfRatings} Reviews</span>
-  </div>
-  <h1 className="text-2xl sm:text-3xl font-bold mb-4">
-    ₹{salePrice || originalPrice}
-  </h1>
-
-  <div className="flex flex-col sm:flex-row justify-start  gap-4 mb-4">
-    <span className="text-gray-700">Quantity</span>
-    <div className="flex items-center border rounded-3xl py-3 px-5 w-full sm:w-1/4 justify-between">
-      <button className="px-3 py-1" onClick={decreaseQuantity}>-</button>
-      <input type="number" className="w-12 text-center" value={quantity} readOnly />
-      <button className="px-3 py-1" onClick={increaseQuantity}>+</button>
-    </div>
-  </div>
-
-  
-</motion.div>
-
-{/* Action Buttons */}
-<motion.div 
-  className="flex flex-col gap-4 w-full"
-  initial={{ opacity: 0, y: 50 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
->
-  <motion.button 
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className="px-4 py-3 bg-[#6a0dad] text-white rounded-full shadow-lg hover:bg-[#4b0082] transition text-sm sm:text-base"
-    onClick={handleAddToCart} 
-  >
-    {addedToCart ? 'Go to Cart' : 'Add to Cart'}
-  </motion.button>
-</motion.div>
-</div>
-
-</motion.div>
-<div>
-{product && product.productHighlights && (
-<ProductHighlights highlights={product.productHighlights} />
-)}
-
-</div>
-
-
-<div className="flex flex-col md:flex-row items-center p-4 md:p-8 border-t-2 border-gray-300 bg-[#e0d2ff]">
-  <div className="flex w-full flex-col md:flex-row justify-between">
-    {/* Image Section */}
-    <div className="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
-      <Image
-        src={featuredImage}
-        alt="Banner Image"
-        className="w-full h-[20rem] md:h-[30rem] object-cover rounded-xl"
-        width={500}
-        height={300}
+      <div className="flex flex-col lg:flex-row p-6 bg-gray-100 w-full h-full mt-5 gap-6">
+  {/* Product Images */}
+  <div className="w-full lg:w-1/3 flex flex-col items-center gap-4">
+    {/* Main Product Image */}
+    <div className="w-full h-[18rem] lg:h-[28rem] bg-white flex justify-center items-center rounded-lg border shadow-md">
+      <img
+        src={currentImage}
+        alt={name}
+        className="object-contain w-full h-full cursor-pointer"
+        onClick={toggleFullScreen}
       />
     </div>
 
-    {/* Text Section */}
-    <div className="flex flex-col justify-start w-full md:w-1/2">
-      <h1 className="text-xl md:text-3xl lg:text-4xl text-[#D07021] mb-4">
-        {name}
-      </h1>
-      <p className="text-black-100 text-base md:text-lg lg:text-xl leading-relaxed">
-        {description}
+    {/* Thumbnails */}
+    <div className="flex flex-wrap gap-2">
+      {images.map((image, index) => (
+        <div
+          key={index}
+          className={`w-16 h-16 border rounded-md p-1 bg-white shadow-sm ${
+            currentImageIndex === index ? 'border-purple-600' : ''
+          }`}
+        >
+          <img
+            src={image}
+            alt={`Thumbnail ${index + 1}`}
+            className="w-full h-full object-contain cursor-pointer"
+            onClick={() => setCurrentImageIndex(index)}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* Product Details */}
+  <div className="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-lg flex flex-col gap-6">
+    {/* Title and Availability */}
+    <div className="flex justify-between items-center">
+      <h1 className="text-xl lg:text-2xl font-bold text-gray-800">{name}</h1>
+      <span className="text-green-600 font-medium">
+      {product.stock > 0 ? "In Stock" : "Out of Stock"}
+      </span>
+    </div>
+
+    {/* Ratings */}
+    <div className="flex items-center">
+      <span className="text-yellow-400 text-lg">★ ★ ★ ★ ★</span>
+      
+    </div>
+
+    {/* Price */}
+    <div className="flex items-center gap-4">
+      <h2 className="text-2xl lg:text-3xl font-bold text-purple-600">₹{salePrice}</h2>
+      <span className="line-through text-gray-400 text-lg">₹{originalPrice}</span>
+      <span className="text-sm text-green-500">
+      {discountPercentage}% Off
+      </span>
+    </div>
+
+    
+
+    {/* Quantity Selector */}
+    <div className="flex items-center gap-4">
+      <span className="font-medium text-gray-600">Quantity:</span>
+      <div className="flex items-center border rounded-full px-3 py-2 bg-gray-100">
+        <button
+          className="px-3 py-1 text-gray-600 hover:bg-gray-200 rounded-full"
+          onClick={decreaseQuantity}
+        >
+          -
+        </button>
+        <input
+          type="number"
+          className="w-10 text-center bg-transparent border-none focus:outline-none text-gray-800"
+          value={quantity}
+          readOnly
+        />
+        <button
+          className="px-3 py-1 text-gray-600 hover:bg-gray-200 rounded-full"
+          onClick={increaseQuantity}
+        >
+          +
+        </button>
+      </div>
+    </div>
+
+    {/* Add to Cart Button */}
+    <div>
+      <button
+        className="w-full bg-purple-600 text-white py-3 rounded-full shadow-md hover:bg-purple-700 transition"
+        onClick={handleAddToCart}
+      >
+        Add to Cart
+      </button>
+    </div>
+
+    {/* Additional Info */}
+    <div className="text-gray-700 space-y-2">
+      <p className="text-sm">
+      {description}
       </p>
+      <div className="flex items-center gap-2">
+        <span className="font-medium">Weight:</span>
+        <span className="text-gray-600">{product.weight.value}{product.weight.unit}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="font-medium">Tag:</span>
+        
+        <span className="text-gray-600">Healthy, Chinese Cabbage</span>
+
+      </div>
     </div>
   </div>
 </div>
 
+<div>
+
+
+</div>
+
+
 {/* Review Section */}
-<div className=" md:mt-0 p-4 md:p-8 border-t-2 border-gray-300 bg-[#e0d2ff]">
+<div className=" p-6 bg-gray-100 w-full h-full">
     <ReviewProductPage />
   </div>
 
@@ -318,73 +298,6 @@ const ProductDetail = () => {
 };
 
 
-// Place these components outside of ProductDetail to avoid conditional rendering issues
-const ProductHighlights = ({ highlights }) => (
-<div className="flex flex-col items-center justify-center min-h-[75vh] bg-white p-6 sm:p-10">
-  <motion.h2
-    className="text-xl sm:text-2xl font-semibold text-orange-600 mb-6 sm:mb-8"
-    initial={{ opacity: 0, y: -50 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-  >
-    Product Highlights
-  </motion.h2>
-  <div className="flex flex-wrap justify-center gap-6 sm:gap-8 lg:gap-10">
-    {highlights.map((highlight, index) => (
-      <motion.div
-        key={highlight.id}
-        className="flex flex-col items-center max-w-[90%] sm:max-w-xs text-center mt-4 sm:mt-5"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: index * 0.2 }}
-      >
-        <img
-          src={highlight.icon}
-          alt={highlight.icon}
-          className="h-16 w-16 sm:h-20 sm:w-20 mx-auto mb-3 sm:mb-4 rounded-full"
-        />
-        <h3 className="text-base sm:text-lg font-bold text-orange-600 mb-1 sm:mb-2">
-          {highlight.title}
-        </h3>
-        <p className="text-sm sm:text-base text-gray-600">{highlight.description}</p>
-      </motion.div>
-    ))}
-  </div>
-</div>
-);
-
-const FeaturedIngredients = ({ ingredients }) => (
-<div className="p-6 sm:p-10 bg-white">
-  <h2 className="text-center text-2xl sm:text-3xl font-semibold text-orange-600 mb-6 sm:mb-10">
-    Featured Ingredients
-  </h2>
-  <div className="flex justify-center items-start flex-wrap gap-5 sm:space-x-5">
-    {ingredients.map((ingredient, index) => (
-      <motion.div
-        key={index}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="bg-green-100 rounded-xl p-4 sm:p-6 shadow-md w-full sm:w-[45%] lg:w-[20%] mt-5"
-      >
-        <img
-          src={ingredient.image}
-          alt={ingredient.name}
-          className="h-16 w-16 sm:h-20 sm:w-20 mx-auto mb-3 sm:mb-4 rounded-full"
-        />
-        <h3 className="text-orange-600 text-center font-semibold text-base sm:text-lg mb-1 sm:mb-2">
-          {ingredient.name}
-        </h3>
-        <p className="text-center text-sm sm:text-base text-gray-700 mb-2">
-          {ingredient.description}
-        </p>
-        <p className="text-center font-semibold text-gray-800">
-          {ingredient.weightInGram}mg
-        </p>
-      </motion.div>
-    ))}
-  </div>
-</div>
-);
 
 
 export default ProductDetail;

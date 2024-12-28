@@ -65,11 +65,11 @@ const HeroSection = () => {
       </div>
 
       {/* Background Image (Mobile Centered and Larger) */}
-      <div className="absolute bottom-30 right-5 z-10 hidden sm:block">
+      <div className="absolute bottom-50 right-5 z-10 hidden sm:block">
         <Image
           src={bg_image}
           alt="Grocery"
-          className="w-[400px] h-auto object-contain sm:hidden md:w-[60%] lg:w-[400px] xl:w-[450px]"
+          className=""
         />
       </div>
       {/* Mobile View - bg_image Centered and Bigger */}

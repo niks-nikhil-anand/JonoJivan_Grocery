@@ -14,6 +14,7 @@ export const GET = async (request, { params }) => {
     await connectDB();
 
     const product = await productModels.findById(id);
+    console.log(product)
     
     if (!product) {
       return NextResponse.json({ msg: "Product not found" }, { status: 404 });
