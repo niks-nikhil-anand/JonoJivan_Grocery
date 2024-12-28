@@ -29,7 +29,6 @@ const HeroSection = () => {
         </div>
       </div>
       
-
       {/* Text Content with Typing Effect */}
       <div className="absolute top-1/3 left-10 z-10 w-4/5 md:w-1/2 lg:w-1/3">
         <motion.h1
@@ -65,13 +64,21 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* Large bg_image */}
+      {/* Background Image (Mobile Centered and Larger) */}
       <div className="absolute bottom-30 right-5 z-10 hidden sm:block">
         <Image
           src={bg_image}
           alt="Grocery"
-          className="w-[400px] h-auto object-contain"
-          />
+          className="w-[400px] h-auto object-contain sm:hidden md:w-[60%] lg:w-[400px] xl:w-[450px]"
+        />
+      </div>
+      {/* Mobile View - bg_image Centered and Bigger */}
+      <div className="absolute top-0 right-4 transform -translate-x-1/2 z-10 sm:block md:hidden">
+        <Image
+          src={bg_image}
+          alt="Grocery"
+          className="w-[80%] h-auto object-contain"
+        />
       </div>
     </div>
   );
