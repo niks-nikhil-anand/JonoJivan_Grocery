@@ -1,7 +1,6 @@
 import connectDB from "@/lib/dbConnect";
 import addressModels from "@/models/addressModels";
 import cartModels from "@/models/cartModels";
-import pendingOrderModel from "@/models/pendingOrder";
 import userModels from "@/models/userModels";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
@@ -53,30 +52,19 @@ export const POST = async (request, { params }) => {
       );
     }
 
-    // Handle Cart
-    let existingCart = await cartModels.findOne({ userId: id });
-    if (existingCart) {
-      console.log("Updating existing cart.");
-      existingCart.items = cart.map((item) => ({
+    // Create a new cart
+    console.log("Creating a new cart.");
+    const newCart = new cartModels({
+      userId: id,
+      items: cart.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
         price: item.price || 0,
-      }));
-      await existingCart.save();
-    } else {
-      console.log("Creating a new cart.");
-      existingCart = new cartModels({
-        userId: id,
-        items: cart.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          price: item.price || 0,
-        })),
-      });
-      await existingCart.save();
-    }
+      })),
+    });
+    await newCart.save();
 
-    // Create Address
+    // Create a new address
     console.log("Creating new address.");
     const newAddress = new addressModels({
       firstName,
@@ -98,7 +86,7 @@ export const POST = async (request, { params }) => {
 
     // Generate JWT Token
     const token = generateToken({
-      cartId: existingCart._id,
+      cartId: newCart._id,
       addressId: newAddress._id,
       userId: id,
     });
