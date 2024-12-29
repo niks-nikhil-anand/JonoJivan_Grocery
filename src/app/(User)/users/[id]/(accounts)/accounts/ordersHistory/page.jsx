@@ -75,6 +75,7 @@ const OrderHistory = () => {
   return (
    <div className="p-4">
   <h2 className="text-2xl font-semibold mb-4">Order History</h2>
+  <div className='bg-white flex flex-wrap w-full gap-5 justify-center'>
   {orderHistory.length === 0 ? (
     <p>No orders found.</p>
   ) : (
@@ -88,53 +89,73 @@ const OrderHistory = () => {
       }, []);
 
       return (
-        <div key={order._id} className="bg-white p-4 shadow mb-4 rounded">
-          <div className="flex items-center space-x-4">
-            <img
-              src={order.cartItems[0]?.featuredImage} // Placeholder in case no image
-              alt="Product"
-              className="w-24 h-24 object-cover"
-            />
-            <div>
-              <h3 className="text-xl font-semibold">
-                Order Date: {new Date(order.orderDate).toLocaleDateString()}
-              </h3>
-              <p>Payment Method: {order.paymentMethod}</p>
-              <p>
-                Order Status:{" "}
-                <span className={`font-semibold ${getStatusColor(order.orderStatus)}`}>
-                  {order.orderStatus}
-                </span>
-              </p>
-            </div>
-          </div>
-
-          {/* Horizontal line for order status */}
-          <div className="mt-2">
-            <hr className={`my-2 ${order.orderStatus === 'Completed' ? 'border-4 border-black' : 'border-gray-300'}`} />
-          </div>
-
-          <div className="mt-4">
-            <h4 className="text-lg font-medium">Items:</h4>
-            <ul className="list-disc list-inside">
-              {uniqueItems.map((item) => (
-                <li key={item._id}>
-                  {item.name} - {item.quantity}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Show total price */}
-          <div className="mt-4">
-            <h4 className="text-lg font-medium">
-              Total Price: ${uniqueItems.reduce((total, item) => total + item.salePrice * item.quantity, 0).toFixed(2)}
-            </h4>
+        
+        <div
+        key={order._id}
+        className="bg-gray-100 p-4 shadow mb-4 rounded w-full flex flex-col md:w-[48%] lg:w-[30%]"
+      >
+        {/* Order Information */}
+        <div className="flex flex-col md:flex-row md:items-center md:space-x-4  ">
+          <img
+            src={order.cartItems[0]?.featuredImage || "/placeholder-image.png"} // Add a fallback image
+            alt="Product"
+            className="w-full md:w-24 h-24 object-cover rounded"
+          />
+          <div className="mt-2 md:mt-0">
+            <h3 className="text-lg md:text-xl font-semibold">
+              Order Date: {new Date(order.orderDate).toLocaleDateString()}
+            </h3>
+            <p className="text-sm md:text-base">Payment Method: {order.paymentMethod}</p>
+            <p className="text-sm md:text-base">
+              Order Status:{" "}
+              <span
+                className={`font-semibold ${getStatusColor(order.orderStatus)}`}
+              >
+                {order.orderStatus}
+              </span>
+            </p>
           </div>
         </div>
+      
+        {/* Horizontal Line for Order Status */}
+        <div>
+          <hr
+            className={`my-2 ${
+              order.orderStatus === "Completed"
+                ? "border-4 border-black"
+                : "border-gray-300"
+            }`}
+          />
+        </div>
+      
+        {/* Items Section */}
+        <div>
+          <h4 className="text-base md:text-lg font-medium">Items:</h4>
+          <ul className="list-disc list-inside text-sm md:text-base">
+            {uniqueItems.map((item) => (
+              <li key={item._id}>
+                {item.name} - {item.quantity}
+              </li>
+            ))}
+          </ul>
+        </div>
+      
+        {/* Total Price Section */}
+        <div>
+          <h4 className="text-base md:text-lg font-medium">
+            Total Price: ₹
+            {uniqueItems
+              .reduce((total, item) => total + item.salePrice * item.quantity, 0)
+              .toFixed(2)}
+          </h4>
+        </div>
+      </div>
+      
       );
     })
   )}
+  </div>
+ 
 </div>
 
   );

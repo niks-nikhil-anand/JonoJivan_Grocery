@@ -78,6 +78,7 @@ export const POST = async (req) => {
       address: address._id,
       paymentMethod,
       paymentStatus: "Completed",
+      orderStatus: "Processing",
        isPaid: true,
       razorpay_order_id,
       razorpay_payment_id,

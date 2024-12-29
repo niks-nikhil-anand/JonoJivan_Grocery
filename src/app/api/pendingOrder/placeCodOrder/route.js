@@ -125,6 +125,7 @@ export const POST = async (req) => {
             totalAmount,
             cart: cart._id,
             address: address._id,
+            orderStatus: "Processing",
             paymentMethod,
             paymentStatus: "Completed",
 
