@@ -48,7 +48,7 @@ const orderSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    azorpay_order_id: {
+    razorpay_order_id: {
         type: String, // Changed from Boolean to String
     },
     razorpay_payment_id: {
