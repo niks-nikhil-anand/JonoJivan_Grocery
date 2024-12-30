@@ -5,7 +5,7 @@ import { IoMdLogOut } from "react-icons/io"; // For the logout icon
 import { HiMoon, HiSun } from 'react-icons/hi'; 
 import Image from 'next/image';
 import logo from '../../../public/logo/logo.png';
-import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 
 
 
@@ -26,12 +26,13 @@ const Navbar = () => {
         });
         const data = await response.json();
         if (response.ok) {
+          toast.success('Logout successful!');
           router.push('/');
         } else {
-          alert(`Logout failed: ${data.message}`);
+          toast.error(`Logout failed: ${data.message}`);
         }
       } catch (error) {
-        alert(`Logout failed: ${error.message}`);
+        toast.error(`Logout failed: ${error.message}`);
       }
     };
 
