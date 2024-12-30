@@ -72,7 +72,7 @@ const TwoCategories = () => {
     return (
       <div
         key={_id}
-        className="flex items-center border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow cursor-pointer p-4"
+        className=" relative flex items-center border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow cursor-pointer p-4"
         onClick={() => handleCardClick(_id)}
       >
         <img
@@ -92,7 +92,7 @@ const TwoCategories = () => {
               <span className="text-sm font-bold text-gray-800">₹{salePrice}</span>
             </div>
             <button
-              className="text-green-600 border border-green-600 rounded px-3 py-1 text-xs font-semibold hover:bg-green-100 transition"
+              className=" absolute bottom-5 right-4 text-green-600 border border-green-600 rounded px-3 py-1 text-xs font-semibold hover:bg-green-100 transition"
               onClick={(e) => {
                 e.stopPropagation();
               }}
