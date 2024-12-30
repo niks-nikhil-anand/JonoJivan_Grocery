@@ -6,7 +6,6 @@ const Invoice = ({ invoiceData }) => {
     orderDate,
     location,
     shippingInfo,
-    billingInfo,
     items,
     subtotal,
     tips,
@@ -36,7 +35,6 @@ const Invoice = ({ invoiceData }) => {
         <h2 className="font-semibold">Shipping Information</h2>
         <p>Logistic: {shippingInfo.logistic}</p>
         <p>Delivery Type: {shippingInfo.deliveryType}</p>
-        <p>Delivery Time: {shippingInfo.deliveryTime}</p>
       </div>
 
       {/* Billing Info */}

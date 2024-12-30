@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loader from '@/components/loader/loader';
 import { FaEye, FaPrint } from 'react-icons/fa'; // Importing the icons
+import GenrerateInvoice from '@/components/adminPanel/ui/GenrerateInvoice';
 
 const Products = () => {
     const [orders, setOrders] = useState([]);
@@ -47,6 +48,11 @@ const Products = () => {
     if (!orders.length) {
       return <p className="text-center text-gray-600">No orders available.</p>;
     }
+
+    const handleDownloadInvoice = (orderId) => {
+      // Call your GenerateInvoice function here when download button is clicked
+      GenrerateInvoice(orderId);
+    };
 
     return (
       <div className="w-full p-4 pr-[5rem] bg-gray-100 shadow-lg rounded-lg h-[80vh]">
@@ -119,8 +125,8 @@ const Products = () => {
             <FaEye /> {/* Eye Icon for View */}
           </button>
           <button
-            onClick={() => handlePrintInvoice(order._id)}
-            className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
+           onClick={() => handleDownloadInvoice(order._id)}
+           className="px-2 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 text-xs"
           >
             <FaPrint /> {/* Print Icon */}
           </button>
