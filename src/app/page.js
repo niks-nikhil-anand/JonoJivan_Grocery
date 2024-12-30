@@ -1,18 +1,16 @@
-import HeroSection from "@/components/frontend/ui/HeroSection";
-import WhoWeAre from "@/components/frontend/ui/WhoWeAre";
-import ProductCard from "@/components/frontend/ui/ProductForSale";
-import CategoriesSection from "@/components/frontend/ui/CategorySection";
-import Marquee from "@/components/frontend/ui/Marquee";
-
-
-// Banner Components
 import Banner1 from "@/components/frontend/ui/(Banners)/Banner1";
 import Banner2 from "@/components/frontend/ui/(Banners)/Banner2";
 import BannerText01 from "@/components/frontend/ui/(Banners)/BannerText01";
 import BannerText02 from "@/components/frontend/ui/(Banners)/BannerText02";
-import ProductCardVegetables from "@/components/frontend/ui/ProductSectionVegetables";
+import CategoriesSection from "@/components/frontend/ui/CategorySection";
+import DailyNeedsProducts from "@/components/frontend/ui/DailyNeedsProducts";
+import HeroSection from "@/components/frontend/ui/HeroSection";
 import LatestProducts from "@/components/frontend/ui/LatestProduct";
-import VeticalScrollProducts from "@/components/frontend/ui/DailyNeedsProducts";
+import Marquee from "@/components/frontend/ui/Marquee";
+import ProductCardVegetables from "@/components/frontend/ui/ProductSectionVegetables";
+import TwoCategories from "@/components/frontend/ui/TwoCategories";
+import WhoWeAre from "@/components/frontend/ui/WhoWeAre";
+
 
 export default function Home() {
   return (
@@ -22,10 +20,10 @@ export default function Home() {
       <ProductCardVegetables />
       <CategoriesSection />
       <WhoWeAre />
-      <VeticalScrollProducts />
+      <DailyNeedsProducts />
       <Marquee />
       <Banner1 />
-      <ProductCardVegetables />
+      <TwoCategories />
       <BannerText01 />
       <LatestProducts />
       <Banner2 />
