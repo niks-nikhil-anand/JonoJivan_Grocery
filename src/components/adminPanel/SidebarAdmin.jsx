@@ -2,15 +2,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaAppleAlt, FaCarrot, FaPlus , FaShoppingCart, FaListUl, FaCog , FaSearch , FaHome } from "react-icons/fa";
-import { FaTable , FaIdCard , FaProductHunt } from "react-icons/fa6";
-import { GiTruck, GiOpenBook } from "react-icons/gi";
+import { FaTable , FaProductHunt } from "react-icons/fa6";
+import {  GiOpenBook } from "react-icons/gi";
 import { MdOutlineLogout , MdPendingActions , MdOutlineRateReview } from "react-icons/md";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
-import { IoDocumentAttach , IoDocuments , IoDocumentText } from "react-icons/io5";
 import { ImProfile } from "react-icons/im";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MdAdd } from "react-icons/md";
+import { toast } from 'react-hot-toast';
+
 
 const SidebarAdmin = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { IoIosMenu } from "react-icons/io"; // For the hamburger menu
 import { IoMdLogOut } from "react-icons/io"; // For the logout icon
-import { HiMoon, HiSun } from 'react-icons/hi'; 
 import Image from 'next/image';
 import logo from '../../../public/logo/logo.png';
 import { toast } from 'react-hot-toast';
@@ -26,13 +25,12 @@ const Navbar = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          toast.success('Logout successful!');
           router.push('/');
         } else {
-          toast.error(`Logout failed: ${data.message}`);
+          alert(`Logout failed: ${data.message}`);
         }
       } catch (error) {
-        toast.error(`Logout failed: ${error.message}`);
+        alert(`Logout failed: ${error.message}`);
       }
     };
 
