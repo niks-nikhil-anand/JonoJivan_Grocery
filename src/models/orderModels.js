@@ -5,6 +5,10 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    invoiceNo:{
+        type: String,
+        required: [true, 'Invoice number is required'],
+    },
     cart:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -25,12 +29,12 @@ const orderSchema = new mongoose.Schema({
     },
     paymentStatus: {
         type: String,
-        enum: ['Pending', 'Completed', 'Failed'],
-        default: 'Pending',
+        enum: ['Paid', 'UnPaid'],
+        default: 'UnPaid',
     },
     orderStatus: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+        enum: ['Pending', 'OrderPlaced', 'Processing', 'PickedUp', 'OutForDelivery' , 'Delivered', 'Cancelled'],
         default: 'Pending',
     },
     orderDate: {

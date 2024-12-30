@@ -68,78 +68,77 @@ const Products = () => {
               </tr>
             </thead>
             <tbody>
-              {currentOrders.map((order) => (
-                <tr key={order._id} className="hover:bg-gray-100">
-                  <td className="border border-gray-300 px-2 py-1">{index + 1}</td> {/* Sl. No */}
-                  <td className="border border-gray-300 px-2 py-1 truncate">{order._id}</td>
-                  <td className="border border-gray-300 px-2 py-1 truncate">
-                    {order.user?.fullName || "N/A"}
-                  </td>
-                  <td className="border border-gray-300 px-2 py-1 truncate">
-                    <button
-                      onClick={() => handleView(order.cart)}
-                      className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
-                    >
-                      View
-                    </button>
-                  </td>
-                  <td className="border border-gray-300 px-2 py-1">₹{order.totalAmount}</td>
-                  <td className="border border-gray-300 px-2 py-1">{order.paymentMethod}</td>
-                  <td className="border border-gray-300 px-2 py-1 text-center">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        order.paymentStatus === "Completed"
-                          ? "bg-green-200 text-green-800"
-                          : order.paymentStatus === "Pending"
-                          ? "bg-yellow-200 text-yellow-800"
-                          : "bg-red-200 text-red-800"
-                      }`}
-                    >
-                      {order.paymentStatus}
-                    </span>
-                  </td>
-                  <td className="border border-gray-300 px-2 py-1 text-center">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        order.orderStatus === "Delivered"
-                          ? "bg-green-200 text-green-800"
-                          : order.orderStatus === "Processing"
-                          ? "bg-yellow-200 text-yellow-800"
-                          : "bg-red-200 text-red-800"
-                      }`}
-                    >
-                      {order.orderStatus}
-                    </span>
-                  </td>
-                  <td className="border border-gray-300 px-2 py-1">
-                  {new Date(order.orderDate).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 text-center">
-                    <div className="flex justify-center space-x-2">
-                      {/* Eye Icon for View */}
-                      <button
-                        onClick={() => handleView(order._id)}
-                        className="px-2 py-1 bg-black text-white rounded hover:bg-blue-600 text-xs"
-                      >
-                        <FaEye className="inline-block text-lg" />
-                      </button>
+  {currentOrders.map((order, index) => (
+    <tr key={order._id} className="hover:bg-gray-100">
+      <td className="border border-gray-300 px-2 py-1">{index + 1}</td> {/* Sl. No */}
+      <td className="border border-gray-300 px-2 py-1 truncate">{order._id}</td>
+      <td className="border border-gray-300 px-2 py-1 truncate">
+        {order.user?.fullName || "N/A"}
+      </td>
+      <td className="border border-gray-300 px-2 py-1 truncate">
+        <button
+          onClick={() => handleView(order.cart)}
+          className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+        >
+          View
+        </button>
+      </td>
+      <td className="border border-gray-300 px-2 py-1">₹{order.totalAmount}</td>
+      <td className="border border-gray-300 px-2 py-1">{order.paymentMethod}</td>
+      <td className="border border-gray-300 px-2 py-1 text-center">
+        <span
+          className={`px-2 py-1 rounded-full text-xs ${
+            order.paymentStatus === "Completed"
+              ? "bg-green-200 text-green-800"
+              : order.paymentStatus === "Pending"
+              ? "bg-yellow-200 text-yellow-800"
+              : "bg-red-200 text-red-800"
+          }`}
+        >
+          {order.paymentStatus}
+        </span>
+      </td>
+      <td className="border border-gray-300 px-2 py-1 text-center">
+        <span
+          className={`px-2 py-1 rounded-full text-xs ${
+            order.orderStatus === "Delivered"
+              ? "bg-green-200 text-green-800"
+              : order.orderStatus === "Processing"
+              ? "bg-yellow-200 text-yellow-800"
+              : "bg-red-200 text-red-800"
+          }`}
+        >
+          {order.orderStatus}
+        </span>
+      </td>
+      <td className="border border-gray-300 px-2 py-1">
+        {new Date(order.orderDate).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        })}
+      </td>
+      <td className="border border-gray-300 px-2 py-1 text-center">
+        <div className="flex justify-center space-x-2">
+          {/* View and Print Invoice buttons with React Icons */}
+          <button
+            onClick={() => handleView(order._id)}
+            className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+          >
+            <FaEye /> {/* Eye Icon for View */}
+          </button>
+          <button
+            onClick={() => handlePrintInvoice(order._id)}
+            className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
+          >
+            <FaPrint /> {/* Print Icon */}
+          </button>
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
 
-                      {/* Print Invoice Icon */}
-                      <button
-                        onClick={() => handlePrintInvoice(order._id)}
-                        className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
-                      >
-                        <FaPrint className="inline-block text-lg" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
           </table>
         </div>
     
