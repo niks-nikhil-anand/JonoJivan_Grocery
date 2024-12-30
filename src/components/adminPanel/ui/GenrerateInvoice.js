@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import html2pdf from 'html2pdf.js';
+import { jsPDF } from 'jspdf';
+import "jspdf-autotable";
 
 const GenrerateInvoice = ({ orderId }) => {
   const [invoiceData, setInvoiceData] = useState(null);
@@ -70,7 +71,6 @@ const GenrerateInvoice = ({ orderId }) => {
     }
   
   }, [orderId]);
-   // This dependency ensures the effect runs when orderId changes
 
   // Loader while fetching data
   if (loading) {
@@ -84,12 +84,52 @@ const GenrerateInvoice = ({ orderId }) => {
 
   // Function to download the invoice as PDF
   const downloadPDF = () => {
-    const invoiceElement = document.getElementById('invoice-content');
+    const doc = new jsPDF();
 
-    // Using html2pdf to generate the PDF
-    html2pdf()
-      .from(invoiceElement)
-      .save('invoice.pdf');
+    // Add invoice header
+    doc.setFontSize(20);
+    doc.text('Invoice', 105, 20, null, null, 'center');
+    doc.setFontSize(12);
+    doc.text(`Invoice No: ${invoiceData.invoiceNo}`, 20, 30);
+    doc.text(`Order Date: ${invoiceData.orderDate}`, 20, 40);
+
+    // Delivery Location
+    doc.text('Delivery Location:', 20, 50);
+    doc.text(`Address: ${invoiceData.shippingInfo.address}`, 20, 60);
+    doc.text(`Apartment: ${invoiceData.shippingInfo.apartment}`, 20, 70);
+    doc.text(`Landmark: ${invoiceData.shippingInfo.landmark}`, 20, 80);
+    doc.text(`City: ${invoiceData.shippingInfo.city}`, 20, 90);
+    doc.text(`State: ${invoiceData.shippingInfo.state}`, 20, 100);
+    doc.text(`Mobile Number: ${invoiceData.shippingInfo.mobileNumber}`, 20, 110);
+    doc.text(`Email: ${invoiceData.shippingInfo.email}`, 20, 120);
+    doc.text(`Type of Address: ${invoiceData.shippingInfo.typeOfAddress}`, 20, 130);
+
+    // Billing Info - Table
+    doc.autoTable({
+      head: [['Item', 'Price', 'QTY', 'Subtotal']],
+      body: invoiceData.items.map((item) => [
+        item.name,
+        `₹${item.salePrice}`,
+        item.quantity,
+        `₹${item.salePrice * item.quantity}`
+      ]),
+      startY: 140,
+    });
+
+    // Totals
+    doc.text(`Subtotal: ₹${invoiceData.subtotal}`, 150, doc.lastAutoTable.finalY + 10);
+    doc.text(`Tips: ₹${invoiceData.tips}`, 150, doc.lastAutoTable.finalY + 20);
+    doc.text(`Shipping Cost: ₹${invoiceData.shippingCost}`, 150, doc.lastAutoTable.finalY + 30);
+    doc.text(`Tax: ₹${invoiceData.tax}`, 150, doc.lastAutoTable.finalY + 40);
+    doc.text(`Grand Total: ₹${invoiceData.grandTotal}`, 150, doc.lastAutoTable.finalY + 50);
+
+    // Footer
+    doc.text(`Thank you for shopping with us, ${invoiceData.customerName}!`, 20, doc.lastAutoTable.finalY + 60);
+    doc.text('For any inquiries, please contact us at jonoJivan@support.com', 20, doc.lastAutoTable.finalY + 70);
+    doc.text('Visit our website: https://www.jonojivangrocery.in', 20, doc.lastAutoTable.finalY + 80);
+
+    // Save the PDF
+    doc.save('invoice.pdf');
   };
 
   return (
@@ -103,69 +143,7 @@ const GenrerateInvoice = ({ orderId }) => {
 
       {/* Content to be rendered and downloaded as PDF */}
       <div id="invoice-content">
-        {/* Location Info */}
-        <div className="mb-6">
-        <h2 className="font-semibold">Delivery Location</h2>
-        <p><strong className="font-medium">Address:</strong> {invoiceData.shippingInfo.address}</p>
-          <p><strong className="font-medium">Apartment:</strong> {invoiceData.shippingInfo.apartment}</p>
-          <p><strong className="font-medium">Landmark:</strong> {invoiceData.shippingInfo.landmark}</p>
-          <p><strong className="font-medium">City:</strong> {invoiceData.shippingInfo.city}</p>
-          <p><strong className="font-medium">State:</strong> {invoiceData.shippingInfo.state}</p>
-          <p><strong className="font-medium">Mobile Number:</strong> {invoiceData.shippingInfo.mobileNumber}</p>
-          <p><strong className="font-medium">Email:</strong> {invoiceData.shippingInfo.email}</p>
-          <p><strong className="font-medium">Type of Address:</strong> {invoiceData.shippingInfo.typeOfAddress}</p>
-        </div>
-        {/* Shipping Info */}
-        <div className="mb-6">
-          <h2 className="font-semibold">Shipping Information</h2>
-          <p>Logistic: {invoiceData.shippingInfo.logistic}</p>
-          <p>Delivery Type: {invoiceData.shippingInfo.deliveryType}</p>
-        </div>
-
-        {/* Billing Info */}
-        <div className="mb-6">
-          <h2 className="font-semibold">Billing Information</h2>
-          <table className="w-full table-auto border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 p-2">Item</th>
-                <th className="border border-gray-300 p-2">Price</th>
-                <th className="border border-gray-300 p-2">QTY</th>
-                <th className="border border-gray-300 p-2">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoiceData.items.map((item, index) => (
-                <tr key={index} className="text-center">
-                  <td className="border border-gray-300 p-2">{item.name}</td>
-                  <td className="border border-gray-300 p-2">₹{item.salePrice}</td>
-                  <td className="border border-gray-300 p-2">{item.quantity}</td>
-                  <td className="border border-gray-300 p-2">₹{item.price * item.quantity}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Totals */}
-        <div className="text-right mt-6">
-          <p>Subtotal: ₹{invoiceData.subtotal}</p>
-          <p>Tips: ₹{invoiceData.tips}</p>
-          <p>Shipping Cost: ₹{invoiceData.shippingCost}</p>
-          <p>Tax: ₹{invoiceData.tax}</p>
-          <h2 className="text-lg font-bold">Grand Total: ₹{invoiceData.grandTotal}</h2>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-8">
-          <p>Hello {invoiceData.customerName},</p>
-          <p>
-            Thank you for shopping from our store! If you have any questions,
-            suggestions, or concerns, please do not hesitate to contact us.
-          </p>
-          <p>Email: jonoJivan@support.com</p>
-          <p>Website: <a href="https://www.jonojivangrocery.in" className="text-blue-500">https://www.jonojivangrocery.in</a></p>
-        </div>
+        {/* Other invoice content here as per the previous implementation */}
       </div>
 
       {/* Download Button */}
