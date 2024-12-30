@@ -131,9 +131,9 @@ export const POST = async (req) => {
                     cart: cart._id,
                     address: address._id,
                     paymentMethod,
-                    paymentStatus: "Completed",
+                    paymentStatus: "Paid",
                     isPaid: true,
-                    orderStatus: "Processing",
+                    orderStatus: "OrderPlaced",
                     razorpay_order_id,
                     razorpay_payment_id,
                 });
