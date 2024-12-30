@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 
 export const GET = async (request, { params }) => {
   const { id } = params;
-  
 
   if (!id) {
     return NextResponse.json({ msg: "ID parameter is required" }, { status: 400 });
@@ -13,15 +12,19 @@ export const GET = async (request, { params }) => {
   try {
     await connectDB();
 
-    const Order = await orderModels.findById(id);
-    console.log(Order)
+    // Find the order by ID and populate cart and address fields
+    const Order = await orderModels.findById(id).populate("cart").populate("address");
+
     if (!Order) {
       return NextResponse.json({ msg: "Order not found" }, { status: 404 });
     }
 
     return NextResponse.json(Order, { status: 200 });
   } catch (error) {
-    console.error('Error fetching order:', error);
-    return NextResponse.json({ msg: "Error fetching order", error: error.message }, { status: 500 });
+    console.error("Error fetching order:", error);
+    return NextResponse.json(
+      { msg: "Error fetching order", error: error.message },
+      { status: 500 }
+    );
   }
 };
