@@ -77,20 +77,10 @@ const ProductsOnSale = () => {
             onClick={() => handleCardClick(_id)}
           >
             {/* SALE Badge */}
-            <div className="absolute top-2 right-2 text-white text-xs font-semibold px-3 py-1 rounded ">
-              🕔
-            </div>
-  
-            {/* Wishlist Icon */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleWishlistClick();
-              }}
-              className="absolute top-2 left-2 text-red-500 hover:text-red-600"
-            >
-              <FaRegHeart size={18} />
-            </button>
+            <div className="absolute top-2 left-2 text-white bg-red-400 text-xs md:text-sm lg:text-base font-semibold px-2 md:px-3 py-1 rounded">
+                    SALE
+                    </div>
+
   
             {/* Product Image */}
             <div className="flex px-5">
