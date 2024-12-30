@@ -8,7 +8,7 @@ import icon3 from "../../../../../public/frontend/icons/icon-3.png";
 import icon4 from "../../../../../public/frontend/icons/icon-4.png";
 import icon5 from "../../../../../public/frontend/icons/icon-5.png";
 
-const BannerText02 = () => {
+const FeaturesList = () => {
   const items = [
     {
       icon: icon1,
@@ -64,4 +64,4 @@ const BannerText02 = () => {
   );
 };
 
-export default BannerText02;
+export default FeaturesList;
