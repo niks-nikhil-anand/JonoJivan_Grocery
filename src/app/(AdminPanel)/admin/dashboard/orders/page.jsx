@@ -56,14 +56,14 @@ const Products = () => {
             <thead>
               <tr className="bg-gray-200">
               <th className="border border-gray-300 px-2 py-1 text-left">Sl. No</th> 
-                <th className="border border-gray-300 px-2 py-1 text-left">Order ID</th>
+                <th className="border border-gray-300 px-2 py-1 text-left">Invoice No.</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Customer</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Items</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Total Amount</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Payment Method</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Payment Status</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Order Status</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Order Date</th>
+                <th className="border border-gray-300 px-2 py-1 text-left">Vendor</th>
                 <th className="border border-gray-300 px-2 py-1 text-center">Actions</th>
               </tr>
             </thead>
@@ -71,17 +71,9 @@ const Products = () => {
   {currentOrders.map((order, index) => (
     <tr key={order._id} className="hover:bg-gray-100">
       <td className="border border-gray-300 px-2 py-1">{index + 1}</td> {/* Sl. No */}
-      <td className="border border-gray-300 px-2 py-1 truncate">{order._id}</td>
+      <td className="border border-gray-300 px-2 py-1 truncate">{order.invoiceNo}</td>
       <td className="border border-gray-300 px-2 py-1 truncate">
         {order.user?.fullName || "N/A"}
-      </td>
-      <td className="border border-gray-300 px-2 py-1 truncate">
-        <button
-          onClick={() => handleView(order.cart)}
-          className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
-        >
-          View
-        </button>
       </td>
       <td className="border border-gray-300 px-2 py-1">₹{order.totalAmount}</td>
       <td className="border border-gray-300 px-2 py-1">{order.paymentMethod}</td>
