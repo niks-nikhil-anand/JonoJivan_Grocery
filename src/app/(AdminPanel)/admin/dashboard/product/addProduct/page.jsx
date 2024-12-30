@@ -558,7 +558,7 @@ const ProductForm = () => {
 
                 {/* Weight Input */}
                 <div>
-                  <label className="block text-green-600 font-bold mb-3">Weight</label>
+                  <label className="block text-green-600 font-bold mb-3">Weight/Pieces</label>
                   <motion.input
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                     type="number"
@@ -592,6 +592,7 @@ const ProductForm = () => {
                 <option value="ML">ML</option>
                 <option value="Gm">Gm</option>
                 <option value="kg">kg</option>
+                <option value="kg">Pieces</option>
               </motion.select>
             </div>
 
