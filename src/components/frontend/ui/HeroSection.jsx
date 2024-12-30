@@ -30,7 +30,7 @@ const HeroSection = () => {
       </div>
       
       {/* Text Content with Typing Effect */}
-      <div className="absolute top-1/3 left-10 z-10 w-4/5 md:w-1/2 lg:w-1/3">
+      <div className="absolute top-1/3 left-10 z-10 w-4/5 md:w-1/2 lg:w-[50%]">
         <motion.h1
           className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold"
           initial={{ opacity: 0 }}
