@@ -1,5 +1,5 @@
 import connectDB from "@/lib/dbConnect";
-import productModels from "@/models/productModels";
+import userModels from "@/models/userModels";
 import { NextResponse } from "next/server";
 
 export const GET = async (request, { params }) => {
@@ -13,16 +13,16 @@ export const GET = async (request, { params }) => {
   try {
     await connectDB();
 
-    const product = await productModels.findById(id);
-    console.log(product)
+    const User = await userModels.findById(id);
+    console.log(User)
     
-    if (!product) {
-      return NextResponse.json({ msg: "Product not found" }, { status: 404 });
+    if (!User) {
+      return NextResponse.json({ msg: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json(product, { status: 200 });
+    return NextResponse.json(User, { status: 200 });
   } catch (error) {
-    console.error('Error fetching product:', error);
-    return NextResponse.json({ msg: "Error fetching product", error: error.message }, { status: 500 });
+    console.error('Error fetching user:', error);
+    return NextResponse.json({ msg: "Error fetching user", error: error.message }, { status: 500 });
   }
 };
