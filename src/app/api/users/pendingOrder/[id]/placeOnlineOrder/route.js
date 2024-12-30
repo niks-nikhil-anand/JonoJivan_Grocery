@@ -69,6 +69,12 @@ export const POST = async (req) => {
     }
     console.log("Address found:", address);
 
+     let invoiceCounter = await orderModels.findOne({}).sort({ invoiceNo: -1 }).limit(1);
+            let invoiceNo = invoiceCounter ? invoiceCounter.invoiceNo + 1 : 1001;
+            const invoiceNumber = `J-Store:${invoiceNo}`;
+            console.log("Generated invoice number:", invoiceNumber);
+    
+
     // Create a new order
     const newOrder = new orderModels({
       user: user._id,
@@ -77,11 +83,12 @@ export const POST = async (req) => {
       cart: cart._id,
       address: address._id,
       paymentMethod,
-      paymentStatus: "Completed",
-      orderStatus: "Processing",
+      paymentStatus: "Paid",
+      orderStatus: "OrderPlaced",
        isPaid: true,
       razorpay_order_id,
       razorpay_payment_id,
+      invoiceNo: invoiceNumber,
     });
     
     await newOrder.save();
