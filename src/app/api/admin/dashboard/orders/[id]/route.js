@@ -13,7 +13,7 @@ export const GET = async (request, { params }) => {
     await connectDB();
 
     // Find the order by ID and populate cart and address fields
-    const Order = await orderModels.findById(id).populate("cart").populate("address");
+    const Order = await orderModels.findById(id);
 
     if (!Order) {
       return NextResponse.json({ msg: "Order not found" }, { status: 404 });

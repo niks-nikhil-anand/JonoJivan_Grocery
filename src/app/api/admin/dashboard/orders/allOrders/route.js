@@ -14,7 +14,6 @@ export const GET = async (req) => {
     // Fetch all orders and populate related fields
     const orders = await orderModels
       .find()
-      .populate("user") 
     console.log("Fetched orders with populated fields:", orders);
 
     return NextResponse.json(orders, { status: 200 });
