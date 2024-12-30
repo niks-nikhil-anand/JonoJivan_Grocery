@@ -43,7 +43,7 @@ const FruitsVegetablesUser = () => {
       }, 30);
     }
 
-        axios.get('/api/product/onSaleProducts')
+        axios.get('/api/product/fruitsVegProd')
             .then(response => {
                 console.log(response.data.products)
                 setProducts(response.data.products);

@@ -39,6 +39,8 @@ export const POST = async (req) => {
     const weight = getTrimmedValue("weight");
     const unit = getTrimmedValue("unit");
 
+    console.log("Form data:", formData);
+
     if (!name || !category) {
       return NextResponse.json({ msg: "Please provide all the required fields." }, { status: 400 });
     }
@@ -125,8 +127,6 @@ export const POST = async (req) => {
       },
       users: tokenToUse.id,
     };
-
-    console.log("Final product data:", productData);
     const newProduct = await productModels.create(productData);
     
 

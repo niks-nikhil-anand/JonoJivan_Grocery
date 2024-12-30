@@ -152,7 +152,7 @@ const ProductForm = () => {
     data.append('isOnSale', formData.isOnSale);
     data.append('tags', formData.tags);
     data.append('weight', formData.weight);
-    data.append('unit', formData.unit);
+    data.append('unit', formData.unit); // Append unit field
   
     // Append images
     images.forEach((file) => {
@@ -179,8 +179,9 @@ const ProductForm = () => {
         salePrice: '',
         originalPrice: '',
         category: '',
+        subCategory: '',
         tags: '',
-        stock: '',
+        stock: 0,
         weight: '',
         unit: '',
         isFanFavourites: false,
@@ -196,6 +197,7 @@ const ProductForm = () => {
       setLoading(false);
     }
   };
+  
   
 
 
@@ -570,23 +572,30 @@ const ProductForm = () => {
                   />
                 </div>
 
-                {/* Unit Dropdown */}
                 <div>
-                  <label className="block text-green-600 font-bold mb-3">Unit</label>
-                  <motion.select
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                    name="unit"
-                    value={formData.unit}
-                    onChange={handleInputChange}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <option value="ML">ML</option>
-                    <option value="Gm">Gm</option>
-                    <option value="kg">kg</option>
-                  </motion.select>
-                </div>
+              <label htmlFor="unit" className="block text-green-600 font-bold mb-3">
+                Unit
+              </label>
+              <motion.select
+                id="unit"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                name="unit" // Matches formData field name
+                value={formData.unit}
+                onChange={handleInputChange}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+              >
+                <option value="" disabled>
+                  Select a unit
+                </option>
+                <option value="ML">ML</option>
+                <option value="Gm">Gm</option>
+                <option value="kg">kg</option>
+              </motion.select>
+            </div>
+
+
 
                 {/* Fan Favourites Checkbox */}
                 <motion.div className="flex items-center mb-4">

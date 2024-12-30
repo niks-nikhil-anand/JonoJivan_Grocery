@@ -22,7 +22,7 @@ const ProductCardVegetables = () => {
             }, 30);
         }
 
-        axios.get('/api/product/onSaleProducts')
+        axios.get('/api/product/fruitsVegProd')
             .then(response => {
                 console.log(response.data.products)
                 setProducts(response.data.products);
@@ -56,7 +56,7 @@ const ProductCardVegetables = () => {
     };
 
     return (
-        <div className="flex flex-col mb-4 md:px-7 bg-gradient-to-b from-green-100 to-green-50 border-t-2 border-gray-50">
+        <div className="flex flex-col mb-4 md:px-7 bg-gray-100 py-5">
         <h2 className="text-xl md:text-4xl mb-4 text-center font-bold text-red-500">
           Fresh Vegetables & Fruits
         </h2>
