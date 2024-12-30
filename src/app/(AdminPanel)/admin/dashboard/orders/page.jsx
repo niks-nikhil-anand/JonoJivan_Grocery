@@ -63,7 +63,6 @@ const Products = () => {
                 <th className="border border-gray-300 px-2 py-1 text-left">Payment Status</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Order Status</th>
                 <th className="border border-gray-300 px-2 py-1 text-left">Order Date</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Vendor</th>
                 <th className="border border-gray-300 px-2 py-1 text-center">Actions</th>
               </tr>
             </thead>
