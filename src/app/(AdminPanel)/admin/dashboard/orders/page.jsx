@@ -5,6 +5,8 @@ import Loader from "@/components/loader/loader";
 import { FaEye, FaPrint } from "react-icons/fa";
 import GenrerateInvoice from "@/components/adminPanel/ui/GenrerateInvoice";
 import { FaTimes } from "react-icons/fa"; // Importing the React Icon for close
+import { useRouter } from "next/navigation";
+
 
 
 const Products = () => {
@@ -14,6 +16,7 @@ const Products = () => {
   const itemsPerPage = 10;
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const router = useRouter();
 
   // Fetch orders from API
   useEffect(() => {
@@ -62,6 +65,10 @@ const Products = () => {
     setIsModalOpen(false);
     setSelectedOrderId(null);
   };
+
+  const handleNavigate = (orderId) => {
+    router.push(`orders/${orderId}`);
+  }
 
   return (
     <div className="w-full p-4 pr-[5rem] bg-gray-100 shadow-lg rounded-lg h-[80vh]">
@@ -125,7 +132,7 @@ const Products = () => {
                 <td className="border border-gray-300 px-2 py-1 text-center">
                   <div className="flex justify-center space-x-2">
                     <button
-                      onClick={() => handleOpenModal(order._id)} // Open modal for full-screen invoice
+                      onClick={() => handleNavigate(order._id)} // Open modal for full-screen invoice
                       className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
                     >
                       <FaEye />
