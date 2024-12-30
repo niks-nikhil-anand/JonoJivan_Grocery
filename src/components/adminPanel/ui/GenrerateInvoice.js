@@ -34,7 +34,7 @@ const GenrerateInvoice = ({ orderId }) => {
         const shippingInfo = addressResponse.data;
   
         // Calculate totals and create the invoice data
-        const subtotal = productDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        const subtotal = productDetails.reduce((acc, item) => acc + item.salePrice * item.quantity, 0);
         const tips = order.tips || 0;
         const shippingCost = order.shippingCost || 0;
         const tax = order.tax || 0;
@@ -106,16 +106,15 @@ const GenrerateInvoice = ({ orderId }) => {
         {/* Location Info */}
         <div className="mb-6">
         <h2 className="font-semibold">Delivery Location</h2>
-          <p><strong>Address:</strong> {invoiceData.shippingInfo.address}</p>
-          <p><strong>Apartment:</strong> {invoiceData.shippingInfo.apartment}</p>
-          <p><strong>Landmark:</strong> {invoiceData.shippingInfo.landmark}</p>
-          <p><strong>City:</strong> {invoiceData.shippingInfo.city}</p>
-          <p><strong>State:</strong> {invoiceData.shippingInfo.state}</p>
-          <p><strong>Mobile Number:</strong> {invoiceData.shippingInfo.mobileNumber}</p>
-          <p><strong>Email:</strong> {invoiceData.shippingInfo.email}</p>
-          <p><strong>Type of Address:</strong> {invoiceData.shippingInfo.typeOfAddress}</p>
+        <p><strong className="font-medium">Address:</strong> {invoiceData.shippingInfo.address}</p>
+          <p><strong className="font-medium">Apartment:</strong> {invoiceData.shippingInfo.apartment}</p>
+          <p><strong className="font-medium">Landmark:</strong> {invoiceData.shippingInfo.landmark}</p>
+          <p><strong className="font-medium">City:</strong> {invoiceData.shippingInfo.city}</p>
+          <p><strong className="font-medium">State:</strong> {invoiceData.shippingInfo.state}</p>
+          <p><strong className="font-medium">Mobile Number:</strong> {invoiceData.shippingInfo.mobileNumber}</p>
+          <p><strong className="font-medium">Email:</strong> {invoiceData.shippingInfo.email}</p>
+          <p><strong className="font-medium">Type of Address:</strong> {invoiceData.shippingInfo.typeOfAddress}</p>
         </div>
-
         {/* Shipping Info */}
         <div className="mb-6">
           <h2 className="font-semibold">Shipping Information</h2>
