@@ -20,6 +20,7 @@ const Products = () => {
     axios
       .get("/api/admin/dashboard/product/addProduct")
       .then((response) => {
+        console.log("Products:", response.data);
         if (Array.isArray(response.data)) {
           setProducts(response.data);
         } else {
@@ -72,6 +73,8 @@ const Products = () => {
       toast.error("An error occurred while updating the product status");
     }
   };
+
+
   
 
   const deleteProduct = async () => {
@@ -116,7 +119,6 @@ const Products = () => {
               <th className="border px-2 py-1 text-center">Stock</th>
               <th className="border px-2 py-1 text-left">Weight</th>
               <th className="border px-2 py-1 text-left">Category</th>
-              <th className="border px-2 py-1 text-left">SubCategory</th>
               <th className="border px-2 py-1 text-left">Vendor</th>
               <th className="border px-2 py-1 text-left">Price</th>
               <th className="border px-2 py-1 text-center">On Sale</th>
@@ -140,9 +142,11 @@ const Products = () => {
                   {product.weight?.value} {product.weight?.unit}
                 </td>
                 <td className="border px-2 py-1">{product.category?.name || "N/A"}</td>
-                <td className="border px-2 py-1">{product.subCategory?.name || "N/A"}</td>
                 <td className="border px-2 py-1">
                   {product.users?.[0]?.fullName || "N/A"}
+                  <span className="font-medium">
+                    ({product.users?.[0]?.role || "N/A"})
+                    </span>
                 </td>
                 <td className="border px-2 py-1">
                   ₹{product.salePrice}{" "}
@@ -188,7 +192,7 @@ const Products = () => {
 
 
                 <td className="border px-2 py-1 text-center">
-                  <div className="flex gap-5">
+                  <div className="flex gap-2">
                     <button
                       onClick={() => console.log("View product", product._id)}
                       className="flex items-center px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"

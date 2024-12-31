@@ -148,8 +148,8 @@ export const GET = async (req) => {
     // Fetch all products and populate the 'category' field
     const products = await productModels
       .find()
-      .populate("category", "name") 
-      .populate("users", "fullName role") 
+      .populate("category", "name")
+      .populate("users") // This will populate the entire user object        
       .exec();
 
     console.log("Fetched products with populated categories:", products);
