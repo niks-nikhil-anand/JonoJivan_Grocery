@@ -123,10 +123,16 @@ export const POST = async (req) => {
         }
 
 
-        let invoiceCounter = await orderModels.findOne({}).sort({ invoiceNo: -1 }).limit(1);
-        let invoiceNo = invoiceCounter ? invoiceCounter.invoiceNo + 1 : 1001;
-        const invoiceNumber = `J-Store:${invoiceNo}`;
-        console.log("Generated invoice number:", invoiceNumber);
+            // Fetch the most recent invoice from the database
+            let invoiceCounter = await orderModels.findOne({}).sort({ invoiceNo: -1 }).limit(1);
+            // Get the numeric part of the last invoice number
+            let lastInvoiceNumber = invoiceCounter ? parseInt(invoiceCounter.invoiceNo.split(':')[1], 10) : 1000;
+            // Increment the invoice number by 1
+            let invoiceNo = lastInvoiceNumber + 1;
+            // Format the invoice number with the J-Store prefix
+            const invoiceNumber = `J-Store:${invoiceNo}`;
+            console.log("Generated invoice number:", invoiceNumber);
+
 
         // Create the order
                 console.log("Creating a new order...");
