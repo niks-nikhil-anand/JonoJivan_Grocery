@@ -128,7 +128,7 @@ const Page = () => {
   }
 
   return (
-    <div className="bg-gray-100  p-4 max-h-[70vh]">
+    <div className="bg-gray-100  p-4 max-h-[70vh">
       <div className="p-4 border rounded-md shadow-sm bg-white">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold text-gray-800">Order Details</h2>

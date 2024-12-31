@@ -71,9 +71,12 @@ const Products = () => {
   }
 
   return (
-    <div className="w-full p-4 pr-[5rem] bg-gray-100 shadow-lg rounded-lg h-[80vh]">
+    <div className="bg-gray-100  p-4 max-h-[70vh] max-w-[90vw]">
+       <div className="flex justify-between i px-4 py-2 bg-white text-black  rounded-md my-4 font-medium">
+                <h2 className="text-lg font-semibold text-gray-800">Order Details</h2>
+              </div>
       {/* Wrapper with horizontal and vertical scrollbars */}
-      <div className="overflow-x-auto overflow-y-auto max-h-[70vh] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+      <div className="overflow-x-auto overflow-y-auto max-h-[70vh] scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100">
         <table className="border-collapse border border-gray-300 min-w-[1400px] text-sm">
           <thead>
             <tr className="bg-gray-200">
