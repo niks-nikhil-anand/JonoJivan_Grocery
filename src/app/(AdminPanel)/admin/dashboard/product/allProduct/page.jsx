@@ -49,21 +49,30 @@ const Products = () => {
   };
 
   const handleToggle = async (productId, currentStatus) => {
-    const newStatus = currentStatus === "active" ? "inactive" : "active";
+    const newStatus = currentStatus === "active" ? "inactive" : "active"; // Toggle status
     try {
-      await axios.patch("/api/admin/dashboard/product/addProduct", {
-        id: productId,
+      // Send PATCH request to update the product status
+      const response = await axios.patch(`/api/admin/dashboard/product/${productId}`, {
         status: newStatus,
       });
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product._id === productId ? { ...product, status: newStatus } : product
-        )
-      );
+  
+      if (response.status === 200) {
+        // Update the state if the status update was successful
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product._id === productId ? { ...product, status: newStatus } : product
+          )
+        );
+        toast.success(`Product status updated to ${newStatus}`);
+      } else {
+        toast.error("Failed to update product status");
+      }
     } catch (error) {
       console.error("Error updating product status:", error);
+      toast.error("An error occurred while updating the product status");
     }
   };
+  
 
   const deleteProduct = async () => {
     if (!productToDelete) return; // Ensure there's a product ID to delete
@@ -150,24 +159,33 @@ const Products = () => {
                     </span>
                   )}
                 </td>
-                <td className="border px-2 py-1 text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    {/* Status Display */}
-
-                    {/* Toggle Switch */}
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={product.status === "active"}
-                        onChange={() => handleToggle(product._id, product.status)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-14 h-5 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:bg-gray-700 peer-checked:bg-green-500">
-                        <div className="absolute w-5 h-5 bg-white border border-gray-300 rounded-full transition-transform duration-300 transform peer-checked:translate-x-7 peer-checked:border-white top-[2px] left-[1px]"></div>
-                      </div>
-                    </label>
+              <td className="border px-2 py-1 text-center">
+              <div className="flex items-center justify-center gap-2">
+                {/* Toggle Switch */}
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={product.status === "active"}
+                    onChange={() => handleToggle(product._id, product.status)} // Pass product ID and current status
+                    className="sr-only peer"
+                  />
+                  <div className="w-12 h-6 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:bg-gray-700 peer-checked:bg-green-500">
+                    <motion.div
+                      className="absolute w-5 h-5 bg-white border border-gray-300 rounded-full top-[2px] left-[1px]"
+                      initial={{ x: 0 }}
+                      animate={{ x: product.status === "active" ? 25 : 0 }} // Adjust the toggle's position based on status
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 30, // Adjust these values for a softer or faster transition
+                      }}
+                    />
                   </div>
-                </td>
+                </label>
+              </div>
+              </td>
+
+
 
                 <td className="border px-2 py-1 text-center">
                   <div className="flex gap-5">
