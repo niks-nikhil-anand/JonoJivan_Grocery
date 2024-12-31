@@ -48,6 +48,10 @@ const addressSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    pinCode: {
+        type: Number,
+        required: [true, 'Pincode is required'],
+    },
 }, {
     timestamps: true
 });
