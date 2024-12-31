@@ -205,13 +205,12 @@ const Page = () => {
         {/* Customer Info Section */}
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Shipping Address</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">Shipping Address({invoiceData?.shippingInfo?.typeOfAddress})</h3>
            
             <p className="text-gray-500">{invoiceData?.shippingInfo?.address || "Not Available"}</p>
             <p className="text-gray-500">{invoiceData?.shippingInfo?.apartment || "Not Available"} ,  {invoiceData?.shippingInfo?.landmark || "Not Available"}</p>
             <p className="text-gray-500">{invoiceData?.shippingInfo?.city} {invoiceData?.shippingInfo?.state} </p>
-            <p className="text-gray-500">{invoiceData?.shippingInfo?.state}</p>
-            <p className="text-gray-500 font-cormorant">{invoiceData?.shippingInfo?.typeOfAddress}</p>
+            <p className="text-gray-500">{invoiceData?.shippingInfo?.pinCode}</p>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-2">Contact Info</h3>

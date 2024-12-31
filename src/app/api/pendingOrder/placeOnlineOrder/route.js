@@ -122,16 +122,31 @@ export const POST = async (req) => {
                    console.log("New address created:", address);
         }
 
+  // Fetch the most recent invoice from the database
+    let invoiceCounter = await orderModels.findOne({}).sort({ invoiceNo: -1 }).limit(1);
 
-            // Fetch the most recent invoice from the database
-            let invoiceCounter = await orderModels.findOne({}).sort({ invoiceNo: -1 }).limit(1);
-            // Get the numeric part of the last invoice number
-            let lastInvoiceNumber = invoiceCounter ? parseInt(invoiceCounter.invoiceNo.split(':')[1], 10) : 1000;
-            // Increment the invoice number by 1
-            let invoiceNo = lastInvoiceNumber + 1;
-            // Format the invoice number with the J-Store prefix
-            const invoiceNumber = `J-Store:${invoiceNo}`;
-            console.log("Generated invoice number:", invoiceNumber);
+    // Initialize the numeric part of the invoice number
+    let lastInvoiceNumber = 1000;
+    
+    if (invoiceCounter && invoiceCounter.invoiceNo) {
+      // Extract the numeric part after "J-Store:" if the invoiceNo exists
+      const parts = invoiceCounter.invoiceNo.split(':');
+      if (parts.length === 2 && !isNaN(parts[1])) {
+        lastInvoiceNumber = parseInt(parts[1], 10);
+      } else {
+        // Handle case where the invoice number format is unexpected
+        console.error('Invalid invoice number format:', invoiceCounter.invoiceNo);
+      }
+    }
+    
+    // Increment the invoice number by 1
+    let invoiceNo = lastInvoiceNumber + 1;
+    
+    // Format the invoice number with the J-Store prefix
+    const invoiceNumber = `J-Store:${invoiceNo}`;
+    
+    // Output or save the new invoice number as required
+    console.log('New invoice number:', invoiceNumber);
 
 
         // Create the order
