@@ -51,3 +51,40 @@ export const DELETE = async (request, { params }) => {
     return NextResponse.json({ msg: "Error deleting product", error: error.message }, { status: 500 });
   }
 };
+
+
+export const PATCH = async (request, { params }) => {
+  const { id } = params;
+
+  if (!id) {
+    return NextResponse.json({ msg: "ID parameter is required" }, { status: 400 });
+  }
+
+  try {
+    await connectDB();
+
+    const data = await request.json();
+    const { status } = data;
+
+    if (!status) {
+      return NextResponse.json({ msg: "Status field is required" }, { status: 400 });
+    }
+
+    const updatedProduct = await productModels.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true, runValidators: true } // Returns updated product and runs validation
+    );
+
+    if (!updatedProduct) {
+      return NextResponse.json({ msg: "Product not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ msg: "Product updated successfully", product: updatedProduct }, { status: 200 });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    return NextResponse.json({ msg: "Error updating product", error: error.message }, { status: 500 });
+  }
+};
+
+

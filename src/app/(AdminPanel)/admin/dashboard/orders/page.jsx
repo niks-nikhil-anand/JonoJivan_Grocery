@@ -71,7 +71,7 @@ const Products = () => {
   }
 
   return (
-    <div className="bg-gray-100  p-4 max-h-[70vh] max-w-[90vw]">
+    <div className="bg-gray-100  p-4 max-h-[70vh] max-w-[90%]">
        <div className="flex justify-between i px-4 py-2 bg-white text-black  rounded-md my-4 font-medium">
                 <h2 className="text-lg font-semibold text-gray-800">Order Details</h2>
               </div>
@@ -104,9 +104,9 @@ const Products = () => {
                     className={`px-2 py-1 rounded-full text-xs ${
                       order.paymentStatus === "Completed"
                         ? "bg-green-200 text-green-800"
-                        : order.paymentStatus === "Pending"
-                        ? "bg-yellow-200 text-yellow-800"
-                        : "bg-red-200 text-red-800"
+                        : order.paymentStatus === "UnPaid"
+                       ?  "bg-red-200 text-green-800"
+                        : "bg-green-400 text-white-800"
                     }`}
                   >
                     {order.paymentStatus}
