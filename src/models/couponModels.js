@@ -53,6 +53,10 @@ const couponSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     }],
+    isFreeShipping: {
+        type: Boolean,
+        default: false,
+    },
 }, {
     timestamps: true
 });

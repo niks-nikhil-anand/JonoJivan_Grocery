@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 
 // Define the schema for Category
-const categorySchema = new Schema(
+const subcategorySchema = new Schema(
   {
     name: {
       type: String,
@@ -11,12 +11,6 @@ const categorySchema = new Schema(
     image: {
       type: String,
     },
-    subcategory: [
-      {
-         type: mongoose.Schema.Types.ObjectId,
-        ref: 'SubCategory',
-      },
-    ],
   },
   {
     timestamps: true,
@@ -24,5 +18,5 @@ const categorySchema = new Schema(
 );
 
 // Export the models with default export
-export default mongoose.models.Category || mongoose.model('Category', categorySchema);
+export default mongoose.models.SubCategory || mongoose.model('SubCategory', subcategorySchema);
 
