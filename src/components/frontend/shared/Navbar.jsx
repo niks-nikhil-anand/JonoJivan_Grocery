@@ -138,14 +138,20 @@ const Navbar = () => {
 
       {/* Campaigns */}
       <li>
-        <Link href="/campaigns" className="block text-gray-800 hover:text-green-600">
+        <Link
+          href="/campaigns"
+          className="block text-gray-800 hover:text-green-600"
+        >
           Campaigns
         </Link>
       </li>
 
       {/* Coupons */}
       <li>
-        <Link href="/coupons" className="block text-gray-800 hover:text-green-600">
+        <Link
+          href="/coupons"
+          className="block text-gray-800 hover:text-green-600"
+        >
           Coupons
         </Link>
       </li>
@@ -165,17 +171,41 @@ const Navbar = () => {
         </button>
         <AiOutlineRight className="text-gray-400" />
       </li>
-
-      {/* Currency */}
-      <li className="flex justify-between items-center">
-        <button className="w-full text-left text-gray-800 hover:text-green-600">
-          ₹ INR
-        </button>
-        <AiOutlineRight className="text-gray-400" />
-      </li>
     </ul>
+
+    <div className="mt-8 flex flex-col space-y-4">
+  {/* Sign In Button */}
+  <motion.button
+    whileHover={{
+      scale: 1.05,
+      backgroundColor: "#1E40AF",
+      boxShadow: "0px 8px 15px rgba(30, 64, 175, 0.3)",
+    }}
+    whileTap={{ scale: 0.95 }}
+    className="flex items-center justify-center w-full py-3 text-white bg-blue-600 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+  >
+    <FiUser className="mr-2 text-lg" />
+    Sign In
+  </motion.button>
+
+  {/* Register Button */}
+  <motion.button
+    whileHover={{
+      scale: 1.05,
+      backgroundColor: "#EFF6FF",
+      boxShadow: "0px 8px 15px rgba(59, 130, 246, 0.3)",
+    }}
+    whileTap={{ scale: 0.95 }}
+    className="flex items-center justify-center w-full py-3 text-blue-600 bg-white border border-blue-600 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+  >
+    <FiUser className="mr-2 text-lg" />
+    Register Now
+  </motion.button>
+</div>
+
   </motion.div>
 )}
+
 
 
       {/* Desktop Menu */}
