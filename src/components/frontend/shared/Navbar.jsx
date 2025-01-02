@@ -77,12 +77,20 @@ const Navbar = () => {
     className="fixed inset-0 bg-white z-50 p-6 shadow-lg"
   >
     {/* Close Button */}
-    <button
+        <motion.button
       onClick={() => setIsMobileMenuOpen(false)}
-      className="absolute top-4 right-4 text-2xl text-red-600 hover:text-red-800"
+      whileHover={{
+        scale: 1.1,
+        rotate: 90,
+        color: "#FF0000",
+        boxShadow: "0px 8px 15px rgba(255, 0, 0, 0.3)",
+      }}
+      whileTap={{ scale: 0.9 }}
+      className="absolute top-4 right-4 text-2xl text-red-600 hover:text-red-800 bg-white rounded-full shadow-md p-2 transition-all duration-300"
     >
       &times;
-    </button>
+    </motion.button>
+
 
     {/* Navigation Menu */}
     <ul className="mt-8 space-y-6 text-lg font-medium">
@@ -175,6 +183,7 @@ const Navbar = () => {
 
     <div className="mt-8 flex flex-col space-y-4">
   {/* Sign In Button */}
+  <Link href={"/auth/signIn"}>
   <motion.button
     whileHover={{
       scale: 1.05,
@@ -187,8 +196,12 @@ const Navbar = () => {
     <FiUser className="mr-2 text-lg" />
     Sign In
   </motion.button>
+  </Link>
+  
 
   {/* Register Button */}
+
+  <Link href={"//auth/register"}> 
   <motion.button
     whileHover={{
       scale: 1.05,
@@ -201,6 +214,8 @@ const Navbar = () => {
     <FiUser className="mr-2 text-lg" />
     Register Now
   </motion.button>
+  </Link>
+  
 </div>
 
   </motion.div>
