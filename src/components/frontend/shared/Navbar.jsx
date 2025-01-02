@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiSearch, FiUser, FiShoppingBag } from "react-icons/fi";
-import { AiOutlineDown, AiOutlineUp, AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineDown, AiOutlineUp, AiOutlineMenu, AiOutlineRight } from "react-icons/ai"; 
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../../../public/logo/logo.png";
+
+
 
 const Navbar = () => {
   const [isShopOpen, setIsShopOpen] = useState(false);
@@ -69,70 +71,112 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed inset-0 bg-white z-50 p-6"
+  <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="fixed inset-0 bg-white z-50 p-6 shadow-lg"
+  >
+    {/* Close Button */}
+    <button
+      onClick={() => setIsMobileMenuOpen(false)}
+      className="absolute top-4 right-4 text-2xl text-red-600 hover:text-red-800"
+    >
+      &times;
+    </button>
+
+    {/* Navigation Menu */}
+    <ul className="mt-8 space-y-6 text-lg font-medium">
+      {/* Home */}
+      <li>
+        <Link href="/" className="block text-gray-800 hover:text-green-600">
+          Home
+        </Link>
+      </li>
+
+      {/* Products Dropdown */}
+      <li>
+        <button
+          onClick={toggleShopDropdown}
+          className="w-full flex justify-between items-center text-gray-800 hover:text-green-600"
         >
-          <button
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="text-2xl absolute top-4 right-4"
-          >
-            &times;
-          </button>
-          <ul className="space-y-6 text-lg font-medium">
+          Products
+          {isShopOpen ? (
+            <AiOutlineUp className="text-xl" />
+          ) : (
+            <AiOutlineDown className="text-xl" />
+          )}
+        </button>
+        {isShopOpen && (
+          <ul className="mt-2 pl-4 space-y-2">
             <li>
-              <Link href="/" className="block hover:text-green-600">
-                Home
-              </Link>
-            </li>
-            <li>
-              <button
-                onClick={toggleShopDropdown}
-                className="w-full flex justify-between items-center"
+              <Link
+                href="/fruits"
+                className="block text-gray-600 hover:text-green-600"
               >
-                Shop
-                {isShopOpen ? <AiOutlineUp /> : <AiOutlineDown />}
-              </button>
-              {isShopOpen && (
-                <ul className="mt-2 pl-4 space-y-2">
-                  <li>
-                    <Link href="/fruits" className="block hover:text-green-600">
-                      Fruits & Vegetables
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/bakery"
-                      className="block hover:text-green-600"
-                    >
-                      Bakery & Dairy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/snacks"
-                      className="block hover:text-green-600"
-                    >
-                      Snacks & Beverages
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-            <li>
-              <Link href="/offers" className="block hover:text-green-600">
-                Offers
+                Fruits & Vegetables
               </Link>
             </li>
             <li>
-              <Link href="/contact-us" className="block hover:text-green-600">
-                Contact Us
+              <Link
+                href="/bakery"
+                className="block text-gray-600 hover:text-green-600"
+              >
+                Bakery & Dairy
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/snacks"
+                className="block text-gray-600 hover:text-green-600"
+              >
+                Snacks & Beverages
               </Link>
             </li>
           </ul>
-        </motion.div>
-      )}
+        )}
+      </li>
+
+      {/* Campaigns */}
+      <li>
+        <Link href="/campaigns" className="block text-gray-800 hover:text-green-600">
+          Campaigns
+        </Link>
+      </li>
+
+      {/* Coupons */}
+      <li>
+        <Link href="/coupons" className="block text-gray-800 hover:text-green-600">
+          Coupons
+        </Link>
+      </li>
+
+      {/* Pages */}
+      <li className="flex justify-between items-center">
+        <Link href="/pages" className="block text-gray-800 hover:text-green-600">
+          Pages
+        </Link>
+        <AiOutlineRight className="text-gray-400" />
+      </li>
+
+      {/* Language */}
+      <li className="flex justify-between items-center">
+        <button className="w-full text-left text-gray-800 hover:text-green-600">
+          English
+        </button>
+        <AiOutlineRight className="text-gray-400" />
+      </li>
+
+      {/* Currency */}
+      <li className="flex justify-between items-center">
+        <button className="w-full text-left text-gray-800 hover:text-green-600">
+          ₹ INR
+        </button>
+        <AiOutlineRight className="text-gray-400" />
+      </li>
+    </ul>
+  </motion.div>
+)}
+
 
       {/* Desktop Menu */}
       <div className="hidden md:flex justify-between items-center py-4">
