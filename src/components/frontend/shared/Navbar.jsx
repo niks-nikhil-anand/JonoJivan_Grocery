@@ -6,6 +6,7 @@ import { AiOutlineDown, AiOutlineUp, AiOutlineMenu, AiOutlineRight } from "react
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../../../public/logo/logo.png";
+import { FaApple, FaBreadSlice, FaCoffee } from 'react-icons/fa';
 
 
 
@@ -122,36 +123,39 @@ const Navbar = () => {
           )}
         </button>
         {isShopOpen && (
-          <ul className="mt-2 pl-4 space-y-2">
-            <li>
-              <Link
-                href="/fruits"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-gray-600 hover:text-green-600"
-              >
-                Fruits & Vegetables
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/bakery"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-gray-600 hover:text-green-600"
-              >
-                Bakery & Dairy
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/snacks"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-gray-600 hover:text-green-600"
-              >
-                Snacks & Beverages
-              </Link>
-            </li>
-          </ul>
-        )}
+  <ul className="mt-2 pl-4 space-y-2">
+    <li>
+      <Link
+        href="/fruits"
+        onClick={() => setIsMobileMenuOpen(false)}
+        className="flex items-center text-gray-600 hover:text-green-600 space-x-2"
+      >
+        <FaApple className="text-xl" />
+        <span>Fruits & Vegetables</span>
+      </Link>
+    </li>
+    <li>
+      <Link
+        href="/bakery"
+        onClick={() => setIsMobileMenuOpen(false)}
+        className="flex items-center text-gray-600 hover:text-green-600 space-x-2"
+      >
+        <FaBreadSlice className="text-xl" />
+        <span>Bakery & Dairy</span>
+      </Link>
+    </li>
+    <li>
+      <Link
+        href="/snacks"
+        onClick={() => setIsMobileMenuOpen(false)}
+        className="flex items-center text-gray-600 hover:text-green-600 space-x-2"
+      >
+        <FaCoffee className="text-xl" />
+        <span>Snacks & Beverages</span>
+      </Link>
+    </li>
+  </ul>
+)}
       </li>
 
       <li>
@@ -161,26 +165,6 @@ const Navbar = () => {
           className="block text-gray-800 hover:text-green-600"
         >
           All Products
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          href="/coupons"
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="block text-gray-800 hover:text-green-600"
-        >
-          Contact Us
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          href="/coupons"
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="block text-gray-800 hover:text-green-600"
-        >
-          About Us
         </Link>
       </li>
 
@@ -194,6 +178,37 @@ const Navbar = () => {
           Coupons
         </Link>
       </li>
+
+      <li>
+        <Link
+          href="/contactUs"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="block text-gray-800 hover:text-green-600"
+        >
+          Contact Us
+        </Link>
+      </li>
+
+      <li>
+        <Link
+          href="/aboutUs"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="block text-gray-800 hover:text-green-600"
+        >
+          About Us
+        </Link>
+      </li>
+
+      <li>
+        <Link
+          href="/aboutUs"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="block text-gray-800 hover:text-green-600"
+        >
+          Feedback 
+        </Link>
+      </li>
+
     </ul>
 
     {/* Sign In & Register Buttons */}
