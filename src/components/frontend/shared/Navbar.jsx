@@ -71,13 +71,17 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
+
+        
   <motion.div
     initial={{ opacity: 0, y: -20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="fixed inset-0 bg-white z-50 p-6 shadow-lg"
+    exit={{ opacity: 0, y: -20 }}
+    className="fixed inset-0 bg-white z-50 p-6 shadow-lg overflow-y-auto"
   >
+
     {/* Close Button */}
-        <motion.button
+    <motion.button
       onClick={() => setIsMobileMenuOpen(false)}
       whileHover={{
         scale: 1.1,
@@ -91,12 +95,15 @@ const Navbar = () => {
       &times;
     </motion.button>
 
-
     {/* Navigation Menu */}
-    <ul className="mt-8 space-y-6 text-lg font-medium">
+    <ul className="mt-4 space-y-6 text-lg font-medium">
       {/* Home */}
       <li>
-        <Link href="/" className="block text-gray-800 hover:text-green-600">
+        <Link
+          href="/"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="block text-gray-800 hover:text-green-600"
+        >
           Home
         </Link>
       </li>
@@ -107,7 +114,7 @@ const Navbar = () => {
           onClick={toggleShopDropdown}
           className="w-full flex justify-between items-center text-gray-800 hover:text-green-600"
         >
-          Products
+          Categories
           {isShopOpen ? (
             <AiOutlineUp className="text-xl" />
           ) : (
@@ -119,6 +126,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/fruits"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block text-gray-600 hover:text-green-600"
               >
                 Fruits & Vegetables
@@ -127,6 +135,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/bakery"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block text-gray-600 hover:text-green-600"
               >
                 Bakery & Dairy
@@ -135,6 +144,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/snacks"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block text-gray-600 hover:text-green-600"
               >
                 Snacks & Beverages
@@ -144,13 +154,33 @@ const Navbar = () => {
         )}
       </li>
 
-      {/* Campaigns */}
       <li>
         <Link
-          href="/campaigns"
+          href="/coupons"
+          onClick={() => setIsMobileMenuOpen(false)}
           className="block text-gray-800 hover:text-green-600"
         >
-          Campaigns
+          All Products
+        </Link>
+      </li>
+
+      <li>
+        <Link
+          href="/coupons"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="block text-gray-800 hover:text-green-600"
+        >
+          Contact Us
+        </Link>
+      </li>
+
+      <li>
+        <Link
+          href="/coupons"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="block text-gray-800 hover:text-green-600"
+        >
+          About Us
         </Link>
       </li>
 
@@ -158,68 +188,49 @@ const Navbar = () => {
       <li>
         <Link
           href="/coupons"
+          onClick={() => setIsMobileMenuOpen(false)}
           className="block text-gray-800 hover:text-green-600"
         >
           Coupons
         </Link>
       </li>
-
-      {/* Pages */}
-      <li className="flex justify-between items-center">
-        <Link href="/pages" className="block text-gray-800 hover:text-green-600">
-          Pages
-        </Link>
-        <AiOutlineRight className="text-gray-400" />
-      </li>
-
-      {/* Language */}
-      <li className="flex justify-between items-center">
-        <button className="w-full text-left text-gray-800 hover:text-green-600">
-          English
-        </button>
-        <AiOutlineRight className="text-gray-400" />
-      </li>
     </ul>
 
+    {/* Sign In & Register Buttons */}
     <div className="mt-8 flex flex-col space-y-4">
-  {/* Sign In Button */}
-  <Link href={"/auth/signIn"}>
-  <motion.button
-    whileHover={{
-      scale: 1.05,
-      backgroundColor: "#1E40AF",
-      boxShadow: "0px 8px 15px rgba(30, 64, 175, 0.3)",
-    }}
-    whileTap={{ scale: 0.95 }}
-    className="flex items-center justify-center w-full py-3 text-white bg-blue-600 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-  >
-    <FiUser className="mr-2 text-lg" />
-    Sign In
-  </motion.button>
-  </Link>
-  
+      <Link href="/auth/signIn" onClick={() => setIsMobileMenuOpen(false)}>
+        <motion.button
+          whileHover={{
+            scale: 1.05,
+            backgroundColor: "#1E40AF",
+            boxShadow: "0px 8px 15px rgba(30, 64, 175, 0.3)",
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center justify-center w-full py-3 text-white bg-blue-600 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          <FiUser className="mr-2 text-lg" />
+          Sign In
+        </motion.button>
+      </Link>
 
-  {/* Register Button */}
-
-  <Link href={"//auth/register"}> 
-  <motion.button
-    whileHover={{
-      scale: 1.05,
-      backgroundColor: "#EFF6FF",
-      boxShadow: "0px 8px 15px rgba(59, 130, 246, 0.3)",
-    }}
-    whileTap={{ scale: 0.95 }}
-    className="flex items-center justify-center w-full py-3 text-blue-600 bg-white border border-blue-600 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-  >
-    <FiUser className="mr-2 text-lg" />
-    Register Now
-  </motion.button>
-  </Link>
-  
-</div>
-
+      <Link href="/auth/register" onClick={() => setIsMobileMenuOpen(false)}>
+        <motion.button
+          whileHover={{
+            scale: 1.05,
+            backgroundColor: "#EFF6FF",
+            boxShadow: "0px 8px 15px rgba(59, 130, 246, 0.3)",
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center justify-center w-full py-3 text-blue-600 bg-white border border-blue-600 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          <FiUser className="mr-2 text-lg" />
+          Register Now
+        </motion.button>
+      </Link>
+    </div>
   </motion.div>
 )}
+
 
 
 
