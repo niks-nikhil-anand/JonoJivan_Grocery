@@ -227,7 +227,7 @@ const CreateAccountForm = () => {
       <span className="border-t border-gray-300 flex-grow"></span>
     </div>
 
-    <div className="flex flex-col sm:flex-row sm:justify-around space-y-4 sm:space-y-0 sm:space-x-4">
+    <div className="flex flex-col sm:flex-row sm:justify-around space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
   <button
     onClick={() => handleProviderSignIn("google")}
     className="flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-lg bg-gradient-to-r from-white to-gray-100 hover:from-gray-100 hover:to-white transition-all transform hover:-translate-y-1 hover:shadow-xl active:shadow-md active:translate-y-0"
@@ -235,13 +235,7 @@ const CreateAccountForm = () => {
     <Image src={googleIcon} alt="Google Icon" width={24} height={24} />
     <span className="ml-2 text-gray-700 font-medium">Sign in with Google</span>
   </button>
-  <button
-    onClick={() => signIn("facebook")}
-    className="flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-lg bg-gradient-to-r from-white to-gray-100 hover:from-gray-100 hover:to-white transition-all transform hover:-translate-y-1 hover:shadow-xl active:shadow-md active:translate-y-0"
-  >
-    <Image src={facebookIcon} alt="Facebook Icon" width={24} height={24} />
-    <span className="ml-2 text-gray-700 font-medium">Sign in with Facebook</span>
-  </button>
+ 
 </div>
 
 
