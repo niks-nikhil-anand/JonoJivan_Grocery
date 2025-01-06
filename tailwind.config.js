@@ -31,6 +31,8 @@ export default {
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
         cormorant: ['Cormorant', 'serif'],
+        sans: ['Roboto', 'Arial', 'sans-serif'],
+
       },
       transitionProperty: {
         borderColor: 'border-color',

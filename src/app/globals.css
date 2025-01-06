@@ -21,6 +21,10 @@
   body {
     @apply font-cormorant text-[16px] tracking-[-0.03em];
   }
+body {
+  font-family: 'Roboto', 'Arial', sans-serif;
+}
+
 
   a {
     @apply no-underline;

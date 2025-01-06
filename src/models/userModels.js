@@ -65,7 +65,11 @@ const userSchema = new mongoose.Schema({
     wishlist: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wishlist',
-    }]
+    }],
+    vendor:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vendor', 
+    }
 }, {
     timestamps: true
 });
