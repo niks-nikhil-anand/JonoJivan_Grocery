@@ -8,7 +8,7 @@ const DeleteAccountPage = () => {
 
       {/* Introduction */}
       <p className="text-gray-700 text-lg">
-        We're sorry to see you go! If you decide to delete your account, please follow the instructions carefully. Keep in mind that this action is permanent and cannot be undone.
+        We&apos;re sorry to see you go! If you decide to delete your account, please follow the instructions carefully. Keep in mind that this action is permanent and cannot be undone.
       </p>
 
       {/* Instructions */}
@@ -17,11 +17,11 @@ const DeleteAccountPage = () => {
         <ol className="list-decimal pl-6 space-y-2 text-gray-700">
           <li>Log in to your account using your credentials.</li>
           <li>Navigate to the account settings or profile section.</li>
-          <li>Locate the "Delete Account" option and click on it.</li>
+          <li>Locate the &ldquo;Delete Account&ldquo; option and click on it.</li>
           <li>Confirm your choice by following the on-screen instructions.</li>
         </ol>
         <p className="text-red-600 font-medium">
-          Note: You must be logged in to delete your account. If you're not logged in, please do so first.
+          Note: You must be logged in to delete your account. If you&apos;re not logged in, please do so first.
         </p>
       </div>
 

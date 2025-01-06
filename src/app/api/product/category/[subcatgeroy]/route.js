@@ -1,5 +1,4 @@
 import connectDB from "@/lib/dbConnect";
-import Category from "@/models/Category";
 import { NextResponse } from "next/server";
 
 export const GET = async (request, { params }) => {
