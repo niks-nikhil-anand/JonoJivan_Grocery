@@ -156,6 +156,7 @@ const LoginForm = () => {
         <div className="flex justify-between mt-4 text-sm md:text-base">
       <a href="#" className="text-green-700 hover:underline">Forgot password?</a>
       <Link href={"/auth/register"} className="text-green-700 hover:underline">Create an account</Link>
+      <Link href={"/admin/auth"} className="text-green-700 hover:underline">Login as Vendor</Link>
     </div>
 
         <div className="flex items-center justify-between my-6">
