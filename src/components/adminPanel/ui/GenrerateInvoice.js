@@ -81,24 +81,24 @@ const GenerateInvoice = ({ orderId }) => {
     const doc = new jsPDF();
   
     // Header
-    doc.setFontSize(24);
+    doc.setFontSize(22);
     doc.setTextColor(50, 50, 50); // Gray color
     doc.text('JonoJivan Grocery', 105, 20, null, null, 'center');
   
-    doc.setFontSize(18);
+    doc.setFontSize(16);
     doc.setTextColor(0, 0, 0); // Black color
     doc.text('Invoice', 105, 30, null, null, 'center');
   
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.text(`Invoice No: #${invoiceData.invoiceNo}`, 20, 40);
     doc.text(`Order Date: ${invoiceData.orderDate}`, 150, 40);
   
     // Shipping Information Section
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.setTextColor(50, 50, 50);
     doc.text('SHIPPING INFORMATION', 20, 50);
   
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.setTextColor(0, 0, 0); // Black color for content
     const shippingDetails = [
       `Location: ${invoiceData.shippingInfo.address}, ${invoiceData.shippingInfo.city}, ${invoiceData.shippingInfo.state}`,
@@ -108,12 +108,12 @@ const GenerateInvoice = ({ orderId }) => {
     let yPos = 60;
     shippingDetails.forEach((line) => {
       doc.text(line, 20, yPos);
-      yPos += 10;
+      yPos += 8; // Reduced line spacing
     });
   
     // Billing Information Section
-    yPos += 10;
-    doc.setFontSize(14);
+    yPos += 8;
+    doc.setFontSize(12);
     doc.setTextColor(50, 50, 50);
     doc.text('BILLING INFORMATION', 20, yPos);
   
@@ -125,14 +125,16 @@ const GenerateInvoice = ({ orderId }) => {
         item.quantity,
         `Rs ${(item.salePrice * item.quantity).toFixed(2)}`,
       ]),
-      startY: yPos + 10,
+      startY: yPos + 8,
       styles: {
         textColor: [0, 0, 0], // Black color for table text
         lineColor: [50, 50, 50], // Gray color for table borders
+        fontSize: 9, // Reduced font size for table content
       },
       headStyles: {
         fillColor: [50, 50, 50], // Gray color for table header background
         textColor: [255, 255, 255], // White color for header text
+        fontSize: 10, // Reduced font size for table header
       },
     });
   
@@ -143,39 +145,46 @@ const GenerateInvoice = ({ orderId }) => {
       { label: 'Tips:', value: `Rs ${invoiceData.tips.toFixed(2)}` },
       { label: 'Shipping Cost:', value: `Rs ${invoiceData.shippingCost.toFixed(2)}` },
       { label: 'Tax:', value: `Rs ${invoiceData.tax.toFixed(2)}` },
-      { label: 'Grand Total:', value: `Rs ${invoiceData.grandTotal.toFixed(2)}` },
+      { label: 'Grand Total:', value: `Rs ${invoiceData.grandTotal.toFixed(2)}`, bold: true },
     ];
     totals.forEach((total) => {
-      doc.setFontSize(12);
+      doc.setFontSize(10);
       doc.setTextColor(50, 50, 50); // Gray color for labels
       doc.text(total.label, 150, yPos);
   
+      if (total.bold) {
+        doc.setFont('helvetica', 'bold');
+      } else {
+        doc.setFont('helvetica', 'normal');
+      }
       doc.setTextColor(0, 0, 0); // Black color for values
       doc.text(total.value, 200, yPos, null, null, 'right');
-      yPos += 10;
+      yPos += 8; // Reduced line spacing
     });
   
     // Footer
-    yPos += 20;
-    doc.setFontSize(12);
+    yPos += 15;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
     doc.text(`Hello ${invoiceData.customerName},`, 20, yPos);
-    yPos += 10;
+    yPos += 8;
     doc.text(
       'Thank you for shopping from our store! It is great to have you as one of our valued customers.',
       20,
       yPos,
       { maxWidth: 170 }
     );
-    yPos += 20;
+    yPos += 15;
     doc.text('For any questions, suggestions, or concerns, please contact us:', 20, yPos);
-    yPos += 10;
+    yPos += 8;
     doc.text('Email: jonojivan@support.com', 20, yPos);
-    doc.text('Website: https://jonojivangrocery.in', 20, yPos + 10);
+    doc.text('Website: https://jonojivangrocery.in', 20, yPos + 8);
   
     // Save the PDF
     doc.save('invoice.pdf');
   };
+  
   
   
 
