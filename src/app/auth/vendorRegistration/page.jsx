@@ -91,6 +91,7 @@ const VendorRegistrationForm = () => {
       >
         <div className="w-full max-w-lg mb-8">
           <StepProgressBar stepLabels={stepLabels} step={step} />
+          <hr className="my-4"/>
         </div>
         {step === 1 && (
           <motion.div
