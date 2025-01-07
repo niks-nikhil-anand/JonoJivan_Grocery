@@ -313,8 +313,10 @@ const Navbar = () => {
         </div>
 
         <div>
-        <h1 className="font-bold text-xl ">
+        <h1 className="font-bold text-xl cursor-pointer ">
+          <Link href={"/"}>
           JonoJivan Grocery
+          </Link>
         </h1>
         </div>
         

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
+import Link from "next/link";
 
 const VendorRegistrationForm = () => {
   const [step, setStep] = useState(1);
