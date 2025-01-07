@@ -167,8 +167,6 @@ const VendorRegistrationForm = () => {
     {showPassword ? <FaEye /> : <FaEyeSlash />}
   </div>
 </div>
-
-
             <div className="mb-4 relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -224,34 +222,51 @@ const VendorRegistrationForm = () => {
           </motion.div>
         )}
 
-        {step === 3 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-xl font-semibold mb-4">Documents</h2>
-            {[
-              "adhaarCard",
-              "panCard",
-              "bankPassbook",
-              "msmsCertificate",
-              "gstCertificate",
-              "tradeLicence",
-              "shopPhoto",
-            ].map((doc, index) => (
-              <div key={index} className="mt-4">
-                <label className="block mb-2 capitalize">{doc.replace(/([A-Z])/g, " $1").trim()}</label>
-                <input
-                  type="file"
-                  name={doc}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-            ))}
-          </motion.div>
-        )}
+{step === 3 && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5 }}
+  >
+    <h2 className="text-xl font-semibold mb-4">Documents</h2>
+    {[ 
+      "adhaarCard",
+      "panCard",
+      "bankPassbook",
+      "msmsCertificate",
+      "gstCertificate",
+      "tradeLicence",
+      "shopPhoto",
+    ].map((doc, index) => (
+      <div key={index} className="mt-4">
+        <label className="block mb-2 capitalize">
+          {doc.replace(/([A-Z])/g, " $1").trim()}
+        </label>
+        <input
+          type="file"
+          name={doc}
+          onChange={handleInputChange}
+          className="w-full p-2 border rounded"
+        />
+      </div>
+    ))}
+
+    {/* Terms and Conditions Checkbox */}
+    <div className="mt-4">
+      <label className="flex items-center">
+        <input
+          type="checkbox"
+          name="termsAndConditions"
+          required
+          className="mr-2"
+        />
+        I agree to the <Link href="/termsAndConditions" className="text-blue-600">Terms and Conditions</Link>
+      </label>
+    </div>
+  </motion.div>
+)}
+
+
 
         <div className="flex justify-between mt-6">
           {step > 1 && (
