@@ -13,6 +13,10 @@ const vendorSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Aadhaar Card is required']
     },
+    panCard:{
+        type: String,
+        required: [true, 'PAN Card is required']
+    },
     bankPassbook: {
         type: String,
         required: [true, 'Bank Passbook is required']
