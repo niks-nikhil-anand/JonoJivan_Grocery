@@ -109,11 +109,11 @@ const Footer = () => {
           <div className="w-16 h-1 bg-[#4ADE80] mb-4"></div>
           <ul className="space-y-3">
             {[
-              { name: 'Home', url: '/' },
               { name: 'Cancellation and Return Policies', url: '/returnPolicy' },
               { name: 'Shipping And Delivery', url: '/shippingPolicy' },
               { name: 'Privacy Policy', url: '/privacyPolicy' },
               { name: 'Terms & Condition', url: '/termsAndConditions' },
+              { name: 'Become JonoJivan Vendor', url: '/auth/vendorRegistration' },
             ].map((link) => (
               <li key={link.name} className="hover:underline cursor-pointer">
                 <a href={link.url}>{link.name}</a>
