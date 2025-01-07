@@ -48,10 +48,9 @@ const vendorSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    address: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address',
-    }],
+    businessAddress:{
+        type: String
+    },
     status: {
         type: String,
         enum: ['Blocked', 'Pending', 'inReview', 'Active'],

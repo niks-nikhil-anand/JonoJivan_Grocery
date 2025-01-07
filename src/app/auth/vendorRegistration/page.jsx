@@ -27,6 +27,9 @@ const VendorRegistrationForm = () => {
     shopPhoto: null,
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
@@ -46,6 +49,8 @@ const VendorRegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading spinner
+
     try {
       const data = new FormData();
       Object.keys(formData).forEach((key) => {
@@ -58,6 +63,8 @@ const VendorRegistrationForm = () => {
       toast.success("Registration successful!");
     } catch (error) {
       toast.error("Error submitting the form. Please try again.");
+    } finally {
+      setLoading(false); // Hide loading spinner
     }
   };
 
@@ -83,10 +90,8 @@ const VendorRegistrationForm = () => {
         className="w-full max-w-lg bg-white p-6 rounded-lg shadow-md space-y-6"
       >
         <div className="w-full max-w-lg mb-8">
-        <div className="">
-      <StepProgressBar stepLabels={stepLabels} step={step} />
-    </div>
-      </div>
+          <StepProgressBar stepLabels={stepLabels} step={step} />
+        </div>
         {step === 1 && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -144,6 +149,42 @@ const VendorRegistrationForm = () => {
               <option value="female">Female</option>
               <option value="other">Other</option>
             </select>
+
+            <div className="mb-4 relative">
+  <label className="block mt-4 mb-2">Password</label>
+  <input
+    type={showPassword ? "text" : "password"}
+    value={formData.password}
+    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+    className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 border-green-600"
+    required
+    placeholder="Password"
+  />
+  <div
+    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+    onClick={() => setShowPassword(!showPassword)}
+  >
+    {showPassword ? <FaEye /> : <FaEyeSlash />}
+  </div>
+</div>
+
+
+            <div className="mb-4 relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                placeholder="Confirm Password"
+                className="w-full px-4 py-2 border rounded-xl border-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                required
+              />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </div>
+            </div>
           </motion.div>
         )}
 
@@ -206,7 +247,6 @@ const VendorRegistrationForm = () => {
                   name={doc}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded"
-                  required
                 />
               </div>
             ))}
@@ -238,9 +278,10 @@ const VendorRegistrationForm = () => {
             <motion.button
               type="submit"
               whileHover={{ scale: 1.05 }}
-              className="px-6 py-2 bg-blue-500 text-white rounded"
+              className={`px-6 py-2 bg-blue-500 text-white rounded ${loading ? 'cursor-not-allowed' : ''}`}
+              disabled={loading}
             >
-              Submit
+              {loading ? 'Submitting...' : 'Submit'}
             </motion.button>
           )}
         </div>

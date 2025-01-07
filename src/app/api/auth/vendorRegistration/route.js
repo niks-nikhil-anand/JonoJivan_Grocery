@@ -79,14 +79,15 @@ export const POST = async (req) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Password hashed successfully.");
 
-    // Upload images to Cloudinary (if they exist)
-    const adhaarCardUrl = adhaarCard ? await uploadImage(adhaarCard) : null;
-    const panCardUrl = panCard ? await uploadImage(panCard) : null;
-    const bankPassbookUrl = bankPassbook ? await uploadImage(bankPassbook) : null;
-    const msmsCertificateUrl = msmsCertificate ? await uploadImage(msmsCertificate) : null;
-    const gstCertificateUrl = gstCertificate ? await uploadImage(gstCertificate) : null;
-    const tradeLicenceUrl = tradeLicence ? await uploadImage(tradeLicence) : null;
-    const shopPhotoUrl = shopPhoto ? await uploadImage(shopPhoto) : null;
+   // Check and upload each file to Cloudinary if provided, else set to null
+const adhaarCardUrl = adhaarCard && adhaarCard !== 'null' ? await uploadImage(adhaarCard) : null;
+const panCardUrl = panCard && panCard !== 'null' ? await uploadImage(panCard) : null;
+const bankPassbookUrl = bankPassbook && bankPassbook !== 'null' ? await uploadImage(bankPassbook) : null;
+const msmsCertificateUrl = msmsCertificate && msmsCertificate !== 'null' ? await uploadImage(msmsCertificate) : null;
+const gstCertificateUrl = gstCertificate && gstCertificate !== 'null' ? await uploadImage(gstCertificate) : null;
+const tradeLicenceUrl = tradeLicence && tradeLicence !== 'null' ? await uploadImage(tradeLicence) : null;
+const shopPhotoUrl = shopPhoto && shopPhoto !== 'null' ? await uploadImage(shopPhoto) : null;
+
 
     const vendorData = {
       fullName,
