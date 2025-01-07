@@ -55,7 +55,7 @@ const vendorSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['Blocked', 'Pending', 'inReview', 'Active'],
-        default: 'Active',
+        default: 'Pending',
     },
     category: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -63,7 +63,6 @@ const vendorSchema = new mongoose.Schema({
     }],
     gender: {
         type: String,
-        enum: ['Male', 'Female', 'Other'],
     },
     numberOfEmployees: {
         type: Number,

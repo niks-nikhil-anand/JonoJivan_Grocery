@@ -1,11 +1,9 @@
+import connectDB from "@/lib/dbConnect";
+import uploadImage from "@/lib/uploadImages";
+import userModels from "@/models/userModels";
+import vendorModels from "@/models/vendorModels";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { Resend } from "resend";
-import WelcomeEmail from "@/emails/welcomeEmail";
-import userModels from "@/models/userModels";
-import connectDB from "@/lib/dbConnect";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const POST = async (req) => {
   try {
@@ -54,22 +52,6 @@ export const POST = async (req) => {
       shopPhoto,
     });
 
-    if (
-      !fullName ||
-      !email ||
-      !mobileNumber ||
-      !password ||
-      !confirmPassword ||
-      !dob ||
-      !gender ||
-      !businessName ||
-      !noOfEmployee ||
-      !businessAddress
-    ) {
-      console.log("Validation failed: Missing required fields.");
-      return NextResponse.json({ msg: "Please provide all the required fields." }, { status: 400 });
-    }
-
     // Validate password match
     if (password !== confirmPassword) {
       console.log("Validation failed: Passwords do not match.");
@@ -97,6 +79,15 @@ export const POST = async (req) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Password hashed successfully.");
 
+    // Upload images to Cloudinary (if they exist)
+    const adhaarCardUrl = adhaarCard ? await uploadImage(adhaarCard) : null;
+    const panCardUrl = panCard ? await uploadImage(panCard) : null;
+    const bankPassbookUrl = bankPassbook ? await uploadImage(bankPassbook) : null;
+    const msmsCertificateUrl = msmsCertificate ? await uploadImage(msmsCertificate) : null;
+    const gstCertificateUrl = gstCertificate ? await uploadImage(gstCertificate) : null;
+    const tradeLicenceUrl = tradeLicence ? await uploadImage(tradeLicence) : null;
+    const shopPhotoUrl = shopPhoto ? await uploadImage(shopPhoto) : null;
+
     const vendorData = {
       fullName,
       email,
@@ -105,28 +96,33 @@ export const POST = async (req) => {
       dob,
       gender,
       businessName,
-      noOfEmployee,
+      numberOfEmployees: noOfEmployee,
       businessAddress,
-      adhaarCard,
-      panCard,
-      bankPassbook,
-      msmsCertificate,
-      gstCertificate,
-      tradeLicence,
-      shopPhoto,
+      adhaarCard: adhaarCardUrl?.secure_url || '',
+      panCard: panCardUrl?.secure_url || '',
+      bankPassbook: bankPassbookUrl?.secure_url || '',
+      msmsCertificate: msmsCertificateUrl?.secure_url || '',
+      gstCertificate: gstCertificateUrl?.secure_url || '',
+      tradeLicence: tradeLicenceUrl?.secure_url || '',
+      shopPhoto: shopPhotoUrl?.secure_url || '',
+    };
+
+    const vendor = new vendorModels(vendorData);
+    await vendor.save();
+    console.log("Vendor saved to the database:", vendor);
+
+    const userData = {
+      fullName,
+      email,
+      mobileNumber,
+      password: hashedPassword,
+      vendor: vendor._id,
+      role: "Vendor",
     };
 
     const user = new userModels(userData);
     await user.save();
     console.log("User saved to the database:", user);
-
-    await resend.emails.send({
-      from: 'no-reply@JonoJivan.com',
-      to: email,
-      subject: 'Welcome to JonoJivan',
-      react: <WelcomeEmail fullName={fullName} />,
-    });
-    console.log("Welcome email sent to:", email);
 
     return NextResponse.json({ msg: "Account created successfully" }, { status: 200 });
   } catch (error) {
