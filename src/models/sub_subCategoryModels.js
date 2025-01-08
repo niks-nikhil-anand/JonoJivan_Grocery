@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-
-// Define the schema for Category
-const subCategorySchema = new Schema(
+// Define the schema for SubSubCategory
+const subSubCategorySchema = new Schema(
   {
     name: {
       type: String,
@@ -18,5 +17,4 @@ const subCategorySchema = new Schema(
 );
 
 // Export the models with default export
-export default mongoose.models.SubCategory || mongoose.model('SubCategory', subCategorySchema);
-
+export default mongoose.models.SubSubCategory || mongoose.model('SubSubCategory', subSubCategorySchema);
