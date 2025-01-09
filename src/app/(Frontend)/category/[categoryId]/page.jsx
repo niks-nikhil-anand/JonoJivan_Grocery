@@ -16,11 +16,12 @@ const Page = () => {
                 const urlPath = window.location.pathname;
                 const id = urlPath.split('/')[2];
 
-                const response = await fetch(`/api/admin/dashboard/category/subCategory/${id}`);
+                const response = await fetch(`/api/admin/dashboard/category/${id}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const result = await response.json();
+                console.log(result)
                 setData(result);
             } catch (error) {
                 setError(error.message);
