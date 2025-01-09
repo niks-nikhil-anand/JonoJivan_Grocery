@@ -32,8 +32,10 @@ const ProductForm = () => {
     category: '',
     subCategory: '',
     stock: 0,
-    isFanFavourites: false,
     isOnSale: false,
+    isClearance: false, 
+    isHotDeal: false,   
+    isFeaturedSale: false, 
     tags: '',
     weight: '', 
     unit: '',
@@ -229,13 +231,17 @@ const ProductForm = () => {
     data.append('salePrice', formData.salePrice);
     data.append('originalPrice', formData.originalPrice);
     data.append('category', formData.category);
-    data.append('subcategories', selectedSubcategories);
+    data.append('subcategories', selectedSubCategory);
+    data.append('subSubcategories', selectedSubSubCategory);
     data.append('stock', formData.stock);
     data.append('isFanFavourites', formData.isFanFavourites);
     data.append('isOnSale', formData.isOnSale);
     data.append('tags', formData.tags);
     data.append('weight', formData.weight);
-    data.append('unit', formData.unit); // Append unit field
+    data.append('unit', formData.unit); 
+    data.append('isOnSale', formData.isOnSale);
+    data.append('isClearance', formData.isClearance);
+    data.append('isHotDeal', formData.isHotDeal);
   
     // Append images
     images.forEach((file) => {
