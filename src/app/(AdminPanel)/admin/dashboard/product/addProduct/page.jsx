@@ -704,29 +704,85 @@ const ProductForm = () => {
 
 
 
-                {/* Fan Favourites Checkbox */}
-                <motion.div className="flex items-center mb-4">
-                  <input
-                    type="checkbox"
-                    name="isFanFavourites"
-                    checked={formData.isFanFavourites}
-                    onChange={handleInputChange}
-                    id="isFanFavourites"
-                  />
-                  <label htmlFor="isFanFavourites" className="ml-2 text-gray-700">Fan Favourites</label>
-                </motion.div>
+               {/* On Sale Checkbox */}
+            <motion.div 
+              className="flex items-center mb-6 p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            >
+              <input
+                type="checkbox"
+                name="isOnSale"
+                checked={formData.isOnSale}
+                onChange={handleInputChange}
+                id="isOnSale"
+                className="w-5 h-5 text-green-500 bg-gray-100 border-gray-300 rounded focus:ring-green-400 focus:ring-2"
+              />
+              <label 
+                htmlFor="isOnSale" 
+                className="ml-3 text-lg text-gray-800 font-medium cursor-pointer"
+              >
+                On Sale
+              </label>
+            </motion.div>
 
-                {/* On Sale Checkbox */}
-                <motion.div className="flex items-center mb-4">
-                  <input
-                    type="checkbox"
-                    name="isOnSale"
-                    checked={formData.isOnSale}
-                    onChange={handleInputChange}
-                    id="isOnSale"
-                  />
-                  <label htmlFor="isOnSale" className="ml-2 text-gray-700">On Sale</label>
-                </motion.div>
+            {/* Clearance Sale Checkbox */}
+            <motion.div 
+              className="flex items-center mb-6 p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            >
+              <input
+                type="checkbox"
+                name="isClearance"
+                checked={formData.isClearance}
+                onChange={handleInputChange}
+                id="isClearance"
+                className="w-5 h-5 text-red-500 bg-gray-100 border-gray-300 rounded focus:ring-red-400 focus:ring-2"
+              />
+              <label 
+                htmlFor="isClearance" 
+                className="ml-3 text-lg text-gray-800 font-medium cursor-pointer"
+              >
+                Clearance Sale
+              </label>
+            </motion.div>
+
+            {/* Hot Deal Checkbox */}
+            <motion.div 
+              className="flex items-center mb-6 p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            >
+              <input
+                type="checkbox"
+                name="isHotDeal"
+                checked={formData.isHotDeal}
+                onChange={handleInputChange}
+                id="isHotDeal"
+                className="w-5 h-5 text-orange-500 bg-gray-100 border-gray-300 rounded focus:ring-orange-400 focus:ring-2"
+              />
+              <label 
+                htmlFor="isHotDeal" 
+                className="ml-3 text-lg text-gray-800 font-medium cursor-pointer"
+              >
+                Hot Deal
+              </label>
+            </motion.div>
+
+            {/* Featured Sale Checkbox */}
+            <motion.div 
+              className="flex items-center mb-6 p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            >
+              <input
+                type="checkbox"
+                name="isFeaturedSale"
+                checked={formData.isFeaturedSale}
+                onChange={handleInputChange}
+                id="isFeaturedSale"
+                className="w-5 h-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-400 focus:ring-2"
+              />
+              <label 
+                htmlFor="isFeaturedSale" 
+                className="ml-3 text-lg text-gray-800 font-medium cursor-pointer"
+              >
+                Featured Sale
+              </label>
+            </motion.div>
               </div>
 
               <div className="flex justify-between">
