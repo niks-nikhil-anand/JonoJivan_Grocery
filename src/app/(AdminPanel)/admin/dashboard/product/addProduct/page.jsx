@@ -108,10 +108,9 @@ const ProductForm = () => {
   
   }, [selectedCategory]);
 
-  // Handle subcategory selection
-  const handleSubCategorySelect = async (subCategoryId) => {
-    setSelectedSubCategory(subCategoryId);
-  };
+ 
+
+
   
   
 
@@ -133,26 +132,8 @@ const ProductForm = () => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
     setImageInputs((prevInputs) => prevInputs.filter((_, i) => i !== index));
   };
-  
 
-  
 
-  const handleSubcategorySelect = (subcategoryId) => {
-    setSelectedSubcategories((prev) => {
-      if (prev.includes(subcategoryId)) {
-        return prev.filter((id) => id !== subcategoryId);
-      } else {
-        return [...prev, subcategoryId];
-      }
-    });
-  };
-  
-
-  const handleSubcategoryChange = (event) => {
-    const value = Array.from(event.target.selectedOptions, option => option.value);
-    setSelectedSubcategories(value);
-  };
- 
   const handleCategorySelect = (categoryId) => {
     setSelectedCategory(categoryId);
     setFormData({
@@ -160,6 +141,26 @@ const ProductForm = () => {
       category: categoryId,
     });
   };
+
+  const handleSubCategorySelect = (subcategoryId) => {
+    setSelectedSubCategory(subcategoryId);
+    setFormData({
+      ...formData,
+      subCatgeory: subcategoryId,
+    });
+  };
+
+
+  const handleSUbSubCategorySelect = (subsubcategoryId) => {
+    setSelectedSubSubCategory(subsubcategoryId);
+    setFormData({
+      ...formData,
+      subSubCatgeory: subsubcategoryId,
+    });
+  };
+
+
+
 
   const handleFeaturedImageChange = (e) => {
     const file = e.target.files[0]; 
@@ -417,7 +418,7 @@ const ProductForm = () => {
                       key={subCategory._id}
                       type="button"
                       onClick={() => handleSubCategorySelect(subCategory._id)}
-                      className={`p-2 border rounded-lg mb-2 ${
+                      className={`p-2 border rounded-lg mb-2 ml-5 ${
                         selectedSubCategory === subCategory._id
                           ? 'bg-green-500 text-white'
                           : 'bg-white text-gray-700 hover:bg-gray-200'
@@ -431,6 +432,32 @@ const ProductForm = () => {
             </div>
           )}
 
+
+{selectedSubCategory && (
+            <div>
+              <label className="block text-blue-600 font-bold mb-3">SubSubCategory</label>
+              {fetchingSubCategories ? (
+                <p>Loading subSubcategories...</p>
+              ) : (
+                <div className="h-32 border border-gray-300 overflow-y-scroll p-2 rounded-lg">
+                  {subSubCategories.map((subSubCategory) => (
+                    <motion.button
+                      key={subSubCategory._id}
+                      type="button"
+                      onClick={() => handleSubSubCategorySelect(subSubCategory._id)}
+                      className={`p-2 border rounded-lg mb-2 ml-5 ${
+                        selectedSubSubCategory === subSubCategory._id
+                          ? 'bg-green-500 text-white'
+                          : 'bg-white text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {subSubCategory.name}
+                    </motion.button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
     </div>
 
     {/* Flexbox for buttons with Previous on the left and Next on the right */}
