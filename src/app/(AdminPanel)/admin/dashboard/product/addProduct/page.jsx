@@ -64,6 +64,8 @@ const ProductForm = () => {
     fetchCategories();
   }, []);
 
+
+
   useEffect(() => {
     const fetchSubcategories = async () => {
       if (selectedCategory) {
@@ -108,6 +110,51 @@ const ProductForm = () => {
   
   }, [selectedCategory]);
 
+
+  useEffect(() => {
+    const fetchSubSubcategories = async () => {
+      if (selectedCategory) {
+        try {
+          // Fetch subcategories based on selectedCategory
+          const subCategoryResponse = await fetch(`/api/admin/dashboard/subCatgeory/${selectedSubCategory}`);
+          if (!subCategoryResponse.ok) {
+            throw new Error(`Category fetch failed: ${subCategoryResponse.statusText}`);
+          }
+          const subCategoryData = await subCategoryResponse.json();
+  
+          // Assuming the subcategory data is in the categoryData.subcategory array
+          const subSubCategoryResponses = await Promise.all(
+            subCategoryData.subSubcategory.map(async (subsubcategoryId) => {
+              try {
+                const subSubResponse = await fetch(`/api/admin/dashboard/subCatgeory/${subsubcategoryId}`);
+                if (!subSubCategoryResponses.ok) {
+                  throw new Error(`Subcategory fetch failed: ${subSubCategoryResponses.statusText}`);
+                }
+                return await subSubResponse.json();
+              } catch (subError) {
+                console.error(`Error fetching subCategory ${subsubcategoryId}:`, subError);
+                return null;
+              }
+            })
+          );
+  
+          // Filter out any null responses from the subcategory fetches
+          const validSubCategories = subSubResponse.filter((sub) => sub !== null);
+  
+          // Set the subcategories to state
+          setSubSubCategories(validSubCategories);
+        } catch (error) {
+          console.error('Error fetching subcategories:', error);
+        }
+      } else {
+        console.log('No category selected, skipping subcategory fetch'); // Log when no category is selected
+      }
+    };
+  
+    fetchSubSubcategories(); // Call the function to fetch subcategories
+  
+  }, [selectedSubCategory]);
+
  
 
 
@@ -151,7 +198,7 @@ const ProductForm = () => {
   };
 
 
-  const handleSUbSubCategorySelect = (subsubcategoryId) => {
+  const handleSubSubCategorySelect = (subsubcategoryId) => {
     setSelectedSubSubCategory(subsubcategoryId);
     setFormData({
       ...formData,
@@ -436,7 +483,7 @@ const ProductForm = () => {
 {selectedSubCategory && (
             <div>
               <label className="block text-blue-600 font-bold mb-3">SubSubCategory</label>
-              {fetchingSubCategories ? (
+              {fetchingSubSubCategories ? (
                 <p>Loading subSubcategories...</p>
               ) : (
                 <div className="h-32 border border-gray-300 overflow-y-scroll p-2 rounded-lg">
