@@ -10,9 +10,11 @@ const ProductForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [fetchingCategories, setFetchingCategories] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [subcategories, setSubcategories] = useState([]); // Add this line
-  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
-  const [fetchingSubcategories, setFetchingSubcategories] = useState(false);
+  
+
+  const [fetchingSubCategories, setFetchingSubCategories] = useState(false);
+    const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+    const [subCategories, setSubCategories] = useState([]);
 
 
   const [formData, setFormData] = useState({
@@ -58,17 +60,37 @@ const ProductForm = () => {
   useEffect(() => {
     const fetchSubcategories = async () => {
       if (selectedCategory) {
-        console.log('Fetching subcategories for category:', selectedCategory); // Log the selected category
-        setFetchingSubcategories(true); // Start fetching subcategories
         try {
-          const response = await axios.get(`/api/admin/dashboard/category/subCategory/${selectedCategory}`);
-          console.log('Subcategories fetched successfully:', response.data.subcategories); // Log the subcategories response
-          setSubcategories(response.data.subcategories);
+          // Fetch subcategories based on selectedCategory
+          const categoryResponse = await fetch(`/api/admin/dashboard/category/${selectedCategory}`);
+          if (!categoryResponse.ok) {
+            throw new Error(`Category fetch failed: ${categoryResponse.statusText}`);
+          }
+          const categoryData = await categoryResponse.json();
+  
+          // Assuming the subcategory data is in the categoryData.subcategory array
+          const subCategoryResponses = await Promise.all(
+            categoryData.subcategory.map(async (subcategoryId) => {
+              try {
+                const subResponse = await fetch(`/api/admin/dashboard/subCatgeory/${subcategoryId}`);
+                if (!subResponse.ok) {
+                  throw new Error(`Subcategory fetch failed: ${subResponse.statusText}`);
+                }
+                return await subResponse.json();
+              } catch (subError) {
+                console.error(`Error fetching subCategory ${subcategoryId}:`, subError);
+                return null;
+              }
+            })
+          );
+  
+          // Filter out any null responses from the subcategory fetches
+          const validSubCategories = subCategoryResponses.filter((sub) => sub !== null);
+  
+          // Set the subcategories to state
+          setSubCategories(validSubCategories);
         } catch (error) {
-          console.error('Error fetching subcategories:', error); // Log any errors
-        } finally {
-          console.log('Fetching subcategories completed'); // Log when fetching is completed
-          setFetchingSubcategories(false); // Stop fetching
+          console.error('Error fetching subcategories:', error);
         }
       } else {
         console.log('No category selected, skipping subcategory fetch'); // Log when no category is selected
@@ -78,6 +100,11 @@ const ProductForm = () => {
     fetchSubcategories(); // Call the function to fetch subcategories
   
   }, [selectedCategory]);
+
+  // Handle subcategory selection
+  const handleSubCategorySelect = async (subCategoryId) => {
+    setSelectedSubCategory(subCategoryId);
+  };
   
   
 
@@ -372,33 +399,30 @@ const ProductForm = () => {
 </div>
 
 {selectedCategory && (
-  <div className="col-span-2">
-    <label className="block text-blue-600 font-bold mb-3">Subcategories</label>
-    {fetchingSubcategories ? (
-      <p>Loading subcategories...</p>
-    ) : (
-      <div className="flex flex-wrap gap-4">
-        {subcategories.map((subcategory) => (
-          <motion.button
-            key={subcategory._id}
-            type="button"
-            onClick={() => handleSubcategorySelect(subcategory._id)}
-            className={`p-3 border rounded-lg ${
-              selectedSubcategories.includes(subcategory._id)
-                ? 'bg-blue-500 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-200'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-          >
-            {subcategory.name}
-          </motion.button>
-        ))}
-      </div>
-    )}
-  </div>
-)}
+            <div>
+              <label className="block text-blue-600 font-bold mb-3">SubCategory</label>
+              {fetchingSubCategories ? (
+                <p>Loading subcategories...</p>
+              ) : (
+                <div className="h-32 border border-gray-300 overflow-y-scroll p-2 rounded-lg">
+                  {subCategories.map((subCategory) => (
+                    <motion.button
+                      key={subCategory._id}
+                      type="button"
+                      onClick={() => handleSubCategorySelect(subCategory._id)}
+                      className={`p-2 border rounded-lg mb-2 ${
+                        selectedSubCategory === subCategory._id
+                          ? 'bg-green-500 text-white'
+                          : 'bg-white text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {subCategory.name}
+                    </motion.button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
     </div>
 
