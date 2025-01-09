@@ -64,7 +64,7 @@ const AddSubCategory = () => {
 
     try {
       console.log('Sending data to API:', Array.from(data.entries())); // Log FormData entries
-      await axios.post('/api/admin/dashboard/category/subCategory', data);
+      await axios.post('/api/admin/dashboard/subCatgeory', data);
       console.log('Subcategory added successfully:', data);
       toast.success('Subcategory added successfully!');
       window.location.reload();
