@@ -39,15 +39,6 @@ const productSchema = new mongoose.Schema({
         required: [true, 'Product price is required'],
         min: [0, 'Price cannot be negative'],
     },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-    },
-    subCategory: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Category.subcategories', 
-    },
     featuredImage: {
         type: String,
         required: [true, 'Featured image URL is required'],
@@ -55,7 +46,6 @@ const productSchema = new mongoose.Schema({
     images: [{
         type: String
     }],
-    
     ratings: {
         average: {
             type: Number,
@@ -68,11 +58,19 @@ const productSchema = new mongoose.Schema({
             default: 0,
         }
     },
-    isFanFavourites: {
+    isFeaturedSale: {
         type: Boolean,
         default: false,
     },
     isOnSale: {
+        type: Boolean,
+        default: false,
+    },
+    isClearance:{
+        type: Boolean,
+        default: false,
+    },
+    isHotDeal:{
         type: Boolean,
         default: false,
     },
@@ -82,12 +80,26 @@ const productSchema = new mongoose.Schema({
     users: [{
          type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-     }],
+    }],
     status: {
         type: String,
-        enum: ['active', 'inactive', 'out of stock'],
-        default: 'inactive',  
-    }
+        enum: ['Active', 'Inactive', 'Out of stock'],
+        default: 'Inactive',  
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+    },
+    subCategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'SubCategory', 
+    },
+    subSubCategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'SubSubCategory',
+    },
 }, {
     timestamps: true
 });
