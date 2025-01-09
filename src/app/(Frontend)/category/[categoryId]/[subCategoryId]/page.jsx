@@ -16,26 +16,39 @@ const Page = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                console.log("Starting fetchData...");
+
+                // Extract name from the URL
                 const urlPath = window.location.pathname;
-                const id = urlPath.split('/')[2];
-                // Fetch category data
-                const response = await fetch(`/api/admin/dashboard/subCategory/${id}`);
+                console.log("URL Path:", urlPath);
+                const name = decodeURIComponent(urlPath.split('/')[3]); // Extract and decode the name
+                console.log("Extracted Name:", name);
+
+                // Fetch category data based on name
+                console.log(`Fetching category data for Name: ${name}`);
+                const response = await fetch(`/api/admin/dashboard/subCatgeory?name=${name}`);
+                console.log("Category fetch response status:", response.status);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch category data: ${response.statusText}`);
                 }
                 const result = await response.json();
-                console.log("Category Data:", result);
+                console.log("Category Data Fetched:", result);
                 setData(result);
 
                 // Fetch subcategory data for each subcategory ID
+                console.log("Fetching subcategories for IDs:", result.subSubcategory);
                 const subCategoryResponses = await Promise.all(
                     result.subSubcategory.map(async (subcategoryId) => {
                         try {
-                            const subResponse = await fetch(`/api/admin/dashboard/subCatgeory/${subcategoryId}`);
+                            console.log(`Fetching subcategory data for ID: ${subcategoryId}`);
+                            const subResponse = await fetch(`/api/admin/dashboard/sub_subCategory/${subcategoryId}`);
+                            console.log(`Subcategory fetch response status for ${subcategoryId}:`, subResponse.status);
                             if (!subResponse.ok) {
                                 throw new Error(`Subcategory fetch failed: ${subResponse.statusText}`);
                             }
-                            return await subResponse.json();
+                            const subData = await subResponse.json();
+                            console.log(`Subcategory Data for ID ${subcategoryId}:`, subData);
+                            return subData;
                         } catch (subError) {
                             console.error(`Error fetching subCategory ${subcategoryId}:`, subError);
                             return null;
@@ -43,20 +56,23 @@ const Page = () => {
                     })
                 );
 
-                // Filter out any null responses
+                // Filter out null responses
                 const validSubCategories = subCategoryResponses.filter((sub) => sub !== null);
-                console.log("Subcategory Data:", validSubCategories);
+                console.log("Valid Subcategory Data:", validSubCategories);
                 setSubCategoryData(validSubCategories);
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error in fetchData:", error);
                 setError(error.message);
             } finally {
+                console.log("Setting loading state to false");
                 setLoading(false);
             }
         };
 
+        console.log("Executing useEffect...");
         fetchData();
     }, []);
+    
 
     if (loading) return <Loader />;
     if (error) return <p className="text-red-500">Error: {error}</p>;

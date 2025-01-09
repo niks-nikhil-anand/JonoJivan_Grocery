@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import uploadImage from "@/lib/uploadImages";
 
 // POST request to create new SubCategories
-export const POST = async (req) => {
+export const POST = async (req ) => {
   try {
     console.log("Connecting to the database...");
     await connectDB();
@@ -86,3 +86,62 @@ export const POST = async (req) => {
     return NextResponse.json({ msg: "Error adding subcategories", error: error.message }, { status: 500 });
   }
 };
+
+
+// GET request to fetch SubCategory by ID or Name
+
+// GET request to fetch SubCategory by Name
+export const GET = async (req) => {
+  console.log("Incoming GET request received");
+
+  // Log the query to check its structure
+  console.log("GET Request URL:", req.url); // Check the full URL
+
+  const { searchParams } = new URL(req.url, `http://${req.headers.host}`);
+  const name = searchParams.get('name'); // Extract 'name' from query params
+
+  console.log("Extracted Name:", name); // Log the extracted name to check
+
+  // Validate input
+  if (!name) {
+    console.log("Validation Error: No Name provided in GET request");
+    return NextResponse.json(
+      { msg: "SubCategory Name is required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    console.log("Attempting to connect to the database...");
+    await connectDB();
+    console.log("Database connection successful");
+
+    // Construct query based on Name
+    const query = { name };
+    console.log("Building query to fetch SubCategory by Name:", query);
+
+    // Fetch SubCategory from the database
+    const subCategory = await subCategoryModels.findOne(query);
+
+    if (!subCategory) {
+      console.log("SubCategory not found for Name:", name);
+      return NextResponse.json(
+        { msg: "SubCategory not found" },
+        { status: 404 }
+      );
+    }
+
+    console.log("SubCategory fetched successfully:", subCategory);
+    return NextResponse.json(subCategory, { status: 200 });
+  } catch (error) {
+    console.error("Error during SubCategory fetch:", error);
+    return NextResponse.json(
+      {
+        msg: "Error fetching SubCategory",
+        error: error.message,
+      },
+      { status: 500 }
+    );
+  }
+};
+
