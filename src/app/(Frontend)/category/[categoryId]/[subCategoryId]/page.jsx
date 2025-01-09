@@ -10,6 +10,9 @@ const Page = () => {
     const [error, setError] = useState(null); // State to handle error
     const router = useRouter();
 
+
+    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
