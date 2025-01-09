@@ -18,9 +18,8 @@ const Page = () => {
             try {
                 const urlPath = window.location.pathname;
                 const id = urlPath.split('/')[2];
-
                 // Fetch category data
-                const response = await fetch(`/api/admin/dashboard/sub_subCategory/${id}`);
+                const response = await fetch(`/api/admin/dashboard/subCategory/${id}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch category data: ${response.statusText}`);
                 }
@@ -30,7 +29,7 @@ const Page = () => {
 
                 // Fetch subcategory data for each subcategory ID
                 const subCategoryResponses = await Promise.all(
-                    result.subcategory.map(async (subcategoryId) => {
+                    result.subSubcategory.map(async (subcategoryId) => {
                         try {
                             const subResponse = await fetch(`/api/admin/dashboard/subCatgeory/${subcategoryId}`);
                             if (!subResponse.ok) {

@@ -2,27 +2,31 @@ import connectDB from "@/lib/dbConnect";
 import subCategoryModels from "@/models/subCategoryModels";
 import { NextResponse } from "next/server";
 
-// GET SubCategory by ID
+// GET SubCategory by ID or Name
 export const GET = async (request, { params }) => {
-  const { id } = params; // Correctly destructure id
+  const { id, name } = params; // Support ID or Name
 
   console.log("GET Request Params:", params);
-  console.log("GET Request ID:", id);
 
-  if (!id) {
-    console.log("No ID provided in GET request");
-    return NextResponse.json({ msg: "SubCategory ID is required" }, { status: 400 });
+  if (!id && !name) {
+    console.log("No ID or Name provided in GET request");
+    return NextResponse.json(
+      { msg: "SubCategory ID or Name is required" },
+      { status: 400 }
+    );
   }
 
   try {
     console.log("Connecting to database...");
     await connectDB();
 
-    console.log("Fetching SubCategory with ID:", id);
-    const subCategory = await subCategoryModels.findById(id); // Use id
+    console.log("Fetching SubCategory with ID or Name:", { id, name });
+
+    const query = id ? { _id: id } : { name }; // Query by ID or Name
+    const subCategory = await subCategoryModels.findOne(query);
 
     if (!subCategory) {
-      console.log("SubCategory not found for ID:", id);
+      console.log("SubCategory not found for:", { id, name });
       return NextResponse.json({ msg: "SubCategory not found" }, { status: 404 });
     }
 
@@ -37,27 +41,31 @@ export const GET = async (request, { params }) => {
   }
 };
 
-// DELETE SubCategory by ID
+// DELETE SubCategory by ID or Name
 export const DELETE = async (request, { params }) => {
-  const { id } = params; // Match variable name for consistency
+  const { id, name } = params; // Support ID or Name
 
   console.log("DELETE Request Params:", params);
-  console.log("DELETE Request ID:", id);
 
-  if (!id) {
-    console.log("No ID provided in DELETE request");
-    return NextResponse.json({ msg: "SubCategory ID is required" }, { status: 400 });
+  if (!id && !name) {
+    console.log("No ID or Name provided in DELETE request");
+    return NextResponse.json(
+      { msg: "SubCategory ID or Name is required" },
+      { status: 400 }
+    );
   }
 
   try {
     console.log("Connecting to database...");
     await connectDB();
 
-    console.log("Deleting SubCategory with ID:", id);
-    const subCategory = await subCategoryModels.findByIdAndDelete(id); // Use id
+    console.log("Deleting SubCategory with ID or Name:", { id, name });
+
+    const query = id ? { _id: id } : { name }; // Query by ID or Name
+    const subCategory = await subCategoryModels.findOneAndDelete(query);
 
     if (!subCategory) {
-      console.log("SubCategory not found for ID:", id);
+      console.log("SubCategory not found for:", { id, name });
       return NextResponse.json({ msg: "SubCategory not found" }, { status: 404 });
     }
 
