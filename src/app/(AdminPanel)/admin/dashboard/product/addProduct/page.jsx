@@ -126,7 +126,7 @@ const ProductForm = () => {
           const subSubCategoryResponses = await Promise.all(
             subCategoryData.subSubcategory.map(async (subsubcategoryId) => {
               try {
-                const subSubResponse = await fetch(`/api/admin/dashboard/subCatgeory/${subsubcategoryId}`);
+                const subSubResponse = await fetch(`/api/admin/dashboard/sub_subCategory/${subsubcategoryId}`);
                 if (!subSubCategoryResponses.ok) {
                   throw new Error(`Subcategory fetch failed: ${subSubCategoryResponses.statusText}`);
                 }
