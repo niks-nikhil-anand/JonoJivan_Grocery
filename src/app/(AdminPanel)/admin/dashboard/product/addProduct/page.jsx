@@ -222,9 +222,10 @@ const ProductForm = () => {
   
     const data = new FormData();
   
-    // Log formData for debugging
-    console.log('Form Data:', formData);
-  
+    // Log the initial form data
+  console.log('Initial Form Data:', formData);
+
+
     // Append basic product details from formData
     data.append('name', formData.name);
     data.append('description', formData.description);
@@ -234,15 +235,18 @@ const ProductForm = () => {
     data.append('subcategories', selectedSubCategory);
     data.append('subSubcategories', selectedSubSubCategory);
     data.append('stock', formData.stock);
-    data.append('isFanFavourites', formData.isFanFavourites);
-    data.append('isOnSale', formData.isOnSale);
     data.append('tags', formData.tags);
     data.append('weight', formData.weight);
     data.append('unit', formData.unit); 
-    data.append('isOnSale', formData.isOnSale);
     data.append('isClearance', formData.isClearance);
+    data.append('isOnSale', formData.isOnSale);
     data.append('isHotDeal', formData.isHotDeal);
+    data.append('isFeaturedSale', formData.isFeaturedSale);
   
+     // Log after appending basic product details
+  console.log('FormData after adding product details:', Array.from(data.entries()));
+
+
     // Append images
     images.forEach((file) => {
       if (file) {
@@ -364,24 +368,7 @@ const ProductForm = () => {
                  />
                </div>
          
-               {/* Sale Price */}
-               <div>
-                 <label className="block text-teal-600 font-bold mb-3" htmlFor="salePrice">
-                   Sale Price
-                 </label>
-                 <motion.input
-                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-                   type="number"
-                   name="salePrice"
-                   id="salePrice"
-                   value={formData.salePrice}
-                   onChange={handleInputChange}
-                   required
-                   initial={{ opacity: 0, scale: 0.8 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ duration: 0.4 }}
-                 />
-               </div>
+              
          
                {/* Original Price */}
                <div>
@@ -402,6 +389,24 @@ const ProductForm = () => {
                  />
                </div>
          
+          {/* Sale Price */}
+          <div>
+                 <label className="block text-teal-600 font-bold mb-3" htmlFor="salePrice">
+                   Sale Price
+                 </label>
+                 <motion.input
+                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
+                   type="number"
+                   name="salePrice"
+                   id="salePrice"
+                   value={formData.salePrice}
+                   onChange={handleInputChange}
+                   required
+                   initial={{ opacity: 0, scale: 0.8 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   transition={{ duration: 0.4 }}
+                 />
+               </div>
               
          
                

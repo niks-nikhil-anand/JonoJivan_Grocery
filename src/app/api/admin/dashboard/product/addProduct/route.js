@@ -34,8 +34,10 @@ export const POST = async (req) => {
     const subCategory = formData.get("subcategories");  
     const stock = parseInt(getTrimmedValue("stock"), 10);
     const tags = getTrimmedValue("tags");
-    const isFanFavourites = formData.get("isFanFavourites") === 'true';
     const isOnSale = formData.get("isOnSale") === 'true';
+    const isFeaturedSale = formData.get("isOnSale") === 'true';
+    const isClearance = formData.get("isClearance") === 'true';
+    const isHotDeal = formData.get("isHotDeal") === 'true';
     const weight = getTrimmedValue("weight");
     const unit = getTrimmedValue("unit");
 
