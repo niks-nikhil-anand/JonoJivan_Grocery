@@ -127,8 +127,8 @@ const ProductForm = () => {
             subCategoryData.subSubcategory.map(async (subsubcategoryId) => {
               try {
                 const subSubResponse = await fetch(`/api/admin/dashboard/sub_subCategory/${subsubcategoryId}`);
-                if (!subSubCategoryResponses.ok) {
-                  throw new Error(`Subcategory fetch failed: ${subSubCategoryResponses.statusText}`);
+                if (!subSubResponse.ok) {
+                  throw new Error(`Subcategory fetch failed: ${subSubResponse.statusText}`);
                 }
                 return await subSubResponse.json();
               } catch (subError) {
@@ -139,9 +139,10 @@ const ProductForm = () => {
           );
   
           // Filter out any null responses from the subcategory fetches
-          const validSubCategories = subSubResponse.filter((sub) => sub !== null);
+          const validSubCategories = subSubCategoryResponses.filter((sub) => sub !== null);
   
           // Set the subcategories to state
+          console.log('SubSubCategories:', validSubCategories);
           setSubSubCategories(validSubCategories);
         } catch (error) {
           console.error('Error fetching subcategories:', error);
