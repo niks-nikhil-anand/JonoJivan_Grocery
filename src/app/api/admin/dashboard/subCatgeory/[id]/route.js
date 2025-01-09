@@ -2,6 +2,7 @@ import connectDB from "@/lib/dbConnect";
 import subCategoryModels from "@/models/subCategoryModels";
 import { NextResponse } from "next/server";
 
+
 // GET SubCategory by ID
 export const GET = async (request, { params }) => {
   const { id } = params;
@@ -16,7 +17,7 @@ export const GET = async (request, { params }) => {
   try {
     await connectDB();
 
-    const subCategory = await subCategoryModels.findById(id).populate("subSubcategory");
+    const subCategory = await subCategoryModels.findById(id);
 
     if (!subCategory) {
       return NextResponse.json({ msg: "SubCategory not found" }, { status: 404 });
