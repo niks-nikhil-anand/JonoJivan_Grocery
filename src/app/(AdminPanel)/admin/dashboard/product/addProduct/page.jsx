@@ -307,9 +307,9 @@ const ProductForm = () => {
   };
 
   return (
-    <div className="max-w-full mx-auto p-4 bg-gray-100 shadow-lg rounded-lg w-full h-[80vh] overflow-y-scroll">
+    <div className="max-w-full mx-auto p-4 bg-gray-50  rounded-lg w-full h-[80vh]  overflow-y-auto max-h-[70vh] custom-scrollbar my-10">
 
-    <h1 className="text-4xl font-extrabold mb-8 text-center text-blue-700 underline">
+    <h1 className="text-2xl font-extrabold mb-8 text-center text-blue-700 underline">
         Add New Product
       </h1>
       <form onSubmit={handleSubmit} className="w-full">
