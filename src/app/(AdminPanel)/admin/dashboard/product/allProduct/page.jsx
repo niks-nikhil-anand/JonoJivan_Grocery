@@ -10,7 +10,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(5);
   const [status, setStatus] = useState("active");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null); // Track the product ID to be deleted
@@ -108,10 +108,12 @@ const Products = () => {
   if (!products.length) return <p className="text-center">No products available.</p>;
 
   return (
-    <div className="w-full p-4 pr-[5rem] bg-gray-100 shadow-lg rounded-lg h-[80vh]">
-      {/* Table Wrapper */}
-      <div className="overflow-x-auto overflow-y-auto max-h-[70vh] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-        <table className="border-collapse border border-gray-300 min-w-[1400px] text-sm">
+    <div className="w-full p-4  bg-white shadow-lg  h-[85vh] min-w-[100%]  ">
+     <div className="flex justify-between px-4 py-2 bg-gray-200 text-black  rounded-md my-4 font-medium">
+                <h2 className="text-lg font-semibold text-gray-800">Product Details</h2>
+              </div>
+      <div className="overflow-x-auto overflow-y-auto max-h-[60vh] custom-scrollbar">
+        <table className="border-collapse border border-gray-300 min-w-[1300px] text-sm">
           <thead>
             <tr className="bg-gray-200">
               <th className="border px-2 py-1 text-left">Featured Image</th>
