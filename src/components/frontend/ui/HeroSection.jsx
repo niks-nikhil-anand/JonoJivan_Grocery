@@ -1,17 +1,17 @@
-"use client"
+"use client";
 import React from "react";
 import { motion } from "framer-motion";
 
 const HeroSection = () => {
   return (
-    <div className="bg-gray-900 text-white py-16 px-8">
+    <div className="bg-gray-900 text-white py-16 px-6 sm:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Top Section */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Text Section */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center text-center md:text-left">
             <motion.h1
-              className="text-5xl font-bold leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -20,7 +20,7 @@ const HeroSection = () => {
               <span className="text-blue-500"> Every Day</span>
             </motion.h1>
             <motion.p
-              className="text-lg mt-4 text-gray-300"
+              className="text-base sm:text-lg mt-4 text-gray-300"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
@@ -30,7 +30,7 @@ const HeroSection = () => {
             </motion.p>
             {/* Buttons */}
             <motion.div
-              className="flex mt-6 space-x-4"
+              className="flex flex-col sm:flex-row mt-6 space-y-4 sm:space-y-0 sm:space-x-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.8 }}
@@ -44,7 +44,7 @@ const HeroSection = () => {
             </motion.div>
             {/* Tags */}
             <motion.div
-              className="flex mt-6 space-x-4"
+              className="flex flex-wrap mt-6 gap-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2, duration: 0.8 }}
@@ -61,7 +61,7 @@ const HeroSection = () => {
             </motion.div>
           </div>
           {/* Category Cards */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-4">
             {[
               { title: "Electronics", subtitle: "Latest Gadgets" },
               { title: "Fashion", subtitle: "Trending Styles" },
@@ -70,13 +70,13 @@ const HeroSection = () => {
             ].map((category, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-800 p-6 rounded-lg shadow-md"
+                className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 + index * 0.2, duration: 0.8 }}
               >
-                <h3 className="text-lg font-bold">{category.title}</h3>
-                <p className="text-gray-400">{category.subtitle}</p>
+                <h3 className="text-base sm:text-lg font-bold">{category.title}</h3>
+                <p className="text-sm sm:text-base text-gray-400">{category.subtitle}</p>
               </motion.div>
             ))}
           </div>
