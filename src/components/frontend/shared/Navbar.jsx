@@ -29,14 +29,50 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Navigation Links */}
-      <motion.ul
+      {/* Navigation Links, Search, and Sign-In for Mobile */}
+      <motion.div
         initial={false}
         animate={isMenuOpen ? "open" : "closed"}
         variants={menuVariants}
-        className={`lg:flex flex-col lg:flex-row lg:space-x-6 absolute lg:static top-12 left-0 w-full lg:w-auto bg-black lg:bg-transparent lg:items-center space-y-4 lg:space-y-0 p-4 lg:p-0 z-20 ${
+        className={`lg:hidden flex-col absolute top-12 left-0 w-full bg-black p-4 space-y-4 z-20 ${
           isMenuOpen ? "flex" : "hidden"
         }`}
+      >
+        <ul className="flex flex-col space-y-4">
+          {[
+            { name: "Home", link: "/" },
+            { name: "Categories", link: "/categories" },
+            { name: "E-commerce", link: "/" },
+            { name: "Grocery", link: "/JonoGrocery" },
+            { name: "Courier", link: "/JonoCourier" },
+            { name: "Deals", link: "/deals" },
+          ].map((item) => (
+            <li
+              key={item.name}
+              className="hover:text-gray-400 transition-colors duration-200 cursor-pointer"
+            >
+              <a href={item.link}>{item.name}</a>
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-col space-y-3">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none w-full"
+            />
+            <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md">
+            Sign In
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Navigation Links, Search, and Sign-In for Desktop */}
+      <motion.ul
+        className="hidden lg:flex items-center space-x-6"
       >
         {[
           { name: "Home", link: "/" },
@@ -55,7 +91,6 @@ const Navbar = () => {
         ))}
       </motion.ul>
 
-      {/* Search and Sign-In */}
       <motion.div
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
