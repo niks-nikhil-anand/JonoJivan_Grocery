@@ -9,6 +9,8 @@ import LatestProducts from "@/components/frontend/ui/LatestProduct";
 import Marquee from "@/components/frontend/ui/Marquee";
 import ProductCardVegetables from "@/components/frontend/ui/ProductSectionVegetables";
 import ProductsOnSale from "@/components/frontend/ui/ProductsOnSale";
+import SubscribeSection from "@/components/frontend/ui/SubscribeSection";
+import TempCategories from "@/components/frontend/ui/TempCategories";
 import TwoCategories from "@/components/frontend/ui/TwoCategories";
 import WhoWeAre from "@/components/frontend/ui/WhoWeAre";
 
@@ -18,8 +20,9 @@ export default function Home() {
     <>
       <HeroSection />
       {/* <Marquee /> */}
-      <ProductCardVegetables />
-      <CategoriesSection />
+      {/* <ProductCardVegetables /> */}
+      {/* <CategoriesSection /> */}
+      <TempCategories/>
       <WhoWeAre />
       <DailyNeedsProducts />
       <Marquee />
@@ -29,7 +32,7 @@ export default function Home() {
       <LatestProducts />
       <FeaturesList />
       <ProductsOnSale/>
-      <Banner2 />
+      <SubscribeSection />
     </>
   );
 }
