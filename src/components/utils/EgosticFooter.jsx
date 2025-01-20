@@ -9,8 +9,9 @@ const EgoisticFooter = () => {
   const isAdminPage = pathname.startsWith('/admin/dashboard');
   const isVendorPage = pathname.startsWith('/vendor/dashboard');
   const isUserPage = pathname.startsWith('/user');
+  const isGrocery = pathname.startsWith('/JonoGrocery');
 
-  if (isAdminPage || isUserPage || isVendorPage ) {
+  if (isAdminPage || isUserPage || isVendorPage || isGrocery  ) {
     return null; 
   }
 

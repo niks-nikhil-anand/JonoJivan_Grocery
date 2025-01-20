@@ -1,6 +1,7 @@
 import 'tailwindcss/tailwind.css';
 import '@/app/globals.css';
 import Head from 'next/head';
+import NavbarGrocery from '@/components/JonoGrocery/shared/NavbarGrocery';
 
 export const metadata = {
   title: "JonoJivan | Your Grocery Destination",
@@ -46,13 +47,9 @@ const Layout = ({ children }) => {
       </Head>
 
       {/* Main Layout */}
-      <div className="min-h-screen bg-gray-100">
-        {/* You can add a header or navbar here */}
-        
-        <main className="flex flex-col items-center justify-center py-8 px-4">
+      <div >
+          <NavbarGrocery/>
           {children}
-        </main>
-
         {/* You can add a footer here */}
       </div>
     </>
