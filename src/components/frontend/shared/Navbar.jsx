@@ -11,17 +11,25 @@ const Navbar = () => {
       {/* Logo */}
       <div className="text-xl font-bold">JonoJivan</div>
 
-      {/* Links */}
-      <ul className="flex space-x-6">
-        {['Home', 'Categories', 'E-commerce', 'Grocery', 'Courier', 'Deals'].map((item) => (
-          <li
-            key={item}
-            className="hover:text-gray-400 transition-colors duration-200 cursor-pointer"
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
+     {/* Links */}
+<ul className="flex space-x-6">
+  {[
+    { name: 'Home', link: '/' },
+    { name: 'Categories', link: '/categories' },
+    { name: 'E-commerce', link: '/ecommerce' },
+    { name: 'Grocery', link: '/JonoGrocery' },
+    { name: 'Courier', link: '/JonoCourier' },
+    { name: 'Deals', link: '/deals' },
+  ].map((item) => (
+    <li
+      key={item.name}
+      className="hover:text-gray-400 transition-colors duration-200 cursor-pointer"
+    >
+      <a href={item.link}>{item.name}</a>
+    </li>
+  ))}
+</ul>
+
 
       {/* Search Bar */}
       <div className="flex items-center space-x-3">
