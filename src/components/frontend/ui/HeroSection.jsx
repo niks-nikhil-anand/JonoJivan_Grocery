@@ -1,84 +1,86 @@
 "use client"
-import React from 'react';
-import Image from 'next/image';
-import grocery from '../../../../public/heroSection/grocery.png';
-import bg_image from '../../../../public/heroSection/bg_image.png';
-import Rectangle from '../../../../public/heroSection/Rectangle.jpg';
-import vegtable from '../../../../public/heroSection/vegtable.png';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
-  const sentence = "Buy your groceries and have it delivered to your doorstep with ease.";
-
   return (
-    <div className="relative h-screen w-full flex items-center justify-center">
-      {/* Rectangle Image as Background */}
-      <div className="absolute top-0 left-0 w-full h-full z-0">
-        <Image
-          src={Rectangle}
-          alt="Rectangle Background"
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      {/* Circular Arcs */}
-      <div className="absolute w-full h-full flex items-center justify-center">
-        <div className="relative w-[400px] h-[400px] md:w-[500px] md:h-[500px]">
-          <div className="absolute w-full h-full border-[2px] border-white rounded-full" />
-          <div className="absolute w-full h-full border-[2px] border-orange-400 rounded-full -top-4 -left-4" />
-        </div>
-      </div>
-      
-      {/* Text Content with Typing Effect */}
-      <div className="absolute top-1/3 left-10 z-10 w-4/5 md:w-1/2 lg:w-[50%]">
-        <motion.h1
-          className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          {sentence.split('').map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{
-                delay: index * 0.05,
-                type: 'spring',
-                stiffness: 300,
-                damping: 30,
-              }}
+    <div className="bg-gray-900 text-white py-16 px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Top Section */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Text Section */}
+          <div className="flex flex-col justify-center">
+            <motion.h1
+              className="text-5xl font-bold leading-tight"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
             >
-              {char}
-            </motion.span>
-          ))}
-        </motion.h1>
-      </div>
-
-      {/* Resized Grocery Image */}
-      <div className="absolute bottom-0 right-10 z-10">
-        <Image
-          src={grocery}
-          alt="Grocery"
-          className="w-2/5 h-auto object-contain sm:w-3/5 md:w-2/4 lg:w-2/5 xl:w-1/4"
-        />
-      </div>
-
-      {/* Background Image (Mobile Centered and Larger) */}
-      <div className="absolute top-30 right-5 z-10 hidden sm:block w-2/5">
-        <Image
-          src={bg_image}
-          alt="Grocery"
-          className=""
-        />
-      </div>
-      {/* Mobile View - bg_image Centered and Bigger */}
-      <div className="absolute top-0 right-0 h-auto w-[50%]  object-contain z-10 sm:block md:hidden">
-        <Image
-          src={bg_image}
-          alt="Grocery"
-          className=""
-        />
+              Discover Amazing Deals
+              <span className="text-blue-500"> Every Day</span>
+            </motion.h1>
+            <motion.p
+              className="text-lg mt-4 text-gray-300"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              Shop across categories, get fresh groceries delivered, and track
+              your parcels - all in one place!
+            </motion.p>
+            {/* Buttons */}
+            <motion.div
+              className="flex mt-6 space-x-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 0.8 }}
+            >
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md shadow-md">
+                Shop Now
+              </button>
+              <button className="bg-transparent border border-white text-white px-6 py-3 rounded-md hover:bg-gray-800">
+                View Offers
+              </button>
+            </motion.div>
+            {/* Tags */}
+            <motion.div
+              className="flex mt-6 space-x-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
+            >
+              <span className="bg-green-200 text-green-800 px-4 py-2 rounded-full text-sm">
+                50% OFF on Electronics
+              </span>
+              <span className="bg-purple-200 text-purple-800 px-4 py-2 rounded-full text-sm">
+                Free Delivery
+              </span>
+              <span className="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm">
+                Special Deals
+              </span>
+            </motion.div>
+          </div>
+          {/* Category Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { title: "Electronics", subtitle: "Latest Gadgets" },
+              { title: "Fashion", subtitle: "Trending Styles" },
+              { title: "Groceries", subtitle: "Fresh Produce" },
+              { title: "Courier", subtitle: "Fast Delivery" },
+            ].map((category, index) => (
+              <motion.div
+                key={index}
+                className="bg-gray-800 p-6 rounded-lg shadow-md"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 + index * 0.2, duration: 0.8 }}
+              >
+                <h3 className="text-lg font-bold">{category.title}</h3>
+                <p className="text-gray-400">{category.subtitle}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
