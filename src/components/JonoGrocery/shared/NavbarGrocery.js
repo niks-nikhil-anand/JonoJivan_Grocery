@@ -33,6 +33,22 @@ const NavbarGrocery = () => {
       {/* Logo */}
       <div className="text-2xl font-bold">GroceryMart</div>
 
+       {/* Navigation Links */}
+       <div className="hidden lg:flex space-x-6">
+        <a href="/categories" className="hover:text-green-400 transition duration-200">
+          Categories
+        </a>
+        <a href="/featured" className="hover:text-green-400 transition duration-200">
+          Ecommerce
+        </a>
+        <a href="/featured" className="hover:text-green-400 transition duration-200">
+          Courier
+        </a>
+        <a href="/benefits" className="hover:text-green-400 transition duration-200">
+          Benefits
+        </a>
+      </div>
+
        <motion.div
                 initial={{ width: "150px" }}
                 animate={{ width: isSearchFocused ? "250px" : "150px" }}
@@ -48,19 +64,6 @@ const NavbarGrocery = () => {
                 />
                 <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               </motion.div>
-
-      {/* Navigation Links */}
-      <div className="hidden lg:flex space-x-6">
-        <a href="/categories" className="hover:text-green-400 transition duration-200">
-          Categories
-        </a>
-        <a href="/featured" className="hover:text-green-400 transition duration-200">
-          Featured
-        </a>
-        <a href="/benefits" className="hover:text-green-400 transition duration-200">
-          Benefits
-        </a>
-      </div>
 
       {/* Location, Cart, and Login */}
       <div className="flex items-center space-x-4">
