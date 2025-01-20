@@ -4,6 +4,7 @@ import BannerText01 from "@/components/frontend/ui/(Banners)/BannerText01";
 import FeaturesList from "@/components/frontend/ui/(Banners)/BannerText02";
 import CategoriesSection from "@/components/frontend/ui/CategorySection";
 import DailyNeedsProducts from "@/components/frontend/ui/DailyNeedsProducts";
+import FeaturedSection from "@/components/frontend/ui/FeaturedSection";
 import HeroSection from "@/components/frontend/ui/HeroSection";
 import LatestProducts from "@/components/frontend/ui/LatestProduct";
 import Marquee from "@/components/frontend/ui/Marquee";
@@ -23,8 +24,9 @@ export default function Home() {
       {/* <ProductCardVegetables /> */}
       {/* <CategoriesSection /> */}
       <TempCategories/>
-      <WhoWeAre />
-      <DailyNeedsProducts />
+      {/* <WhoWeAre /> */}
+      {/* <DailyNeedsProducts /> */}
+      <FeaturedSection/>
       <Marquee />
       <Banner1 />
       <TwoCategories />
