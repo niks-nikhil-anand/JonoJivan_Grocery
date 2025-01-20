@@ -16,7 +16,7 @@ const Navbar = () => {
   {[
     { name: 'Home', link: '/' },
     { name: 'Categories', link: '/categories' },
-    { name: 'E-commerce', link: '/ecommerce' },
+    { name: 'E-commerce', link: '/' },
     { name: 'Grocery', link: '/JonoGrocery' },
     { name: 'Courier', link: '/JonoCourier' },
     { name: 'Deals', link: '/deals' },
