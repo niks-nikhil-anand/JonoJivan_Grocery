@@ -60,36 +60,45 @@ const HeroCarousel = () => {
 
   return (
     <div className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.img
-          key={currentIndex}
-          src={images[currentIndex].src}
-          alt={images[currentIndex].alt}
-          custom={direction}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            x: { type: "spring", stiffness: 300, damping: 30 },
-            opacity: { duration: 0.2 },
-          }}
-          className="absolute w-full h-full object-cover"
-        />
-      </AnimatePresence>
-      <div className="absolute inset-0 bg-black opacity-70"></div>
-      <div className="absolute text-center text-white px-4">
-        <h1 className="text-5xl font-bold">{images[currentIndex].title}</h1>
-        <p className="mt-4 text-lg">{images[currentIndex].description}</p>
-        <div className="mt-6 flex justify-center space-x-4">
-          <button className="px-6 py-3 bg-green-500 rounded-md text-black font-semibold">
-            Shop Now
-          </button>
-          <button className="px-6 py-3 border-2 border-white rounded-md text-white font-semibold">
-            View Offers
-          </button>
+      <div className="flex w-full h-full">
+        {/* Content Section */}
+        <div className="flex flex-col justify-center text-center text-white px-4 w-1/2">
+          <h1 className="text-5xl font-bold">{images[currentIndex].title}</h1>
+          <p className="mt-4 text-lg">{images[currentIndex].description}</p>
+          <div className="mt-6 flex justify-center space-x-4">
+            <button className="px-6 py-3 bg-green-500 rounded-md text-black font-semibold">
+              Shop Now
+            </button>
+            <button className="px-6 py-3 border-2 border-white rounded-md text-white font-semibold">
+              View Offers
+            </button>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div className="relative w-1/2 h-[70vh]">
+          <AnimatePresence initial={false} custom={direction}>
+            <motion.img
+              key={currentIndex}
+              src={images[currentIndex].src}
+              alt={images[currentIndex].alt}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              className="absolute w-full h-full object-cover"
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-black opacity-70"></div>
         </div>
       </div>
+
+      {/* Navigation Arrows */}
       <div className="absolute inset-0 flex items-center justify-between p-4">
         <button
           onClick={() => paginate(-1)}
@@ -104,6 +113,8 @@ const HeroCarousel = () => {
           <FaChevronRight />
         </button>
       </div>
+
+      {/* Carousel Dots */}
       <div className="absolute bottom-4 flex justify-center space-x-2">
         {images.map((_, index) => (
           <span

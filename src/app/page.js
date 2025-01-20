@@ -27,8 +27,8 @@ export default function Home() {
       {/* <WhoWeAre /> */}
       {/* <DailyNeedsProducts /> */}
       <FeaturedSection/>
-      <Marquee />
-      <Banner1 />
+      {/* <Marquee />
+      <Banner1 /> */}
       <TwoCategories />
       <BannerText01 />
       <LatestProducts />
