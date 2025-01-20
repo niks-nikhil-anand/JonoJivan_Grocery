@@ -6,12 +6,12 @@ import { AiFillApple, AiFillAndroid } from "react-icons/ai";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-500 text-white py-10 px-5">
+    <footer className="bg-[#171717] text-gray-300 py-10 px-5">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Company Info */}
         <div>
           <h3 className="text-xl font-bold">JONOJIVAN</h3>
-          <p className="mt-3 text-gray-100">
+          <p className="mt-3 text-gray-300">
             Your one-stop destination for shopping, groceries, and courier services.
           </p>
           <div className="flex space-x-4 mt-4">
@@ -25,7 +25,7 @@ const Footer = () => {
         {/* Quick Links */}
         <div>
           <h3 className="text-lg font-semibold">Quick Links</h3>
-          <ul className="mt-3 space-y-2 text-gray-100">
+          <ul className="mt-3 space-y-2 text-gray-300">
             <li className="hover:text-gray-300 cursor-pointer">Home</li>
             <li className="hover:text-gray-300 cursor-pointer">Categories</li>
             <li className="hover:text-gray-300 cursor-pointer">E-commerce</li>
@@ -35,7 +35,7 @@ const Footer = () => {
         </div>
         <div>
           <h3 className="text-lg font-semibold">Quick Links</h3>
-          <ul className="mt-3 space-y-2 text-gray-100">
+          <ul className="mt-3 space-y-2 text-gray-300">
             <li className="hover:text-gray-300 cursor-pointer">
               <a href="/returnPolicy">Track Your Courier</a>
             </li>
@@ -70,7 +70,7 @@ const Footer = () => {
       </div>
 
       {/* Footer Bottom */}
-      <div className="border-t border-gray-800 mt-8 pt-6 text-gray-100 text-sm flex justify-between flex-wrap">
+      <div className="border-t border-gray-800 mt-8 pt-6 text-gray-300 text-sm flex justify-between flex-wrap">
         <p>© 2024 JONOJIVAN. All rights reserved.</p>
         <div className="flex space-x-6">
           <a href="#" className="hover:text-gray-300">Privacy Policy</a>
