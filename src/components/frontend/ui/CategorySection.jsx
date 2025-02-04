@@ -37,38 +37,41 @@ const CategoriesSection = () => {
     return <p className="text-center">No categories available.</p>;
   }
 
+  const bgColors = [
+    "bg-red-100", "bg-blue-100", "bg-green-100", "bg-yellow-100", "bg-purple-100", 
+    "bg-pink-100", "bg-gray-100", "bg-indigo-100", "bg-teal-100", "bg-orange-100"
+  ];
+
   return (
     <div className="flex flex-col items-center gap-2 p-4 sm:p-2  bg-gray-150">
   <h2 className="text-lg sm:text-xl md:text-3xl  font-bold text-red-600">
     Shop By Category
   </h2>
-  <div className="flex gap-4 sm:gap-6 justify-center p-2 md:p-4 overflow-x-auto snap-x snap-mandatory flex-wrap">
-    {categories.map((category) => (
-      <motion.div
-      key={category._id}
-      className="flex-shrink-0 snap-center flex flex-col items-center w-32 h-40 sm:w-40 sm:h-48 md:w-52 md:h-64 bg-gradient-to-br from-gray-50 to-gray-200  shadow-lg hover:shadow-2xl transition-shadow duration-300 hover:scale-105 cursor-pointer transform border rounded-t-3xl rounded-xl"
-      whileHover={{
-        boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.3)",
-      }}
-      onClick={() => router.push(`/category/${category._id}`)}
-    >
-      {/* Circular Image Container */}
-      <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center mb-4 shadow-md">
-        <img
-          src={category.image}
-          alt={category.name}
-          className="object-cover w-full h-full transition-transform duration-300 ease-in-out transform hover:scale-110"
-          onError={(e) => (e.target.src = "/path/to/fallback-image.jpg")}
-        />
-      </div>
-      {/* Category Name Below the Image */}
-      <p className="text-center text-sm sm:text-md md:text-lg font-semibold text-gray-700 hover:text-red-500 transition-colors duration-300">
-        {category.name}
-      </p>
-    </motion.div>
-    
-    ))}
-  </div>
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+      {categories.map((category, index) => (
+        <motion.div
+          key={category._id}
+          className={`flex flex-col items-center p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow cursor-pointer ${bgColors[index % bgColors.length]}`}
+          whileHover={{ scale: 1.05 }}
+          onClick={() => router.push(`/category/${category._id}`)}
+        >
+          {/* Image Container */}
+          <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-white rounded-full flex items-center justify-center shadow-md overflow-hidden">
+            <img
+              src={category.image}
+              alt={category.name}
+              className="w-full h-full object-cover"
+              onError={(e) => (e.target.src = "/path/to/fallback-image.jpg")}
+            />
+          </div>
+
+          {/* Category Name */}
+          <p className="mt-3 text-center text-sm sm:text-md md:text-lg font-semibold text-gray-800 hover:text-red-500 transition-colors duration-300">
+            {category.name}
+          </p>
+        </motion.div>
+      ))}
+    </div>
 </div>
 
   );

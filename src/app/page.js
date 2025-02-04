@@ -20,15 +20,15 @@ export default function Home() {
   return (
     <>
       <HeroSection />
-      {/* <Marquee /> */}
-      {/* <ProductCardVegetables /> */}
-      {/* <CategoriesSection /> */}
+      <Marquee />
+      <ProductCardVegetables />
+      <CategoriesSection />
       <TempCategories/>
-      {/* <WhoWeAre /> */}
-      {/* <DailyNeedsProducts /> */}
+      <WhoWeAre />
+      <DailyNeedsProducts />
       <FeaturedSection/>
-      {/* <Marquee />
-      <Banner1 /> */}
+       <Marquee />
+      <Banner1 /> 
       <TwoCategories />
       <BannerText01 />
       <LatestProducts />
