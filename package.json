@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@react-email/components": "^0.0.22",
     "@tailwindcss/typography": "^0.5.15",
     "axios": "^1.7.4",
