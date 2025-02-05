@@ -23,7 +23,7 @@ export default function Home() {
       <Marquee />
       <ProductCardVegetables />
       <CategoriesSection />
-      <TempCategories/>
+      {/* <TempCategories/> */}
       <WhoWeAre />
       <DailyNeedsProducts />
       <FeaturedSection/>
