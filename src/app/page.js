@@ -24,7 +24,7 @@ export default function Home() {
       <ProductCardVegetables />
       <CategoriesSection />
       {/* <TempCategories/> */}
-      <WhoWeAre />
+      {/* <WhoWeAre /> */}
       <DailyNeedsProducts />
       <FeaturedSection/>
        <Marquee />
