@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -35,9 +36,11 @@ const HeroSection = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.8 }}
             >
+              <Link href={"/product/shopAllProducts"}>
               <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md shadow-md">
                 Shop Now
               </button>
+              </Link>
               <button className="bg-transparent border border-white text-white px-6 py-3 rounded-md hover:bg-gray-800">
                 View Offers
               </button>

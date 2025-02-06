@@ -80,7 +80,7 @@ const AllProducts = () => {
   const ProductCard = ({ product }) => {
     return (
       <motion.div
-        className="relative flex-shrink-0 snap-center flex flex-col items-center justify-center bg-white rounded-xl p-6 border hover:shadow-lg transition-all duration-300 w-[80%] sm:w-[220px] md:w-[250px] lg:w-[280px] h-[250px] md:h-[300px] text-center group cursor-pointer"
+        className="relative flex-shrink-0 snap-center flex flex-col items-center justify-center bg-gray-50 rounded-xl p-6 border hover:shadow-lg transition-all duration-300 w-[80%] sm:w-[220px] md:w-[250px] lg:w-[280px] h-[250px] md:h-[300px] text-center group cursor-pointer"
 
         onClick={() => handleCardClick(product._id)}
 
@@ -127,16 +127,52 @@ const AllProducts = () => {
   ) : (
     <>
       {/* Banner and Title */}
-      <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh] flex items-center">
-        <Image 
-          src={banner} 
-          alt="Banner"
-          layout="fill"
-          objectFit="cover"
-          className="w-full h-full"
-          priority 
-        />
-      </div>
+      {/* Banner and Title */}
+      <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[70vh] flex items-center justify-center overflow-hidden">
+  <div className="absolute inset-0 w-full h-full">
+    <Image 
+      src={banner} 
+      alt="Banner"
+      className="w-full h-full object-cover"
+      priority 
+    />
+  </div>
+  
+  {/* Overlay Content */}
+  <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-center px-4 sm:px-6 md:px-8">
+    {/* Main Heading */}
+    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-4">
+      Shop All Products – Everything You Need in One Place!
+    </h1>
+    
+    {/* Subheading */}
+    <p className="text-sm sm:text-lg md:text-xl lg:text-2xl text-white mb-4 sm:mb-6">
+      Fashion, Electronics, Home Essentials & More
+    </p>
+    
+    {/* Description */}
+    <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white max-w-2xl mb-4 sm:mb-6 hidden md:flex">
+      Welcome to JonoJivan, your ultimate shopping destination for top-quality products across multiple categories. From the latest fashion trends to high-performance electronics, stylish home decor, and must-have beauty essentials, we bring you a seamless and affordable shopping experience. 
+    </p>
+    
+    {/* Offers Section */}
+    <div className="hidden md:flex flex-wrap justify-center gap-3 sm:gap-4 text-white text-xs sm:text-sm md:text-base">
+  <div className="bg-white bg-opacity-20 p-2 sm:p-3 rounded-lg flex items-center">
+    🔥 <span className="font-semibold ml-1">Fashion Deals</span> – Up to 50% Off on clothing & accessories 👗👞
+  </div>
+  <div className="bg-white bg-opacity-20 p-2 sm:p-3 rounded-lg flex items-center">
+    📱 <span className="font-semibold ml-1">Electronics Sale</span> – Flat 20% Off on mobiles & laptops 💻📱
+  </div>
+  <div className="bg-white bg-opacity-20 p-2 sm:p-3 rounded-lg flex items-center">
+    🏠 <span className="font-semibold ml-1">Home & Furniture</span> – Up to 40% Off on furniture & decor 🛋
+  </div>
+  <div className="bg-white bg-opacity-20 p-2 sm:p-3 rounded-lg flex items-center">
+    🌟 <span className="font-semibold ml-1">Beauty Bonanza</span> – Buy 1 Get 1 Free on select beauty products 💄✨
+  </div>
+</div>
+  </div>
+</div>
+
 
       {/* Sort By Dropdown */}
       <div className="flex flex-col sm:flex-row sm:justify-end px-4 sm:px-6 py-4">
@@ -160,10 +196,11 @@ const AllProducts = () => {
 
         {/* Products Grid */}
         <motion.div
-          className="flex flex-wrap gap-7 justify-center sm:justify-start"
+          className="flex flex-wrap gap-7 justify-center sm:justify-start px-5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
+
         >
           {displayedProducts.map((product) => (
             <ProductCard key={product.id} product={product}     
