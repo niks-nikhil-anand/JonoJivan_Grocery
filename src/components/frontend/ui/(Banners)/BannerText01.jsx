@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const BannerText01 = () => {
   return (
@@ -27,9 +28,12 @@ const BannerText01 = () => {
       </p>
   
       {/* Button */}
+      <Link  href={"/product/shopAllProducts"}>
       <button className="bg-white text-black text-sm md:text-lg px-6 py-3 rounded-md shadow-md hover:bg-gray-100">
         Shop Now
       </button>
+      
+      </Link>
     </div>
   </div>
   
