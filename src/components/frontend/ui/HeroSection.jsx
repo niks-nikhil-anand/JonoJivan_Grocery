@@ -65,8 +65,8 @@ const HeroSection = () => {
             {[
               { title: "Electronics", subtitle: "Latest Gadgets" },
               { title: "Fashion", subtitle: "Trending Styles" },
-              { title: "Groceries", subtitle: "Fresh Produce" },
-              { title: "Courier", subtitle: "Fast Delivery" },
+              { title: "Beauty", subtitle: "Wide Range" },
+              { title: "Mobile & Laptops", subtitle: "Fast Delivery" },
             ].map((category, index) => (
               <motion.div
                 key={index}

@@ -21,17 +21,17 @@ export default function Home() {
     <>
       <HeroSection />
       <Marquee />
-      <ProductCardVegetables />
+      {/* <ProductCardVegetables /> */}
       <CategoriesSection />
       {/* <TempCategories/> */}
       {/* <WhoWeAre /> */}
-      <DailyNeedsProducts />
+      {/* <DailyNeedsProducts /> */}
       <FeaturedSection/>
        <Marquee />
       <Banner1 /> 
-      <TwoCategories />
-      <BannerText01 />
+      {/* <TwoCategories /> */}
       <LatestProducts />
+      <BannerText01 />
       <FeaturesList />
       <ProductsOnSale/>
       <SubscribeSection />
