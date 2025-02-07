@@ -83,8 +83,8 @@ const productSchema = new mongoose.Schema({
     }],
     status: {
         type: String,
-        enum: ['Active', 'Inactive', 'Out of stock'],
-        default: 'Inactive',  
+        enum: ['Active', 'Inactive', 'Out of stock' , 'inReview'],
+        default: 'inReview',  
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
