@@ -1,13 +1,13 @@
-const mongoose = require("mongoose");
-import connectDB from "@/lib/dbConnect";
 import uploadImage from "@/lib/uploadImages";
-import categoryModels from "@/models/categoryModels";
 import productModels from "@/models/productModels";
 import { NextResponse } from "next/server";
 import jwt from 'jsonwebtoken';
 import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import userModels from "@/models/userModels";
+import connectDB from "@/lib/dbConnect";
+
+
 
 
 
@@ -21,7 +21,7 @@ export const POST = async (req) => {
     // Helper function to safely get and trim values
     const getTrimmedValue = (key) => {
       const value = formData.get(key);
-      return value ? value.trim() : "";
+      return value ? value.trim().replace(/^"|"$/g, "") : ""; // Remove extra quotes
     };
 
     const name = getTrimmedValue("name");
@@ -29,8 +29,8 @@ export const POST = async (req) => {
     const salePrice = parseFloat(getTrimmedValue("salePrice")) || 0;
     const originalPrice = parseFloat(getTrimmedValue("originalPrice")) || 0;
     const category = getTrimmedValue("category");
-    const subCategory = getTrimmedValue("subcategories");
-    const subSubcategories = getTrimmedValue("subSubcategories");
+    const subCategory = getTrimmedValue("subcategories"); // Fixed
+    const subSubCategory = getTrimmedValue("subSubcategories"); // Fixed
     const stock = parseInt(getTrimmedValue("stock"), 10) || 0;
     const tags = getTrimmedValue("tags");
     const isOnSale = formData.get("isOnSale") === "true";
@@ -130,7 +130,7 @@ export const POST = async (req) => {
       originalPrice,
       category,
       subCategory,
-      subSubCategory : subSubcategories,
+      subSubCategory, // Fixed
       stock,
       isOnSale,
       isFeaturedSale,
@@ -161,6 +161,7 @@ export const POST = async (req) => {
     );
   }
 };
+
 
 
 

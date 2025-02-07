@@ -289,12 +289,10 @@ const handleSubmit = async (e) => {
             isHotDeal: false,
             isFeaturedSale: false
         });
-        setSelectedSubcategories([]);
         setImages([]);
         setFeaturedImage(null);
     } catch (error) {
         console.error('Error creating product:', error);
-        toast.error('Failed to create the product. Please try again.');
     } finally {
         setLoading(false);
     }
