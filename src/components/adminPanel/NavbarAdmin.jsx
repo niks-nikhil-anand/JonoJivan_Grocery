@@ -13,21 +13,24 @@ import { useRouter } from 'next/navigation';
 const Navbar = () => {
   const router = useRouter();
 
-    const handleLogout = async () => {
-      try {
-        const response = await fetch('/api/admin/auth/logout', {
-          method: 'POST',
-        });
-        const data = await response.json();
-        if (response.ok) {
-          router.push('/');
-        } else {
-          alert(`Logout failed: ${data.message}`);
-        }
-      } catch (error) {
-        alert(`Logout failed: ${error.message}`);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/admin/auth/logout', {
+        method: 'POST',
+      });
+      const data = await response.json();
+  
+      if (response.ok) {
+        toast.success('Logout successful!');
+        router.push('/');
+      } else {
+        toast.error(`Logout failed: ${data.message}`);
       }
-    };
+    } catch (error) {
+      toast.error(`Logout failed: ${error.message}`);
+    }
+  };
+  
 
 
 
