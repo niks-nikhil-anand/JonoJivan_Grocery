@@ -22,21 +22,10 @@ const Navbar = () => {
     closed: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 200 } },
   };
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     if (searchQuery.trim()) {
-      try {
-        const response = await fetch(`/api/search?query=${encodeURIComponent(searchQuery)}`);
-        const data = await response.json();
-  
-        if (response.ok) {
-          // Redirect if response is OK
-          router.push(`/product/search?q=${encodeURIComponent(searchQuery)}`);
-        } else {
-          console.error("Search failed:", data.msg || "Unknown error");
-        }
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      }
+      // Redirect to the search results page with query parameter
+      router.push(`/product/search?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
