@@ -8,6 +8,7 @@ import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import { AiOutlineClose } from "react-icons/ai";
 import { useRouter } from 'next/navigation';
 import ReviewProductPage from '@/components/frontend/ui/ReviewProductPage';
+import SuggestedProducts from '@/components/frontend/ui/SuggestedProducts';
 
 
 const ProductDetail = () => {
@@ -270,6 +271,14 @@ const ProductDetail = () => {
 <div className=" p-6 bg-gray-100 w-full h-full">
     <ReviewProductPage />
   </div>
+
+
+{/* Suggested Products */}
+<div className=" p-6 bg-gray-100 w-full h-full">
+    <SuggestedProducts />
+  </div>
+
+
 
 
 
