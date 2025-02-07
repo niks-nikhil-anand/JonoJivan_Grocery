@@ -11,13 +11,7 @@ import { useRouter } from 'next/navigation';
 
 
 const Navbar = () => {
-  const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
-    const toggleDarkMode = () => {
-      setDarkMode(!darkMode);
-      document.documentElement.classList.toggle("dark", !darkMode);
-    };
-
 
     const handleLogout = async () => {
       try {
@@ -26,7 +20,7 @@ const Navbar = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          Router.push('/');
+          router.push('/');
         } else {
           alert(`Logout failed: ${data.message}`);
         }

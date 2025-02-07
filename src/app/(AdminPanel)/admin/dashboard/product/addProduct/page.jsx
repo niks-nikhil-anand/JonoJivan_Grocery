@@ -229,80 +229,77 @@ const ProductForm = () => {
     const file = e.target.files[0]; 
     setFeaturedImage(file); 
   };
-  const handleSubmit = async (e) => {
+
+const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
-    const data = new FormData();
-  
-    // Log the initial form data
-  console.log('Initial Form Data:', formData);
 
-
-    // Append basic product details from formData
-    data.append('name', formData.name);
-    data.append('description', formData.description);
-    data.append('salePrice', formData.salePrice);
-    data.append('originalPrice', formData.originalPrice);
-    data.append('category', formData.category);
-    data.append('subcategories', selectedSubCategory);
-    data.append('subSubcategories', selectedSubSubCategory);
-    data.append('stock', formData.stock);
-    data.append('tags', formData.tags);
-    data.append('weight', formData.weight);
-    data.append('unit', formData.unit); 
-    data.append('isClearance', formData.isClearance);
-    data.append('isOnSale', formData.isOnSale);
-    data.append('isHotDeal', formData.isHotDeal);
-    data.append('isFeaturedSale', formData.isFeaturedSale);
-  
-     // Log after appending basic product details
-  console.log('FormData after adding product details:', Array.from(data.entries()));
-
-
-    // Append images
-    images.forEach((file) => {
-      if (file) {
-        data.append('images', file);
-      }
-    });
-  
-    if (featuredImage) {
-      data.append('featuredImage', featuredImage);
-    }
-  
     try {
-      console.log('Sending data to API:', Array.from(data.entries())); // Log FormData entries
-      await axios.post('/api/admin/dashboard/product/addProduct', data);
-  
-      // Show success notification
-      toast.success('Product created successfully!');
-  
-      // Clear the form
-      setFormData({
-        name: '',
-        description: '',
-        salePrice: '',
-        originalPrice: '',
-        category: '',
-        subCategory: '',
-        tags: '',
-        stock: 0,
-        weight: '',
-        unit: '',
-        isFanFavourites: false,
-        isOnSale: false,
-      });
-      setSelectedSubcategories([]);
-      setImages([]);
-      setFeaturedImage(null);
+        const data = new FormData();
+        
+        // Log the initial form data
+        console.log('Initial Form Data:', formData);
+
+        // Append basic product details
+        Object.entries(formData).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                data.append(key, value);
+            }
+        });
+
+        data.append('subcategories', JSON.stringify(selectedSubCategory));
+        data.append('subSubcategories', JSON.stringify(selectedSubSubCategory));
+        
+        // Append images
+        images.forEach((file) => {
+            if (file) {
+                data.append('images', file);
+            }
+        });
+
+        if (featuredImage) {
+            data.append('featuredImage', featuredImage);
+        }
+
+        // Log FormData entries before sending
+        console.log('Final FormData:', Array.from(data.entries()));
+
+        await axios.post('/api/admin/dashboard/product/addProduct', data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        toast.success('Product created successfully!');
+
+        // Reset the form
+        setFormData({
+            name: '',
+            description: '',
+            salePrice: '',
+            originalPrice: '',
+            category: '',
+            subCategory: '',
+            tags: '',
+            stock: 0,
+            weight: '',
+            unit: '',
+            isClearance: false,
+            isOnSale: false,
+            isHotDeal: false,
+            isFeaturedSale: false
+        });
+        setSelectedSubcategories([]);
+        setImages([]);
+        setFeaturedImage(null);
     } catch (error) {
-      console.error('Error creating product:', error);
-      toast.error('Failed to create the product. Please try again.');
+        console.error('Error creating product:', error);
+        toast.error('Failed to create the product. Please try again.');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
   
   
 
