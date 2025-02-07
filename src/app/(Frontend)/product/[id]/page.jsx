@@ -147,7 +147,7 @@ const ProductDetail = () => {
 
     return (
       <div>
-      <div className="flex flex-col lg:flex-row p-6 bg-gray-100 w-full h-full mt-5 gap-6">
+      <div className="flex flex-col lg:flex-row p-6 bg-gray-100 w-full h-full  gap-6">
   {/* Product Images */}
   <div className="w-full lg:w-1/3 flex flex-col items-center gap-4">
     {/* Main Product Image */}
