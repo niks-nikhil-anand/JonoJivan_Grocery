@@ -1,4 +1,6 @@
-import { motion } from 'framer-motion';
+"use client"
+import { motion } from "framer-motion";
+import { PropagateLoader } from "react-spinners";
 
 const Loader = () => {
   return (
@@ -8,11 +10,7 @@ const Loader = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <motion.div
-        className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity }}
-      />
+      <PropagateLoader color="#3b82f6" size={15} />
     </motion.div>
   );
 };
