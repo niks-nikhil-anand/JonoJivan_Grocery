@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
             type: String,
             required: [true, 'Weight unit is required'],
             enum: {
-                values: ['ML', 'Gm', 'kg'],
+                values: ['ML', 'Gm', 'kg' , 'Pieces'],
                 message: 'Weight unit must be either ML, Gm, or kg',
             },
         },

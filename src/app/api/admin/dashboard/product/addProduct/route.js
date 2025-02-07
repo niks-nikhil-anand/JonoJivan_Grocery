@@ -10,6 +10,7 @@ import { cookies } from "next/headers";
 import userModels from "@/models/userModels";
 
 
+
 export const POST = async (req) => {
   try {
     await connectDB();
@@ -17,41 +18,41 @@ export const POST = async (req) => {
     const formData = await req.formData();
     const token = await getToken({ req });
 
-
-    
-
     // Helper function to safely get and trim values
     const getTrimmedValue = (key) => {
       const value = formData.get(key);
-      return value ? value.trim() : '';
+      return value ? value.trim() : "";
     };
 
     const name = getTrimmedValue("name");
     const description = getTrimmedValue("description");
-    const salePrice = getTrimmedValue("salePrice");
-    const originalPrice = getTrimmedValue("originalPrice");
+    const salePrice = parseFloat(getTrimmedValue("salePrice")) || 0;
+    const originalPrice = parseFloat(getTrimmedValue("originalPrice")) || 0;
     const category = getTrimmedValue("category");
-    const subCategory = formData.get("subcategories");  
-    const stock = parseInt(getTrimmedValue("stock"), 10);
+    const subCategory = getTrimmedValue("subcategories");
+    const subSubcategories = getTrimmedValue("subSubcategories");
+    const stock = parseInt(getTrimmedValue("stock"), 10) || 0;
     const tags = getTrimmedValue("tags");
-    const isOnSale = formData.get("isOnSale") === 'true';
-    const isFeaturedSale = formData.get("isOnSale") === 'true';
-    const isClearance = formData.get("isClearance") === 'true';
-    const isHotDeal = formData.get("isHotDeal") === 'true';
-    const weight = getTrimmedValue("weight");
+    const isOnSale = formData.get("isOnSale") === "true";
+    const isFeaturedSale = formData.get("isFeaturedSale") === "true";
+    const isClearance = formData.get("isClearance") === "true";
+    const isHotDeal = formData.get("isHotDeal") === "true";
+    const weight = parseFloat(getTrimmedValue("weight")) || 0;
     const unit = getTrimmedValue("unit");
 
-    console.log("Form data:", formData);
-
     if (!name || !category) {
-      return NextResponse.json({ msg: "Please provide all the required fields." }, { status: 400 });
+      return NextResponse.json(
+        { msg: "Please provide all the required fields." },
+        { status: 400 }
+      );
     }
 
-    const images = formData.getAll("images");
+    const images = formData.getAll("images") || [];
     const featuredImage = formData.get("featuredImage");
 
-    // Log image uploads
     console.log("Uploading images...");
+
+    // Upload product images
     const imageUploads = await Promise.all(
       images.map(async (image) => {
         const result = await uploadImage(image, "productImages");
@@ -65,49 +66,61 @@ export const POST = async (req) => {
     // Upload featured image
     let featuredImageUrl = null;
     if (featuredImage) {
-      const featuredImageResult = await uploadImage(featuredImage, "featuredImage");
+      const featuredImageResult = await uploadImage(
+        featuredImage,
+        "featuredImage"
+      );
       if (!featuredImageResult.secure_url) {
-        return NextResponse.json({ msg: "Featured image upload failed." }, { status: 500 });
+        return NextResponse.json(
+          { msg: "Featured image upload failed." },
+          { status: 500 }
+        );
       }
       featuredImageUrl = featuredImageResult.secure_url;
     }
 
-
     const cookieStore = cookies();
-        const authToken = cookieStore.get("adminAuthToken");
-        console.log("Cookie authToken:", authToken);
-    
-        // Check if either token from NextAuth or cookie exists
-        const tokenToUse = token || (authToken && authToken.value ? jwt.decode(authToken.value) : null);
-        console.log("Token to use:", tokenToUse);
-    
-        if (!tokenToUse || !tokenToUse.id) {
-          console.error("Authentication token or ID is missing.");
-          throw new Error("Authentication token or ID is missing.");
-        }
-    
-        const id = tokenToUse.id;
-        console.log("User ID:", id);
-    
-        const user = await userModels.findById(id);
-        console.log("Retrieved user:", user);
-    
-        if (!user) {
-          console.error("User not found.");
-          throw new Error("User not found.");
-        }
+    const authToken = cookieStore.get("adminAuthToken");
+    console.log("Cookie authToken:", authToken);
 
-         // Check if the user has the correct role and status
-        if (user.role !== "SuperAdmin") {
-        return NextResponse.json({ msg: "Only vendors are allowed to add products." }, { status: 403 });
-      }
-  
-      if (user.status !== "Active") {
-        return NextResponse.json({ msg: "Your account is not active." }, { status: 403 });
-      }
-      
+    // Check if either token from NextAuth or cookie exists
+    const tokenToUse =
+      token || (authToken?.value ? jwt.decode(authToken.value) : null);
+    console.log("Token to use:", tokenToUse);
 
-   
+    if (!tokenToUse || !tokenToUse.id) {
+      console.error("Authentication token or ID is missing.");
+      return NextResponse.json(
+        { msg: "Authentication required." },
+        { status: 401 }
+      );
+    }
+
+    const id = tokenToUse.id;
+    console.log("User ID:", id);
+
+    const user = await userModels.findById(id);
+    console.log("Retrieved user:", user);
+
+    if (!user) {
+      console.error("User not found.");
+      return NextResponse.json({ msg: "User not found." }, { status: 404 });
+    }
+
+    // Check if the user has the correct role and status
+    if (user.role !== "SuperAdmin") {
+      return NextResponse.json(
+        { msg: "Only vendors are allowed to add products." },
+        { status: 403 }
+      );
+    }
+
+    if (user.status !== "Active") {
+      return NextResponse.json(
+        { msg: "Your account is not active." },
+        { status: 403 }
+      );
+    }
 
     // Construct product data
     const productData = {
@@ -116,29 +129,39 @@ export const POST = async (req) => {
       salePrice,
       originalPrice,
       category,
-      subCategory,  
+      subCategory,
+      subSubCategory : subSubcategories,
       stock,
-      isFanFavourites,
       isOnSale,
-      tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+      isFeaturedSale,
+      isClearance,
+      isHotDeal,
+      tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
       images: imageUploads,
       featuredImage: featuredImageUrl,
       weight: {
-        value: weight,  
-        unit: unit,    
+        value: weight,
+        unit: unit,
       },
       users: tokenToUse.id,
     };
-    const newProduct = await productModels.create(productData);
-    
+    console.log("Product data:", productData);
 
-    
-    return NextResponse.json({ msg: "Product added successfully", product: newProduct }, { status: 200 });
+    const newProduct = await productModels.create(productData);
+
+    return NextResponse.json(
+      { msg: "Product added successfully", product: newProduct },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error adding product:", error);  // More detailed error logging
-    return NextResponse.json({ msg: "Error adding product", error: error.message }, { status: 500 });
+    console.error("Error adding product:", error);
+    return NextResponse.json(
+      { msg: "Error adding product", error: error.message },
+      { status: 500 }
+    );
   }
 };
+
 
 
 export const GET = async (req) => {

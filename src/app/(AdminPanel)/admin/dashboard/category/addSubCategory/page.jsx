@@ -135,7 +135,7 @@ const AddSubCategory = () => {
                     key={category._id}
                     type="button"
                     onClick={() => setSelectedCategory(category._id)}
-                    className={`p-2 border rounded-lg mb-2 ${
+                    className={`p-2 border rounded-lg mb-2 mx-2 ${
                       selectedCategory === category._id
                         ? 'bg-blue-500 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-200'
@@ -157,13 +157,13 @@ const AddSubCategory = () => {
               {fetchingSubCategories ? (
                 <p>Loading subcategories...</p>
               ) : (
-                <div className="h-32 border border-gray-300 overflow-y-scroll p-2 rounded-lg">
+                <div className="h-32 border border-gray-300 overflow-y-scroll p-2 rounded-lg ">
                   {subCategories.map((subCategory) => (
                     <motion.button
                       key={subCategory._id}
                       type="button"
                       onClick={() => handleSubCategorySelect(subCategory._id)}
-                      className={`p-2 border rounded-lg mb-2 ${
+                      className={`p-2 border rounded-lg mb-2 mx-2 ${
                         selectedSubCategory === subCategory._id
                           ? 'bg-green-500 text-white'
                           : 'bg-white text-gray-700 hover:bg-gray-200'

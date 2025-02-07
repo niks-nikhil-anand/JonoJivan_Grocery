@@ -1,9 +1,11 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import { toast } from 'react-hot-toast';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
 
 const ProductForm = () => {
   const [categories, setCategories] = useState([]);
@@ -20,6 +22,11 @@ const ProductForm = () => {
     const [fetchingSubSubCategories, setFetchingSubSubCategories] = useState(false);
     const [selectedSubSubCategory, setSelectedSubSubCategory] = useState(null);
     const [subSubCategories, setSubSubCategories] = useState([]);
+
+    const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { 
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }), []);
 
 
 
@@ -178,6 +185,12 @@ const ProductForm = () => {
     setImages(newImages);
   };
 
+  const handleQuillChange = (description) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      description,
+    }));
+  };
   const removeImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
     setImageInputs((prevInputs) => prevInputs.filter((_, i) => i !== index));
@@ -319,112 +332,103 @@ const ProductForm = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {currentStep === 1 && (
-             <>
-             <motion.h3
-               className="text-xl font-semibold mb-4 text-blue-600"
-               initial={{ opacity: 0, x: -100 }}
-               animate={{ opacity: 1, x: 0 }}
-               transition={{ duration: 0.5 }}
-             >
-               Step 1: Basic Information
-             </motion.h3>
-         
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-               {/* Product Name */}
-               <div>
-                 <label className="block text-purple-600 font-bold mb-3" htmlFor="name">
-                   Product Name
-                 </label>
-                 <motion.input
-                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-                   type="text"
-                   name="name"
-                   id="name"
-                   value={formData.name}
-                   onChange={handleInputChange}
-                   required
-                   initial={{ opacity: 0, scale: 0.8 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ duration: 0.4 }}
-                 />
-               </div>
-         
-               {/* Description */}
-               <div>
-                 <label className="block text-pink-600 font-bold mb-3" htmlFor="description">
-                   Description
-                 </label>
-                 <motion.textarea
-                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-                   name="description"
-                   id="description"
-                   value={formData.description}
-                   onChange={handleInputChange}
-                   required
-                   initial={{ opacity: 0, scale: 0.8 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ duration: 0.4 }}
-                 />
-               </div>
-         
-              
-         
-               {/* Original Price */}
-               <div>
-                 <label className="block text-orange-600 font-bold mb-3" htmlFor="originalPrice">
-                   Original Price
-                 </label>
-                 <motion.input
-                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                   type="number"
-                   name="originalPrice"
-                   id="originalPrice"
-                   value={formData.originalPrice}
-                   onChange={handleInputChange}
-                   required
-                   initial={{ opacity: 0, scale: 0.8 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ duration: 0.4 }}
-                 />
-               </div>
-         
-          {/* Sale Price */}
-          <div>
-                 <label className="block text-teal-600 font-bold mb-3" htmlFor="salePrice">
-                   Sale Price
-                 </label>
-                 <motion.input
-                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-                   type="number"
-                   name="salePrice"
-                   id="salePrice"
-                   value={formData.salePrice}
-                   onChange={handleInputChange}
-                   required
-                   initial={{ opacity: 0, scale: 0.8 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ duration: 0.4 }}
-                 />
-               </div>
-              
-         
-               
-             </div>
-         
-             <div className="flex justify-end">
-               <motion.button
-                 type="button"
-                 onClick={nextStep}
-                 className="w-40 p-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600"
-                 whileHover={{ scale: 1.05 }}
-                 whileTap={{ scale: 0.95 }}
-               >
-                 Next
-               </motion.button>
-             </div>
-           </>
-          )}
+         {currentStep === 1 && (
+  <>
+    <motion.h3
+      className="text-xl font-semibold mb-4 text-blue-600"
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      Step 1: Basic Information
+    </motion.h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      {/* Left Column: Product Name, Original Price, Sale Price */}
+      <div className="space-y-6">
+        {/* Product Name */}
+        <div>
+          <label className="block text-purple-600 font-bold mb-3" htmlFor="name">
+            Product Name
+          </label>
+          <motion.input
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            type="text"
+            name="name"
+            id="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+          />
+        </div>
+
+        {/* Original Price */}
+        <div>
+          <label className="block text-orange-600 font-bold mb-3" htmlFor="originalPrice">
+            Original Price
+          </label>
+          <motion.input
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            type="number"
+            name="originalPrice"
+            id="originalPrice"
+            value={formData.originalPrice}
+            onChange={handleInputChange}
+            required
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+          />
+        </div>
+
+        {/* Sale Price */}
+        <div>
+          <label className="block text-teal-600 font-bold mb-3" htmlFor="salePrice">
+            Sale Price(Discounted Price)
+          </label>
+          <motion.input
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
+            type="number"
+            name="salePrice"
+            id="salePrice"
+            value={formData.salePrice}
+            onChange={handleInputChange}
+            required
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+          />
+        </div>
+      </div>
+
+      {/* Right Column: Description */}
+      <div>
+        <label className="block mb-3 text-gray-700 font-bold">Description</label>
+                  <ReactQuill
+                    value={formData.description}
+                    onChange={handleQuillChange}
+                    className="w-full h-80 rounded"
+                  />
+      </div>
+    </div>
+
+    {/* Next Button */}
+    <div className="flex justify-end mt-[3rem]">
+      <motion.button
+        type="button"
+        onClick={nextStep}
+        className="w-40 p-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Next
+      </motion.button>
+    </div>
+  </>
+)}
          {currentStep === 2 && (
   <>
     <motion.h3
@@ -709,7 +713,7 @@ const ProductForm = () => {
                 <option value="ML">ML</option>
                 <option value="Gm">Gm</option>
                 <option value="kg">kg</option>
-                <option value="kg">Pieces</option>
+                <option value="Pieces">Pieces</option>
               </motion.select>
             </div>
 
