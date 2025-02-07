@@ -198,12 +198,17 @@ const ProductDetail = () => {
 
     {/* Price */}
     <div className="flex items-center gap-4">
-      <h2 className="text-2xl lg:text-3xl font-bold text-purple-600">₹{salePrice}</h2>
-      <span className="line-through text-gray-400 text-lg">₹{originalPrice}</span>
-      <span className="text-sm text-green-500">
-      {discountPercentage}% Off
-      </span>
-    </div>
+        <h2 className="text-2xl lg:text-3xl font-bold text-purple-600">
+          ₹{salePrice.toLocaleString('en-IN')}
+        </h2>
+        <span className="line-through text-gray-400 text-lg">
+          ₹{originalPrice.toLocaleString('en-IN')}
+        </span>
+        <span className="text-sm text-green-500">
+          {discountPercentage}% Off
+        </span>
+      </div>
+
 
     
 
@@ -242,22 +247,18 @@ const ProductDetail = () => {
       </button>
     </div>
 
-    {/* Additional Info */}
-    <div className="text-gray-700 space-y-2">
-      <p className="text-sm">
-      {description}
-      </p>
-      <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2">
         <span className="font-medium">Weight:</span>
         <span className="text-gray-600">{product.weight.value}{product.weight.unit}</span>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="font-medium">Tag:</span>
-        
-        <span className="text-gray-600">Healthy, Chinese Cabbage</span>
 
-      </div>
-    </div>
+    {/* Additional Info */}
+    <div className="text-gray-700 space-y-2" style={{ height: '300px', overflowY: 'auto' }}>
+  <p 
+    className="prose prose-sm md:prose-lg mx-auto text-sm" 
+    dangerouslySetInnerHTML={{ __html: description }}
+  />
+</div>
   </div>
 </div>
 
