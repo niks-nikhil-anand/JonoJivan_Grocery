@@ -96,6 +96,13 @@ const Navbar = () => {
               type="text"
               placeholder="Search..."
               className="bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none w-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyPress} // Changed from onKeyPress (deprecated)
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+              aria-label="Search"
+              autoComplete="off"
             />
             <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
