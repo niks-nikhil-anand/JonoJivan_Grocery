@@ -4,6 +4,7 @@ import { FiSearch } from "react-icons/fi";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -30,12 +31,16 @@ const Navbar = () => {
       </div>
       <div className="text-xl font-bold">JonoJivan</div>
       <div className="flex gap-5 md:hidden">
+        <Link href={"/auth/signIn"}>
       <button className="text-2xl relative">
           <FaUser />
           </button>
+          </Link>
+        <Link href={"/product/cart"}>
       <button className="text-2xl relative">
           <FaShoppingCart />
           </button>
+          </Link>
       </div>
 
       {/* Navigation Links, Search, and Sign-In for Mobile */}
@@ -51,7 +56,7 @@ const Navbar = () => {
           {[
             { name: "Home", link: "/" },
             { name: "Mobile & Laptops", link: "/JonoCourier" },
-            { name: "All Categories", link: "/categories" },
+            { name: "All Categories", link: "/category" },
             { name: "Electronics", link: "/" },
             { name: "Fashion", link: "/JonoGrocery" },
             { name: "Beauty", link: "/JonoCourier" },
@@ -74,9 +79,13 @@ const Navbar = () => {
             />
             <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md">
+          <div>
+          <Link href={"/auth/signIn"}>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md w-full">
             Sign In
           </button>
+          </Link>
+          </div>
 
         </div>
       </motion.div>
@@ -87,10 +96,11 @@ const Navbar = () => {
       >
         {[
           { name: "Home", link: "/" },
-          { name: "Categories", link: "/categories" },
-          { name: "E-commerce", link: "/" },
-          { name: "Grocery", link: "/JonoGrocery" },
-          { name: "Courier", link: "/JonoCourier" },
+          { name: "All Categories", link: "/category" },
+          { name: "Mobile & Laptops", link: "/" },
+          { name: "Electronics", link: "/JonoGrocery" },
+          { name: "Fashion", link: "/JonoCourier" },
+          { name: "Beauty", link: "/JonoCourier" },
           { name: "Deals", link: "/deals" },
         ].map((item) => (
           <li
@@ -123,6 +133,7 @@ const Navbar = () => {
           />
           <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </motion.div>
+        <Link href={"/auth/signIn"}>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -130,9 +141,12 @@ const Navbar = () => {
         >
           Sign In
         </motion.button>
+        </Link>
+        <Link href={"/product/cart"}>
       <button className="text-2xl relative">
           <FaShoppingCart />
           </button>
+        </Link>
       </motion.div>
     </nav>
   );
