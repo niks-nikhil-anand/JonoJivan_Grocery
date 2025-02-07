@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { motion } from "framer-motion";
+import { FaShoppingCart, FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -17,7 +18,6 @@ const Navbar = () => {
   return (
     <nav className="bg-black text-white px-6 py-3 flex items-center justify-between relative">
       {/* Logo */}
-      <div className="text-xl font-bold">JonoJivan</div>
 
       {/* Hamburger Menu for Mobile */}
       <div className="lg:hidden">
@@ -27,6 +27,15 @@ const Navbar = () => {
         >
           {isMenuOpen ? <HiX /> : <HiMenuAlt3 />}
         </button>
+      </div>
+      <div className="text-xl font-bold">JonoJivan</div>
+      <div className="flex gap-5 md:hidden">
+      <button className="text-2xl relative">
+          <FaUser />
+          </button>
+      <button className="text-2xl relative">
+          <FaShoppingCart />
+          </button>
       </div>
 
       {/* Navigation Links, Search, and Sign-In for Mobile */}
@@ -41,10 +50,11 @@ const Navbar = () => {
         <ul className="flex flex-col space-y-4">
           {[
             { name: "Home", link: "/" },
-            { name: "Categories", link: "/categories" },
-            { name: "E-commerce", link: "/" },
-            { name: "Grocery", link: "/JonoGrocery" },
-            { name: "Courier", link: "/JonoCourier" },
+            { name: "Mobile & Laptops", link: "/JonoCourier" },
+            { name: "All Categories", link: "/categories" },
+            { name: "Electronics", link: "/" },
+            { name: "Fashion", link: "/JonoGrocery" },
+            { name: "Beauty", link: "/JonoCourier" },
             { name: "Deals", link: "/deals" },
           ].map((item) => (
             <li
@@ -67,6 +77,7 @@ const Navbar = () => {
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md">
             Sign In
           </button>
+
         </div>
       </motion.div>
 
@@ -119,6 +130,9 @@ const Navbar = () => {
         >
           Sign In
         </motion.button>
+      <button className="text-2xl relative">
+          <FaShoppingCart />
+          </button>
       </motion.div>
     </nav>
   );
