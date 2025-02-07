@@ -9,11 +9,38 @@ import Link from "next/link";
 const Navbar = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   // Animation variants for the menu
   const menuVariants = {
     open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 200 } },
     closed: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 200 } },
+  };
+
+  const handleSearch = async () => {
+    if (searchQuery.trim()) {
+      try {
+        const response = await fetch(`/api/search?query=${encodeURIComponent(searchQuery)}`);
+        const data = await response.json();
+  
+        if (response.ok) {
+          // Redirect if response is OK
+          router.push(`/product/search/${encodeURIComponent(searchQuery)}`);
+        } else {
+          console.error("Search failed:", data.msg || "Unknown error");
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    }
+  };
+
+  // Function to handle key press (Enter)
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -124,13 +151,19 @@ const Navbar = () => {
           transition={{ type: "spring", stiffness: 300 }}
           className="relative"
         >
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none w-full"
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
-          />
+         <input
+          type="text"
+          placeholder="Search..."
+          className="w-full px-4 py-2 text-white bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyPress} // Changed from onKeyPress (deprecated)
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
+          aria-label="Search"
+          autoComplete="off"
+        />
+
           <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </motion.div>
         <Link href={"/auth/signIn"}>
@@ -138,6 +171,7 @@ const Navbar = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md"
+          
         >
           Sign In
         </motion.button>
