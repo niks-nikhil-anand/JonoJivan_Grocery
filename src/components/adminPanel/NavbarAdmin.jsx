@@ -5,6 +5,7 @@ import { IoMdLogOut } from "react-icons/io"; // For the logout icon
 import Image from 'next/image';
 import logo from '../../../public/logo/logo.png';
 import { toast } from 'react-hot-toast';
+import Router from 'next/navigation';
 
 
 
@@ -25,7 +26,7 @@ const Navbar = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          router.push('/');
+          Router.push('/');
         } else {
           alert(`Logout failed: ${data.message}`);
         }
