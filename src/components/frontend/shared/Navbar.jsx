@@ -5,11 +5,15 @@ import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // For Next.js App Router
+
 
 const Navbar = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter(); // Initialize router
+
 
 
   // Animation variants for the menu
@@ -26,7 +30,7 @@ const Navbar = () => {
   
         if (response.ok) {
           // Redirect if response is OK
-          router.push(`/product/search/${encodeURIComponent(searchQuery)}`);
+          router.push(`/product/search?q=${encodeURIComponent(searchQuery)}`);
         } else {
           console.error("Search failed:", data.msg || "Unknown error");
         }
