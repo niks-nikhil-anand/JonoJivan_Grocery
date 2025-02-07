@@ -2,6 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FiSmartphone, FiBox, FiHome, FiShoppingBag } from 'react-icons/fi';
+import Link from 'next/link';
 
 const FeaturedSection = () => {
   const products = [
@@ -66,11 +67,13 @@ const FeaturedSection = () => {
               <h3 className="text-lg font-bold text-gray-800">{product.title}</h3>
               <p className="text-gray-600 mt-2">{product.description}</p>
               <p className="font-bold mt-4">{product.price}</p>
+              <Link href={"/product/shopAllProducts"}>
               <button
                 className={`mt-4 px-4 py-2 rounded-lg text-white ${product.buttonColor} hover:opacity-90`}
               >
                 Shop Now
               </button>
+              </Link>
             </motion.div>
           ))}
         </div>

@@ -3,6 +3,8 @@ import subCategoryModels from "@/models/subCategoryModels";
 import categoryModels from "@/models/categoryModels";
 import { NextResponse } from "next/server";
 import uploadImage from "@/lib/uploadImages";
+import sub_subCategoryModels from "@/models/sub_subCategoryModels";
+import productModels from "@/models/productModels";
 
 // POST request to create new SubCategories
 export const POST = async (req ) => {
@@ -88,9 +90,6 @@ export const POST = async (req ) => {
 };
 
 
-// GET request to fetch SubCategory by ID or Name
-
-// GET request to fetch SubCategory by Name
 export const GET = async (req) => {
   console.log("Incoming GET request received");
 
@@ -121,7 +120,7 @@ export const GET = async (req) => {
     console.log("Building query to fetch SubCategory by Name:", query);
 
     // Fetch SubCategory from the database
-    const subCategory = await subCategoryModels.findOne(query);
+    const subCategory = await sub_subCategoryModels.findOne(query);
 
     if (!subCategory) {
       console.log("SubCategory not found for Name:", name);
@@ -132,12 +131,22 @@ export const GET = async (req) => {
     }
 
     console.log("SubCategory fetched successfully:", subCategory);
-    return NextResponse.json(subCategory, { status: 200 });
+
+    // Fetch all products associated with the subSubCategory
+    const products = await productModels.find({ subSubCategory: subCategory._id });
+
+    console.log("Products fetched successfully:", products);
+
+    // Return both the subCategory and the associated products
+    return NextResponse.json(
+      { subCategory, products },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error during SubCategory fetch:", error);
+    console.error("Error during SubCategory or Products fetch:", error);
     return NextResponse.json(
       {
-        msg: "Error fetching SubCategory",
+        msg: "Error fetching SubCategory or Products",
         error: error.message,
       },
       { status: 500 }

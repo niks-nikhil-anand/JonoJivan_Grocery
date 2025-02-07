@@ -1,78 +1,47 @@
 "use client";
 import Loader from '@/components/loader/loader';
 import React, { useEffect, useState } from 'react';
+import { FaStar, FaLock, FaCartPlus } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
+import { motion } from "framer-motion";
+
 
 const Page = () => {
-    const [data, setData] = useState(null); // State to store category data
-    const [subCategoryData, setSubCategoryData] = useState([]); // State to store subcategory data
+    const [data, setData] = useState(null); // State to store category and subcategory data
+    const [sub_subCategory, setSub_subCategory] = useState(null); // State to store subcategory data
     const [loading, setLoading] = useState(true); // State to manage loading state
     const [error, setError] = useState(null); // State to handle error
     const router = useRouter();
 
-
-    
-
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log("Starting fetchData...");
-
                 // Extract name from the URL
                 const urlPath = window.location.pathname;
-                console.log("URL Path:", urlPath);
-                const name = decodeURIComponent(urlPath.split('/')[3]); // Extract and decode the name
-                console.log("Extracted Name:", name);
+                const name = decodeURIComponent(urlPath.split('/')[3]);
 
-                // Fetch category data based on name
-                console.log(`Fetching category data for Name: ${name}`);
+                // Fetch category and subcategory data based on name
                 const response = await fetch(`/api/admin/dashboard/subCatgeory?name=${name}`);
-                console.log("Category fetch response status:", response.status);
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch category data: ${response.statusText}`);
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
                 }
                 const result = await response.json();
-                console.log("Category Data Fetched:", result);
-                setData(result);
-
-                // Fetch subcategory data for each subcategory ID
-                console.log("Fetching subcategories for IDs:", result.subSubcategory);
-                const subCategoryResponses = await Promise.all(
-                    result.subSubcategory.map(async (subcategoryId) => {
-                        try {
-                            console.log(`Fetching subcategory data for ID: ${subcategoryId}`);
-                            const subResponse = await fetch(`/api/admin/dashboard/sub_subCategory/${subcategoryId}`);
-                            console.log(`Subcategory fetch response status for ${subcategoryId}:`, subResponse.status);
-                            if (!subResponse.ok) {
-                                throw new Error(`Subcategory fetch failed: ${subResponse.statusText}`);
-                            }
-                            const subData = await subResponse.json();
-                            console.log(`Subcategory Data for ID ${subcategoryId}:`, subData);
-                            return subData;
-                        } catch (subError) {
-                            console.error(`Error fetching subCategory ${subcategoryId}:`, subError);
-                            return null;
-                        }
-                    })
-                );
-
-                // Filter out null responses
-                const validSubCategories = subCategoryResponses.filter((sub) => sub !== null);
-                console.log("Valid Subcategory Data:", validSubCategories);
-                setSubCategoryData(validSubCategories);
+                console.log("Fetched Data:", result);
+                setData(result.products);
+                setSub_subCategory(result.subCategory);
             } catch (error) {
-                console.error("Error in fetchData:", error);
                 setError(error.message);
             } finally {
-                console.log("Setting loading state to false");
                 setLoading(false);
             }
         };
 
-        console.log("Executing useEffect...");
         fetchData();
     }, []);
-    
+
+    const handleCardClick = (id) => {
+        router.push(`/product/${id}`);
+    };
 
     if (loading) return <Loader />;
     if (error) return <p className="text-red-500">Error: {error}</p>;
@@ -81,36 +50,64 @@ const Page = () => {
         <div className="flex flex-col items-center gap-6 p-4 md:p-6 my-8">
             {/* Display Category Name at the Top */}
             <h1 className="text-lg sm:text-xl md:text-4xl mb-4 font-bold text-red-500 underline">
-                {data?.name || "Category"}
+                {sub_subCategory?.name}
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                {/* Map through subcategory data and display each as a card */}
-                {subCategoryData.length > 0 ? (
-                    subCategoryData.map((subcategory) => (
-                        <div
-                            key={subcategory._id}
-                            className="w-full flex items-center gap-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 cursor-pointer"
-                            onClick={() => router.push(`/category/${data._id}/${subcategory.name}`)} // Update the URL
-                        >
-                            {/* Subcategory Image */}
-                            <img
-                                src={subcategory.image}
-                                alt={subcategory.name}
-                                className="w-12 h-12 sm:w-16 sm:h-16 rounded-full shadow-md"
-                            />
-                            {/* Subcategory Name */}
-                            <h2 className="text-base sm:text-lg md:text-xl font-medium text-red-500">
-                                {subcategory.name}
-                            </h2>
-                        </div>
+                {data && data.length > 0 ? (
+                    data.map((product) => (
+                        <ProductCard key={product._id} product={product} handleCardClick={handleCardClick} />
                     ))
                 ) : (
-                    <p className="text-gray-500">No subcategories available</p>
+                    <p className="text-gray-500">No Products available</p>
                 )}
             </div>
         </div>
     );
 };
+
+const ProductCard = ({ product }) => {
+    return (
+      <motion.div
+        className="relative flex-shrink-0 snap-center flex flex-col items-center justify-center bg-gray-50 rounded-xl p-6 border hover:shadow-lg transition-all duration-300 w-[80%] sm:w-[220px] md:w-[250px] lg:w-[280px] h-[250px] md:h-[300px] text-center group cursor-pointer"
+
+        onClick={() => handleCardClick(product._id)}
+
+      >
+        {/* Product Image */}
+        <div className="overflow-hidden h-[15rem] flex justify-center">
+          <img
+            src={product.featuredImage}
+            alt={product.name}
+            className="object-contain h-full w-full transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+          />
+        </div>
+  
+        {/* Product Info */}
+        <div className="text-center mt-4">
+          <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
+        </div>
+         {/* Price Section */}
+         <div className="flex items-center gap-2 mt-1">
+              <span className="text-sm sm:text-base font-bold text-black">₹{product.salePrice}</span>
+              <span className="text-xs sm:text-sm font-bold text-[#999999] line-through">
+                ₹{product.originalPrice}
+              </span>
+            </div>
+  
+        {/* Rating and Lock Icon */}
+        <div className="flex items-center justify-center mt-2">
+          <div className="flex text-yellow-500 justify-between w-16">
+            {[...Array(4)].map((_, i) => (
+              <FaStar key={i} size={16} className="mr-1" />
+            ))}
+            <FaStar size={16} className="text-gray-400" />
+          </div>
+          <FaCartPlus size={20} className="ml-4 text-gray-500" />
+        </div>
+      </motion.div>
+    );
+  };
+
 
 export default Page;
