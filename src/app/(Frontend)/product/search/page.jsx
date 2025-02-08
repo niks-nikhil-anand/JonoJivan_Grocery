@@ -1,11 +1,18 @@
 "use client"; // Required for useSearchParams
 import { motion } from 'framer-motion';
 import { FaStar, FaCartPlus } from 'react-icons/fa';
-
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 const SearchPage = () => {
+  return (
+    <Suspense fallback={<p className="text-center text-gray-500">Loading...</p>}>
+      <SearchResults />
+    </Suspense>
+  );
+};
+
+const SearchResults = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("q"); // Get search query from URL
   const [results, setResults] = useState([]);
@@ -31,14 +38,12 @@ const SearchPage = () => {
 
   return (
     <div className="min-h-screen p-6">
-       {results.length > 0 ? (
+      {loading ? (
+        <p className="text-center text-gray-500">Loading results...</p>
+      ) : results.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {results.map((product) => (
-            <ProductCard 
-              key={product._id} 
-              product={product} 
-              onClick={() => handleCardClick(product._id)}
-            />
+            <ProductCard key={product._id} product={product} />
           ))}
         </div>
       ) : (
@@ -48,13 +53,11 @@ const SearchPage = () => {
   );
 };
 
-
-const ProductCard = ({ product, onClick }) => {
+const ProductCard = ({ product }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       className="flex flex-col items-center justify-center bg-white rounded-xl p-4 border hover:shadow-lg transition-all duration-300 w-full h-full cursor-pointer"
-      onClick={onClick}
     >
       {/* Product Image */}
       <div className="overflow-hidden h-48 w-full flex justify-center mb-4">
