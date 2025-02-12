@@ -72,7 +72,7 @@ const LatestProducts = () => {
         return (
           <div
             key={_id}
-            className="relative flex flex-col items-center border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow w-full sm:w-[48%] md:w-full"
+            className="relative flex flex-col items-center border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow w-full sm:w-[48%] md:w-full cursor-pointer"
             onClick={() => handleCardClick(_id)}
           >
             {/* SALE Badge */}

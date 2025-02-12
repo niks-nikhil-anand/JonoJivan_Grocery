@@ -6,7 +6,6 @@ import Loader from '@/components/loader/loader';
 import { useRouter } from 'next/navigation';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import {  AiOutlineClose } from 'react-icons/ai';
-import { FaRegArrowAltCircleRight , FaRegArrowAltCircleLeft  } from "react-icons/fa";
 import ReviewProductPage from '@/components/frontend/ui/ReviewProductPage';
 
 
@@ -103,7 +102,7 @@ const ProductDetail = () => {
 
   return (
     <div>
-    <div className="flex flex-col lg:flex-row p-6 bg-gray-100 w-full h-full mt-5 gap-6">
+    <div className="flex flex-col lg:flex-row p-6 bg-gray-100 w-full h-full  gap-6">
 {/* Product Images */}
 <div className="w-full lg:w-1/3 flex flex-col items-center gap-4">
   {/* Main Product Image */}
@@ -154,12 +153,17 @@ const ProductDetail = () => {
 
   {/* Price */}
   <div className="flex items-center gap-4">
-    <h2 className="text-2xl lg:text-3xl font-bold text-purple-600">₹{salePrice}</h2>
-    <span className="line-through text-gray-400 text-lg">₹{originalPrice}</span>
-    <span className="text-sm text-green-500">
-    {discountPercentage}% Off
-    </span>
-  </div>
+      <h2 className="text-2xl lg:text-3xl font-bold text-purple-600">
+        ₹{salePrice.toLocaleString('en-IN')}
+      </h2>
+      <span className="line-through text-gray-400 text-lg">
+        ₹{originalPrice.toLocaleString('en-IN')}
+      </span>
+      <span className="text-sm text-green-500">
+        {discountPercentage}% Off
+      </span>
+    </div>
+
 
   
 
@@ -198,22 +202,18 @@ const ProductDetail = () => {
     </button>
   </div>
 
-  {/* Additional Info */}
-  <div className="text-gray-700 space-y-2">
-    <p className="text-sm">
-    {description}
-    </p>
-    <div className="flex items-center gap-2">
+  <div className="flex items-center gap-2">
       <span className="font-medium">Weight:</span>
       <span className="text-gray-600">{product.weight.value}{product.weight.unit}</span>
     </div>
-    <div className="flex items-center gap-2">
-      <span className="font-medium">Tag:</span>
-      
-      <span className="text-gray-600">Healthy, Chinese Cabbage</span>
 
-    </div>
-  </div>
+  {/* Additional Info */}
+  <div className="text-gray-700 space-y-2" style={{ height: '300px', overflowY: 'auto' }}>
+<p 
+  className="prose prose-sm md:prose-lg mx-auto text-sm" 
+  dangerouslySetInnerHTML={{ __html: description }}
+/>
+</div>
 </div>
 </div>
 
@@ -221,11 +221,21 @@ const ProductDetail = () => {
 
 
 </div>
+
+
 {/* Review Section */}
 <div className=" p-6 bg-gray-100 w-full h-full">
   <ReviewProductPage />
 </div>
- {isFullScreen && (
+
+
+
+
+
+
+
+
+        {isFullScreen && (
       <motion.div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
         <div className="relative bg-white p-2 rounded-lg" style={{ width: '80vw', height: '80vh' }}>
           <img src={currentImage} alt="Full Size Product" className="object-contain w-full h-full" />
