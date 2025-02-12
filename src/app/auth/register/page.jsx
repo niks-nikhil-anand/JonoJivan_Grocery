@@ -215,7 +215,7 @@ const CreateAccountForm = () => {
       </div>
 
       <div className="flex justify-between mt-4">
-        <Link href={"/auth/register"} className="text-green-700">
+        <Link href={"/auth/signIn"} className="text-green-700">
           Already have an account? <span className="text-blue-500 hover:underline">Sign in</span>
         </Link>
       </div>

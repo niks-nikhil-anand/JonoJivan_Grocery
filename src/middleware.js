@@ -17,7 +17,8 @@ export async function middleware(req) {
 
   // Redirect logged-in users away from auth pages
   if (token && (isAuthPage || isSignInPage)) {
-    return NextResponse.redirect(new URL(`/users/${token.id}`, req.nextUrl.origin));
+    console.log(token)
+    return NextResponse.redirect(new URL(`/users/${token._id}`, req.nextUrl.origin));
   }
 
   // Redirect user to their profile if they are already logged in
