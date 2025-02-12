@@ -22,10 +22,12 @@ const Navbar = () => {
     closed: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 200 } },
   };
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
+   // Updated handleSearch function
+   const handleSearch = (query = searchQuery) => {
+    if (query.trim()) {
       // Redirect to the search results page with query parameter
-      router.push(`/product/search?q=${encodeURIComponent(searchQuery)}`);
+      router.push(`/product/search?q=${encodeURIComponent(query)}`);
+      setIsSearchFocused(false); // Close the popular searches dropdown
     }
   };
 
@@ -35,6 +37,13 @@ const Navbar = () => {
       handleSearch();
     }
   };
+
+  const popularSearches = [
+    "saree", "jacket", "shoes", "sweater for women",
+    "kurti", "sweater", "watch", "earring", "tshirt",
+    "winter wear for women", "lehenga", "blouse",
+    "Mobile", "Laptops", "blouse",
+  ];
 
   return (
     <nav className="bg-black text-white px-6 py-3 flex items-center justify-between relative">
@@ -146,26 +155,43 @@ const Navbar = () => {
         className="hidden lg:flex items-center space-x-3"
       >
         <motion.div
-          initial={{ width: "150px" }}
-          animate={{ width: isSearchFocused ? "250px" : "150px" }}
-          transition={{ type: "spring", stiffness: 300 }}
-          className="relative"
-        >
-         <input
-          type="text"
-          placeholder="Search..."
-          className="w-full px-4 py-2 text-white bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyPress} // Changed from onKeyPress (deprecated)
-          onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setIsSearchFocused(false)}
-          aria-label="Search"
-          autoComplete="off"
-        />
+      initial={{ width: "150px" }}
+      animate={{ width: isSearchFocused ? "250px" : "150px" }}
+      transition={{ type: "spring", stiffness: 300 }}
+      className="relative"
+    >
+      <input
+        type="text"
+        placeholder="Search..."
+        className="w-full px-4 py-2 text-white bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleKeyPress}
+        onFocus={() => setIsSearchFocused(true)}
+        onBlur={() => setIsSearchFocused(false)}
+        aria-label="Search"
+        autoComplete="off"
+      />
 
-          <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        </motion.div>
+      <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+
+      {/* Popular Searches Dropdown */}
+      {isSearchFocused && (
+        <div className="absolute mt-4 w-full bg-gray-800 rounded-lg shadow-lg z-10 min-w-[25rem] ">
+         <div className="flex flex-wrap gap-3 py-5 px-3 ">
+        {popularSearches.map((item, index) => (
+          <span
+            key={index}
+            onClick={() => handleSearch(item)} 
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer"
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+        </div>
+      )}
+    </motion.div>
         <Link href={"/auth/signIn"}>
         <motion.button
           whileHover={{ scale: 1.05 }}
