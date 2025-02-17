@@ -26,10 +26,10 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Right Side - Two Small Banners */}
-      <div className="w-full md:w-1/4 flex md:flex-col gap-4">
+      <div className="w-full md:w-1/4 flex md:flex-col gap-4 md:mt-7">
         {/* Big Sale Banner */}
         <motion.div
-          className="rounded-lg overflow-hidden shadow-lg w-[49%]"
+          className="rounded-lg overflow-hidden shadow-lg w-[49%] md:w-full"
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
@@ -43,7 +43,7 @@ const HeroSection = () => {
 
         {/* Fresh Fruits Banner */}
         <motion.div
-          className="rounded-lg overflow-hidden shadow-lg w-[49%]"
+          className="rounded-lg overflow-hidden shadow-lg w-[49%] md:w-full"
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.5 }}
