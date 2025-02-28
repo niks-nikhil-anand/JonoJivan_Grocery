@@ -71,8 +71,7 @@ const SidebarAdmin = () => {
             <SidebarItem icon={<MdAdd />} label="Add Categories" selected={selectedItem === 'Add Categories'} onClick={() => setSelectedItem('Add Categories')} />
           </Link>
 
-
-          <Link href="/admin/dashboard/category/addSubCategory" passHref>
+          <Link href="/admin/dashboard/category/addSubSubCatgeory" passHref>
             <SidebarItem icon={<FaListUl />} label="Add Sub_subCategories" selected={selectedItem === 'Sub_subCategories'} onClick={() => setSelectedItem('Sub_subCategories')} />
           </Link>
 
