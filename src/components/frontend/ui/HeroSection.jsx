@@ -40,7 +40,7 @@ const HeroSection = () => {
             className="w-full h-auto object-cover"
           />
         </motion.div>
-
+``
         {/* Fresh Fruits Banner */}
         <motion.div
           className="rounded-lg overflow-hidden shadow-lg w-[49%] md:w-full"

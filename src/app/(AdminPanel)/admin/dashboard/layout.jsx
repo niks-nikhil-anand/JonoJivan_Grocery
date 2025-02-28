@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
     <div className="flex w-full min-h-screen overflow-hidden">
     <SidebarAdmin className="w-1/4 h-screen bg-gray-800" />
     <div className="flex-1 overflow-hidden ">
-      <NavbarAdmin className="w-ful" />
+      <NavbarAdmin className="w-full" />
       {children}
     </div>
   </div>
