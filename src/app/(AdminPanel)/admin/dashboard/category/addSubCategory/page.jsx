@@ -41,7 +41,7 @@ const AddSubCategory = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (!name || !image || !selectedCategory || !selectedSubCategory) {
+    if (!name || !image || !selectedCategory ) {
       toast.error('Please fill in all required fields');
       setLoading(false);
       return;
@@ -53,11 +53,10 @@ const AddSubCategory = () => {
     formData.append('category', selectedCategory);
 
     try {
-      await axios.post('/api/admin/dashboard/sub_subCategory', formData);
+      await axios.post('/api/admin/dashboard/subCatgeory', formData);
       toast.success('Sub-subcategory added successfully!');
       setName('');
       setImage(null);
-      setSubSubCategories([]);
     } catch (error) {
       console.error('Error adding sub-subcategory:', error);
       toast.error('Failed to add sub-subcategory');

@@ -1,11 +1,12 @@
 import connectDB from "@/lib/dbConnect";
-import subCategoryModels from "@/models/subCategoryModels";
-import categoryModels from "@/models/categoryModels";
-import { NextResponse } from "next/server";
 import uploadImage from "@/lib/uploadImages";
+import categoryModels from "@/models/categoryModels";
+import subCategoryModels from "@/models/subCategoryModels";
+import { NextResponse } from "next/server";
+
 
 // POST request to create new SubCategories
-export const POST = async (req ) => {
+export const POST = async (req) => {
   try {
     console.log("Connecting to the database...");
     await connectDB();
@@ -24,19 +25,19 @@ export const POST = async (req ) => {
 
     // Parse subcategories
     const subCategoriesData = [];
-    
+
     // Log the whole formData to inspect its structure
     for (let [key, value] of formData.entries()) {
       console.log(`Key: ${key}, Value: ${value}`);
     }
 
     // Get the count of subcategories
-    const subCategoryCount = formData.getAll("subCategories[0][name]").length;
+    const subCategoryCount = formData.getAll("name").length;
     console.log("Subcategory Count:", subCategoryCount);
 
     for (let i = 0; i < subCategoryCount; i++) {
-      const name = formData.get(`subCategories[${i}][name]`);
-      const image = formData.get(`subCategories[${i}][image]`);
+      const name = formData.getAll("name")[i];
+      const image = formData.getAll("image")[i];
 
       if (!name || !image) {
         console.error(`Missing fields for subcategory ${i + 1}.`);
@@ -88,7 +89,6 @@ export const POST = async (req ) => {
 };
 
 
-// GET request to fetch SubCategory by ID or Name
 
 // GET request to fetch SubCategory by Name
 export const GET = async (req) => {
