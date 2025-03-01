@@ -24,7 +24,7 @@ const Page = () => {
                 // Decode each segment
                 const name = segments.map(segment => decodeURIComponent(segment));
                 console.log(name)
-                const response = await fetch(`/api/admin/dashboard/sub_subCategory?name=${name}`);
+                const response = await fetch(`/api/admin/dashboard/sub_subCategory?name=${encodeURIComponent(name)}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch data: ${response.statusText}`);
                 }
