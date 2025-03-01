@@ -18,15 +18,15 @@ const Page = () => {
             try {
                 console.log("Starting fetchData...");
 
-                // Extract name from the URL
                 const urlPath = window.location.pathname;
-                console.log("URL Path:", urlPath);
-                const name = decodeURIComponent(urlPath.split('/')[3]); // Extract and decode the name
+                const pathSegments = urlPath.split('/');
+                const name = decodeURIComponent(pathSegments[3]); // Extract and decode the 4th segment
                 console.log("Extracted Name:", name);
 
+
                 // Fetch category data based on name
-                console.log(`Fetching category data for Name: ${name}`);
-                const response = await fetch(`/api/admin/dashboard/subCatgeory?name=${name}`);
+                console.log(`Fetching  Name: ${name}`);
+                const response = await fetch(`/api/admin/dashboard/subCatgeory?name=${encodeURIComponent(name)}`);
                 console.log("Category fetch response status:", response.status);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch category data: ${response.statusText}`);

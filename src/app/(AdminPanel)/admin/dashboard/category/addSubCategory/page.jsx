@@ -59,7 +59,6 @@ const AddSubCategory = () => {
       setImage(null);
     } catch (error) {
       console.error('Error adding sub-subcategory:', error);
-      toast.error('Failed to add sub-subcategory');
     } finally {
       setLoading(false);
     }

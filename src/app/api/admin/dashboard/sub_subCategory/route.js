@@ -97,7 +97,7 @@ export const GET = async (req) => {
 
     // Construct query based on Name
     const query = { name };
-    console.log("Building query to fetch SubCategory by Name:", query);
+    console.log("Building query to fetch :", query);
 
     // Fetch SubCategory from the database
     const subCategory = await sub_subCategoryModels.findOne(query);

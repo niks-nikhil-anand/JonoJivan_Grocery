@@ -16,8 +16,14 @@ const Page = () => {
         const fetchData = async () => {
             try {
                 const urlPath = window.location.pathname;
-                const name = decodeURIComponent(urlPath.split('/')[4]);
-
+                const pathSegments = urlPath.split('/');
+                
+                // Get multiple segments (e.g., second, third, etc.)
+                const segments = pathSegments.slice(4); // Adjust the starting index as needed
+                
+                // Decode each segment
+                const name = segments.map(segment => decodeURIComponent(segment));
+                console.log(name)
                 const response = await fetch(`/api/admin/dashboard/sub_subCategory?name=${name}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch data: ${response.statusText}`);

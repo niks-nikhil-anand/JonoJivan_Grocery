@@ -94,13 +94,15 @@ export const POST = async (req) => {
 export const GET = async (req) => {
   console.log("Incoming GET request received");
 
-  // Log the query to check its structure
-  console.log("GET Request URL:", req.url); // Check the full URL
+  // Log the full URL to check its structure
+  console.log("GET URL:", req.url);
 
+  // Parse the URL and extract query parameters
   const { searchParams } = new URL(req.url, `http://${req.headers.host}`);
   const name = searchParams.get('name'); // Extract 'name' from query params
 
-  console.log("Extracted Name:", name); // Log the extracted name to check
+  // Log the extracted name to check its value
+  console.log("Extracted Name:", name);
 
   // Validate input
   if (!name) {
@@ -118,7 +120,7 @@ export const GET = async (req) => {
 
     // Construct query based on Name
     const query = { name };
-    console.log("Building query to fetch SubCategory by Name:", query);
+    console.log("Building query to fetch SubCategory:", query);
 
     // Fetch SubCategory from the database
     const subCategory = await subCategoryModels.findOne(query);
