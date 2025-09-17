@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
@@ -83,9 +84,18 @@ const Footer = () => {
       <div className="border-t border-gray-800 mt-8 pt-6 text-gray-300 text-sm flex justify-between flex-wrap">
         <p>© 2024 JONOJIVAN GROCERY DISTRIBUTION PVT LTD. All rights reserved.</p>
         <div className="flex space-x-6">
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+          <Link href={"/privacyPolicy"} className="hover:text-white transition-colors">
+          Privacy Policy
+          </Link>
+          <Link href={"/returnPolicy"} className="hover:text-white transition-colors">
+        Return Policy
+          </Link>
+          <Link href={"/shippingPolicy"} className="hover:text-white transition-colors">
+         Shipping Policy
+          </Link>
+          <Link href={"/termsAndConditions"} className="hover:text-white transition-colors">
+        Terms Condition
+          </Link>
         </div>
       </div>
     </footer>
