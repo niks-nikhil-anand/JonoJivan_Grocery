@@ -63,19 +63,11 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-white">Services & Support</h3>
           <ul className="mt-3 space-y-2 text-gray-300">
             <li className="hover:text-white cursor-pointer transition-colors">
-              <a href="/shippingPolicy">Shipping And Delivery</a>
-            </li>
-            <li className="hover:text-white cursor-pointer transition-colors">
-              <a href="/privacyPolicy">Privacy Policy</a>
-            </li>
-            <li className="hover:text-white cursor-pointer transition-colors">
-              <a href="/termsAndConditions">Terms & Conditions</a>
-            </li>
-            <li className="hover:text-white cursor-pointer transition-colors">
               <a href="/auth/vendorRegistration">Become JonoJivan Vendor</a>
             </li>
             <li className="hover:text-white cursor-pointer transition-colors">Customer Support</li>
             <li className="hover:text-white cursor-pointer transition-colors">About Us</li>
+            <li className="hover:text-white cursor-pointer transition-colors">Contact Us</li>
           </ul>
         </div>
       </div>
