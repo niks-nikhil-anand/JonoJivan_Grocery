@@ -16,6 +16,15 @@ export const generateRationCardPDF = (card) => {
     const lightBg = [240, 253, 244]; // Very light green
     const white = [255, 255, 255];
 
+    const drawHeader = () => {
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, 53.98, 11, 'F');
+        doc.setFontSize(9);
+        doc.setTextColor(...white);
+        doc.setFont("helvetica", "bold");
+        doc.text("Jonojivan Grocery Distribution", 27, 7, { align: 'center' });
+    };
+
     // --- Page 1: Front Side (Portrait) ---
     
     // Background
@@ -23,18 +32,12 @@ export const generateRationCardPDF = (card) => {
     doc.rect(0, 0, 53.98, 85.6, 'F');
     
     // Header
-    doc.setFillColor(...primaryColor);
-    doc.rect(0, 0, 53.98, 10, 'F');
+    drawHeader();
     
-    doc.setFontSize(10);
-    doc.setTextColor(...white);
-    doc.setFont("helvetica", "bold");
-    doc.text("Jonojivan grocery distribution", 27, 6.5, { align: 'center' });
-
     // --- Photo (Circular) ---
     const photoRadius = 11;
     const photoCX = 27; // Center X
-    const photoCY = 23; // Just below header (approx Y=12 start + 11 radius)
+    const photoCY = 23; 
     
     // Draw white circle background/border
     doc.setDrawColor(200);
@@ -154,12 +157,7 @@ export const generateRationCardPDF = (card) => {
     doc.rect(0, 0, 53.98, 85.6, 'F');
     
     // Header
-    doc.setFillColor(...primaryColor);
-    doc.rect(0, 0, 53.98, 12, 'F');
-    doc.setFontSize(8);
-    doc.setTextColor(...white);
-    doc.setFont("helvetica", "bold");
-    doc.text("Jonojivan grocery distribution", 27, 5, { align: 'center' });
+    drawHeader();
     
     // --- Body Content (Back) ---
     let backY = 16;
