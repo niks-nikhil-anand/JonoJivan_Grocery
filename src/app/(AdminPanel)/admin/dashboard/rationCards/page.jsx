@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { IoIosSearch, IoMdRefresh, IoMdClose } from "react-icons/io";
 import { FaIdCard, FaEye, FaEdit, FaTrash, FaSave, FaDownload } from "react-icons/fa";
-import jsPDF from 'jspdf';
+import { generateRationCardPDF } from "@/lib/generateRationCardPDF";
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -111,190 +111,7 @@ const RationCardsPage = () => {
       }
   };
 
-  const downloadPDF = (card) => {
-    // ID-1 Portrait Size: 53.98 × 85.60 mm
-    const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: [53.98, 85.6]
-    });
 
-    // --- Helper Styles ---
-    const primaryColor = [22, 101, 52]; // Green 800
-    const secondaryColor = [60, 60, 60]; // Dark Gray
-    const lightBg = [240, 253, 244]; // Very light green
-    const white = [255, 255, 255];
-
-    // --- Page 1: Front Side (Portrait) ---
-    
-    // Background
-    doc.setFillColor(...lightBg);
-    doc.rect(0, 0, 53.98, 85.6, 'F');
-    
-    // Header
-    doc.setFillColor(...primaryColor);
-    doc.rect(0, 0, 53.98, 12, 'F');
-    
-    doc.setFontSize(10);
-    doc.setTextColor(...white);
-    doc.setFont("helvetica", "bold");
-    doc.text("RATION CARD", 27, 8, { align: 'center' });
-    
-    // Photo (Centered)
-    const photoW = 22;
-    const photoH = 26;
-    const photoX = (53.98 - photoW) / 2;
-    const photoY = 16;
-    
-    doc.setDrawColor(200);
-    doc.setFillColor(...white);
-    doc.rect(photoX, photoY, photoW, photoH, 'FD');
-
-    if (card.profilePicture) {
-        try {
-            doc.addImage(card.profilePicture, 'JPEG', photoX + 0.5, photoY + 0.5, photoW - 1, photoH - 1);
-        } catch (error) {
-             doc.setFontSize(6);
-             doc.setTextColor(150);
-             doc.text("Photo", 27, photoY + 13, { align: 'center' });
-        }
-    } else {
-         doc.setFontSize(6);
-         doc.setTextColor(150);
-         doc.text("No Photo", 27, photoY + 13, { align: 'center' });
-    }
-
-    // Name & ID Section
-    let textY = 46;
-    doc.setTextColor(0);
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.text(card.name, 27, textY, { align: 'center' }); // Name centered
-    textY += 4;
-    
-    doc.setFontSize(8);
-    doc.setTextColor(...primaryColor);
-    doc.text(card.uniqueNumber, 27, textY, { align: 'center' }); // ID centered
-    textY += 6;
-
-    // Divider
-    doc.setDrawColor(200);
-    doc.line(8, textY - 2, 46, textY - 2);
-
-    // Details Grid
-    const startX = 6;
-    const valX = 22;
-    const lineHeight = 4;
-    doc.setFontSize(6);
-    doc.setTextColor(100);
-
-    const addDetail = (label, value) => {
-        doc.setFont("helvetica", "normal");
-        doc.text(label, startX, textY);
-        doc.setFont("helvetica", "bold");
-        doc.text(value || '-', valX, textY);
-        textY += lineHeight;
-    };
-
-    addDetail("Father:", card.fatherName);
-    addDetail("DOB:", card.dob ? format(new Date(card.dob), 'dd-MM-yyyy') : '-');
-    addDetail("Mobile:", card.whatsappNo);
-    
-    // Address (Truncated to fit)
-    doc.setFont("helvetica", "normal");
-    doc.text("Dist:", startX, textY);
-    doc.setFont("helvetica", "bold");
-    const district = card.address?.split(',').pop()?.trim() || card.state || '-';
-    doc.text(district, valX, textY);
-    textY += 6;
-
-    // Footer Barcode
-    doc.setFont("courier", "normal");
-    doc.setFontSize(16);
-    doc.setTextColor(0);
-    doc.text(`||||||||||`, 27, textY + 2, { align: 'center' });
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(4);
-    doc.text("Signature", 27, textY + 5, { align: 'center' });
-
-
-    // --- Page 2: Back Side (Portrait) ---
-    doc.addPage();
-    
-    // Background
-    doc.setFillColor(...lightBg);
-    doc.rect(0, 0, 53.98, 85.6, 'F');
-    
-    // Top Strip
-    doc.setFillColor(200);
-    doc.rect(0, 0, 53.98, 6, 'F');
-    doc.setFontSize(5);
-    doc.setTextColor(50);
-    doc.text("Non-Transferable / Official Document", 27, 4, { align: 'center' });
-
-    let backY = 10;
-    
-    // Address Section
-    doc.setFontSize(7);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0);
-    doc.text("Registered Address:", 6, backY);
-    backY += 3;
-    
-    doc.setFontSize(6);
-    doc.setFont("helvetica", "normal");
-    const addressText = `${card.address}, ${card.state}, ${card.pincode}`;
-    const addressLines = doc.splitTextToSize(addressText, 42); // Wrap text
-    doc.text(addressLines, 6, backY);
-    backY += (addressLines.length * 3) + 4;
-    
-    doc.setDrawColor(200);
-    doc.line(6, backY - 2, 48, backY - 2);
-
-    // Official Details
-    doc.setFontSize(7);
-    doc.setFont("helvetica", "bold");
-    doc.text("Details:", 6, backY);
-    backY += 4;
-    
-    const addBackRow = (label, value) => {
-        doc.setFontSize(6);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(80);
-        doc.text(label, 6, backY);
-        doc.setTextColor(0);
-        // Align value to the right
-        doc.text(value, 48, backY, { align: 'right' });
-        backY += 4;
-    };
-
-    addBackRow("Aadhaar:", card.aadhaarCardNumber || '-');
-    addBackRow("PAN:", card.panCardNumber || '-');
-    backY += 1;
-    doc.line(6, backY - 2, 48, backY - 2);
-    
-    doc.setFont("helvetica", "bold");
-    doc.text("Bank Info:", 6, backY); 
-    backY += 4;
-    
-    addBackRow("Bank:", card.bankName || card.bankDetails?.bankName || '-');
-    addBackRow("A/C:", card.accountNumber || card.bankDetails?.accountNumber || '-');
-    addBackRow("IFSC:", card.ifscCode || card.bankDetails?.ifscCode || '-');
-
-    // Bottom QR Area
-    const qrY = 65;
-    doc.setDrawColor(0);
-    doc.rect(19.5, qrY, 15, 15);
-    doc.setFontSize(4);
-    doc.text("Scan QR", 27, qrY + 7.5, { align: 'center' });
-    
-    // Bottom Branding
-    doc.setFontSize(4);
-    doc.setTextColor(150);
-    doc.text("JonoJivan Grocery", 27, 83, { align: 'center' });
-
-    doc.save(`RationCard_${card.uniqueNumber}.pdf`);
-  };
 
   return (
     <div className="p-6 min-h-screen bg-gray-50/50">
@@ -403,7 +220,7 @@ const RationCardsPage = () => {
                              <button onClick={() => handleDelete(item._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
                                 <FaTrash />
                              </button>
-                             <button onClick={() => downloadPDF(item)} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Download PDF">
+                              <button onClick={() => generateRationCardPDF(item)} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Download PDF">
                                 <FaDownload />
                              </button>
                          </div>
