@@ -92,6 +92,9 @@ export const generateRationCardPDF = (card) => {
     const valX = 22; 
     const rowSpacing = 3.8; // Compact spacing
     
+    // Add margin top for the first field
+    textY += 2;
+
     const drawRow = (label, value) => {
         // Label
         doc.setFontSize(5); // Smaller Label
@@ -173,9 +176,9 @@ export const generateRationCardPDF = (card) => {
     addSectionHeader("TERMS & CONDITIONS");
 
     const terms = [
-        "1. Jonojivan Grocery Mart",
-        "2. Jonojivan Logistics Courier",
-        "3. Fintech All Recharge"
+        "Jonojivan Grocery Mart",
+        "Jonojivan Logistics Courier",
+        "Fintech All Recharge"
     ];
 
     doc.setFontSize(6.5);
