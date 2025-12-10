@@ -14,6 +14,7 @@ import {
   FaCog,
   FaSignOutAlt,
   FaChevronRight,
+  FaIdCard
 } from "react-icons/fa";
 import { MdPendingActions, MdOutlineRateReview, MdDashboard } from "react-icons/md";
 import { GiOpenBook } from "react-icons/gi";
@@ -69,6 +70,7 @@ const SidebarAdmin = () => {
       items: [
         { label: "Users Table", href: "/admin/dashboard/users", icon: <FaUser /> },
         { label: "Search User", href: "/admin/dashboard/user/search", icon: <FaSearch /> },
+        { label: "Ration Cards", href: "/admin/dashboard/rationCards", icon: <FaIdCard /> },
       ],
     },
     {
