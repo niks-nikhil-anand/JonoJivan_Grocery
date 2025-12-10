@@ -2,20 +2,48 @@ import connectDB from "@/lib/dbConnect";
 import userModels from "@/models/userModels";
 import { NextResponse } from "next/server";
 
-
-export const GET = async () => {
+export const GET = async (req) => {
   try {
-    console.log("Connecting to the database...");
     await connectDB();
-    console.log("Connected to the database.");
+    
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page')) || 1;
+    const limit = parseInt(searchParams.get('limit')) || 10;
+    const search = searchParams.get('search') || '';
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const order = searchParams.get('order') || 'desc';
 
-    // Fetch all users, excluding the password field
-    const users = await userModels.find({}, { password: 0 });
-    console.log("Users fetched successfully:", users);
+    const query = {};
+    if (search) {
+      query.$or = [
+        { fullName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { mobileNumber: { $regex: search, $options: 'i' } },
+      ];
+    }
 
-    return NextResponse.json({ users }, { status: 200 });
+    const skip = (page - 1) * limit;
+
+    const users = await userModels.find(query, { password: 0 })
+      .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
+      .skip(skip)
+      .limit(limit);
+      
+    const total = await userModels.countDocuments(query);
+
+    return NextResponse.json({
+      success: true,
+      data: users,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    }, { status: 200 });
+
   } catch (error) {
     console.log("Error fetching users:", error.message);
-    return NextResponse.json({ msg: "Error fetching users", error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, msg: "Error fetching users", error: error.message }, { status: 500 });
   }
 };

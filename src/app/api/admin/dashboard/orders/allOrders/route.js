@@ -1,26 +1,53 @@
 import connectDB from "@/lib/dbConnect";
-import addressModels from "@/models/addressModels";
-import cartModels from "@/models/cartModels";
 import orderModels from "@/models/orderModels";
 import { NextResponse } from "next/server";
 
-
 export const GET = async (req) => {
   try {
-    console.log("Connecting to the database...");
     await connectDB();
-    console.log("Connected to the database.");
+    
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page')) || 1;
+    const limit = parseInt(searchParams.get('limit')) || 10;
+    const search = searchParams.get('search') || '';
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const order = searchParams.get('order') || 'desc';
 
-    // Fetch all orders and populate related fields
-    const orders = await orderModels
-      .find()
-    console.log("Fetched orders with populated fields:", orders);
+    const query = {};
+    if (search) {
+      query.$or = [
+        { invoiceNo: { $regex: search, $options: 'i' } },
+        { orderStatus: { $regex: search, $options: 'i' } },
+        { paymentMethod: { $regex: search, $options: 'i' } },
+        { paymentStatus: { $regex: search, $options: 'i' } },
+      ];
+    }
 
-    return NextResponse.json(orders, { status: 200 });
+    const skip = (page - 1) * limit;
+
+    const orders = await orderModels.find(query)
+      .populate('user', 'fullName email mobileNumber')
+      .populate('address')
+      .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await orderModels.countDocuments(query);
+
+    return NextResponse.json({
+      success: true,
+      data: orders,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    }, { status: 200 });
   } catch (error) {
     console.error("Error fetching orders:", error);
     return NextResponse.json(
-      { msg: "Error fetching orders", error: error.message },
+      { success: false, msg: "Error fetching orders", error: error.message },
       { status: 500 }
     );
   }
