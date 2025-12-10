@@ -112,134 +112,188 @@ const RationCardsPage = () => {
   };
 
   const downloadPDF = (card) => {
-    const doc = new jsPDF();
+    // ID-1 Portrait Size: 53.98 × 85.60 mm
+    const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [53.98, 85.6]
+    });
 
-    // --- Page 1: Front Side ---
+    // --- Helper Styles ---
+    const primaryColor = [22, 101, 52]; // Green 800
+    const secondaryColor = [60, 60, 60]; // Dark Gray
+    const lightBg = [240, 253, 244]; // Very light green
+    const white = [255, 255, 255];
+
+    // --- Page 1: Front Side (Portrait) ---
+    
+    // Background
+    doc.setFillColor(...lightBg);
+    doc.rect(0, 0, 53.98, 85.6, 'F');
     
     // Header
-    doc.setFillColor(220, 252, 231); // Light Green background for header
-    doc.rect(0, 0, 210, 30, 'F');
-    doc.setFontSize(22);
-    doc.setTextColor(22, 101, 52); // Green 800
-    doc.setFont("helvetica", "bold");
-    doc.text("Ration Card Application", 105, 18, { align: 'center' });
+    doc.setFillColor(...primaryColor);
+    doc.rect(0, 0, 53.98, 12, 'F');
     
-    // Card ID & Status
     doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text(`Unique ID: ${card.uniqueNumber}`, 15, 40);
-    doc.text(`Status: ${card.status || 'Pending'}`, 195, 40, { align: 'right' });
-
-    // Applicant Details Box
-    doc.setDrawColor(200);
-    doc.rect(15, 50, 180, 110);
+    doc.setTextColor(...white);
+    doc.setFont("helvetica", "bold");
+    doc.text("RATION CARD", 27, 8, { align: 'center' });
     
-    // Image Placeholder
+    // Photo (Centered)
+    const photoW = 22;
+    const photoH = 26;
+    const photoX = (53.98 - photoW) / 2;
+    const photoY = 16;
+    
+    doc.setDrawColor(200);
+    doc.setFillColor(...white);
+    doc.rect(photoX, photoY, photoW, photoH, 'FD');
+
     if (card.profilePicture) {
-       try {
-         doc.addImage(card.profilePicture, 'JPEG', 160, 55, 30, 35);
-       } catch (e) {
-         doc.rect(160, 55, 30, 35); // Fallback box
-         doc.text("Photo", 175, 75, { align: 'center' });
-       }
+        try {
+            doc.addImage(card.profilePicture, 'JPEG', photoX + 0.5, photoY + 0.5, photoW - 1, photoH - 1);
+        } catch (error) {
+             doc.setFontSize(6);
+             doc.setTextColor(150);
+             doc.text("Photo", 27, photoY + 13, { align: 'center' });
+        }
     } else {
-       doc.rect(160, 55, 30, 35);
-       doc.setFontSize(8);
-       doc.text("No Photo", 175, 75, { align: 'center' });
+         doc.setFontSize(6);
+         doc.setTextColor(150);
+         doc.text("No Photo", 27, photoY + 13, { align: 'center' });
     }
 
-    // Personal Info
-    doc.setFontSize(14);
+    // Name & ID Section
+    let textY = 46;
     doc.setTextColor(0);
-    doc.text("Personal Details", 20, 65);
-    doc.line(20, 68, 80, 68);
-
     doc.setFontSize(10);
-    const startY = 80;
-    const lineHeight = 10;
+    doc.setFont("helvetica", "bold");
+    doc.text(card.name, 27, textY, { align: 'center' }); // Name centered
+    textY += 4;
     
-    const addRow = (label, value, y) => {
-        doc.setFont("helvetica", "bold");
-        doc.text(`${label}:`, 20, y);
+    doc.setFontSize(8);
+    doc.setTextColor(...primaryColor);
+    doc.text(card.uniqueNumber, 27, textY, { align: 'center' }); // ID centered
+    textY += 6;
+
+    // Divider
+    doc.setDrawColor(200);
+    doc.line(8, textY - 2, 46, textY - 2);
+
+    // Details Grid
+    const startX = 6;
+    const valX = 22;
+    const lineHeight = 4;
+    doc.setFontSize(6);
+    doc.setTextColor(100);
+
+    const addDetail = (label, value) => {
         doc.setFont("helvetica", "normal");
-        doc.text(`${value || '-'}`, 70, y);
+        doc.text(label, startX, textY);
+        doc.setFont("helvetica", "bold");
+        doc.text(value || '-', valX, textY);
+        textY += lineHeight;
     };
 
-    addRow("Head of Family", card.name, startY);
-    addRow("Father/Husband", card.fatherName, startY + lineHeight);
-    addRow("Date of Birth", card.dob ? format(new Date(card.dob), 'dd-MM-yyyy') : '-', startY + lineHeight * 2);
-    addRow("Mobile Number", card.whatsappNo, startY + lineHeight * 3);
-    addRow("Email", card.email, startY + lineHeight * 4);
-    addRow("Gender", card.gender || '-', startY + lineHeight * 5); // Assuming gender might be added later
-
-    // Address Box
-    doc.rect(15, 170, 180, 50);
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("Address Details", 20, 185);
-    doc.line(20, 188, 80, 188);
-
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.text(`${card.address || ''}`, 20, 200);
-    doc.text(`${card.state || ''} - ${card.pincode || ''}`, 20, 208);
+    addDetail("Father:", card.fatherName);
+    addDetail("DOB:", card.dob ? format(new Date(card.dob), 'dd-MM-yyyy') : '-');
+    addDetail("Mobile:", card.whatsappNo);
     
-    // --- Page 2: Back Side ---
+    // Address (Truncated to fit)
+    doc.setFont("helvetica", "normal");
+    doc.text("Dist:", startX, textY);
+    doc.setFont("helvetica", "bold");
+    const district = card.address?.split(',').pop()?.trim() || card.state || '-';
+    doc.text(district, valX, textY);
+    textY += 6;
+
+    // Footer Barcode
+    doc.setFont("courier", "normal");
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text(`||||||||||`, 27, textY + 2, { align: 'center' });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(4);
+    doc.text("Signature", 27, textY + 5, { align: 'center' });
+
+
+    // --- Page 2: Back Side (Portrait) ---
     doc.addPage();
     
-    // Header
-    doc.setFillColor(240, 240, 240); 
-    doc.rect(0, 0, 210, 20, 'F');
-    doc.setFontSize(16);
+    // Background
+    doc.setFillColor(...lightBg);
+    doc.rect(0, 0, 53.98, 85.6, 'F');
+    
+    // Top Strip
+    doc.setFillColor(200);
+    doc.rect(0, 0, 53.98, 6, 'F');
+    doc.setFontSize(5);
     doc.setTextColor(50);
-    doc.text("Additional Details", 105, 13, { align: 'center' });
+    doc.text("Non-Transferable / Official Document", 27, 4, { align: 'center' });
 
-
-    // Documents
-    doc.setFontSize(12);
-    doc.setTextColor(0);
-    doc.text("Document Information", 15, 40);
-    doc.line(15, 43, 80, 43);
-
-    doc.setFontSize(10);
-    doc.text(`Aadhaar Card Number:  ${card.aadhaarCardNumber || '-'}`, 15, 55);
-    doc.text(`PAN Card Number:         ${card.panCardNumber || '-'}`, 15, 65);
-
-    // Bank Details
-    doc.setFontSize(12);
-    doc.text("Bank Details", 15, 90);
-    doc.line(15, 93, 60, 93);
-
-    doc.setFontSize(10);
-    doc.text(`Bank Name:        ${card.bankName || card.bankDetails?.bankName || '-'}`, 15, 105);
-    doc.text(`Account Number: ${card.accountNumber || card.bankDetails?.accountNumber || '-'}`, 15, 115);
-    doc.text(`IFSC Code:        ${card.ifscCode || card.bankDetails?.ifscCode || '-'}`, 15, 125);
-
-
-    // Family Members Placeholder (If array exists in future)
-    doc.setFontSize(12);
-    doc.text("Family Members", 15, 150);
-    doc.line(15, 153, 60, 153);
+    let backY = 10;
     
-    // Example table header
-    doc.setFillColor(230);
-    doc.rect(15, 160, 180, 10, 'F');
-    doc.setFontSize(9);
+    // Address Section
+    doc.setFontSize(7);
     doc.setFont("helvetica", "bold");
-    doc.text("Name", 20, 166);
-    doc.text("Relation", 80, 166);
-    doc.text("Age", 120, 166);
-    doc.text("Aadhaar", 150, 166);
+    doc.setTextColor(0);
+    doc.text("Registered Address:", 6, backY);
+    backY += 3;
     
+    doc.setFontSize(6);
     doc.setFont("helvetica", "normal");
-    doc.text("No family members listed yet.", 105, 180, { align: 'center' });
+    const addressText = `${card.address}, ${card.state}, ${card.pincode}`;
+    const addressLines = doc.splitTextToSize(addressText, 42); // Wrap text
+    doc.text(addressLines, 6, backY);
+    backY += (addressLines.length * 3) + 4;
     
-    // Footer
-    doc.setFontSize(8);
-    doc.setTextColor(150);
-    doc.text("Generated by JonoJivan Grocery Admin Panel", 105, 290, { align: 'center' });
+    doc.setDrawColor(200);
+    doc.line(6, backY - 2, 48, backY - 2);
 
-    doc.save(`RationCard_${card.name.replace(/\s+/g, '_')}.pdf`);
+    // Official Details
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.text("Details:", 6, backY);
+    backY += 4;
+    
+    const addBackRow = (label, value) => {
+        doc.setFontSize(6);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(80);
+        doc.text(label, 6, backY);
+        doc.setTextColor(0);
+        // Align value to the right
+        doc.text(value, 48, backY, { align: 'right' });
+        backY += 4;
+    };
+
+    addBackRow("Aadhaar:", card.aadhaarCardNumber || '-');
+    addBackRow("PAN:", card.panCardNumber || '-');
+    backY += 1;
+    doc.line(6, backY - 2, 48, backY - 2);
+    
+    doc.setFont("helvetica", "bold");
+    doc.text("Bank Info:", 6, backY); 
+    backY += 4;
+    
+    addBackRow("Bank:", card.bankName || card.bankDetails?.bankName || '-');
+    addBackRow("A/C:", card.accountNumber || card.bankDetails?.accountNumber || '-');
+    addBackRow("IFSC:", card.ifscCode || card.bankDetails?.ifscCode || '-');
+
+    // Bottom QR Area
+    const qrY = 65;
+    doc.setDrawColor(0);
+    doc.rect(19.5, qrY, 15, 15);
+    doc.setFontSize(4);
+    doc.text("Scan QR", 27, qrY + 7.5, { align: 'center' });
+    
+    // Bottom Branding
+    doc.setFontSize(4);
+    doc.setTextColor(150);
+    doc.text("JonoJivan Grocery", 27, 83, { align: 'center' });
+
+    doc.save(`RationCard_${card.uniqueNumber}.pdf`);
   };
 
   return (
