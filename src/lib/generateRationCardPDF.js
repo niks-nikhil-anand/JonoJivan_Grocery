@@ -29,12 +29,7 @@ export const generateRationCardPDF = (card) => {
     doc.setFontSize(10);
     doc.setTextColor(...white);
     doc.setFont("helvetica", "bold");
-    doc.text("RATION CARD", 27, 6.5, { align: 'center' });
-    
-    // Header Subtext
-    doc.setFontSize(4);
-    doc.setFont("helvetica", "normal");
-    doc.text("GOVT. RECOGNIZED", 27, 8.5, { align: 'center' });
+    doc.text("Jonojivan grocery distribution", 27, 6.5, { align: 'center' });
 
     // Photo (Centered)
     const photoW = 20;
@@ -140,69 +135,101 @@ export const generateRationCardPDF = (card) => {
     doc.setFontSize(8);
     doc.setTextColor(...white);
     doc.setFont("helvetica", "bold");
-    doc.text("JONOJIVAN GROCERY", 27, 5, { align: 'center' });
-    doc.text("OBJECTS", 27, 9, { align: 'center' });
-
-    let backY = 20;
-
-    // Objects List
-    const objects = [
-        "1. JONOJIVAN GROCERY MART",
-        "2. JONOJIVAN LOGISTICS COURIER",
-        "3. FINTECH ALL RECHARGE"
-    ];
-
-    doc.setFontSize(7);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0);
+    doc.text("Jonojivan grocery distribution", 27, 5, { align: 'center' });
     
-    objects.forEach(obj => {
-        doc.text(obj, 27, backY, { align: 'center' });
-        backY += 5;
-    });
+    // --- Body Content (Back) ---
+    let backY = 16;
 
-    backY += 5;
-    
-    // Separator line
-    doc.setDrawColor(200);
-    doc.line(10, backY, 44, backY);
-    backY += 5;
-
-    // Contact Information
-    doc.setFontSize(8);
-    doc.setTextColor(...primaryColor);
-    doc.setFont("helvetica", "bold");
-    doc.text("CONTACT INFORMATION", 27, backY, { align: 'center' });
-    backY += 5;
-
-    doc.setFontSize(7);
-    doc.setTextColor(60);
-    doc.setFont("helvetica", "bold");
-    
-    const addressLines = [
-        "UTTAR KHATOWAL RUPAHIHAT",
-        "NAGAON, ASSAM",
-        "PIN: 782124"
-    ];
-
-    addressLines.forEach(line => {
-        doc.text(line, 27, backY, { align: 'center' });
+    const addSectionHeader = (text) => {
+        doc.setFontSize(8);
+        doc.setTextColor(...primaryColor);
+        doc.setFont("helvetica", "bold");
+        doc.text(text, 27, backY, { align: 'center' });
         backY += 4;
-    });
+    };
     
-    backY += 2;
-    doc.setFontSize(9);
-    doc.setTextColor(0);
-    doc.text("Ph: 9435266783", 27, backY, { align: 'center' });
-    
+    // 1. Terms Section
+    addSectionHeader("TERMS & CONDITIONS");
 
-    // QR Code for authenticity (Bottom)
-    const qrY = 62;
-    // doc.addImage(qrCodeBase64, 'PNG', 19.5, qrY, 15, 15);
-    doc.setDrawColor(0);
-    doc.rect(19.5, qrY, 15, 15);
-    doc.setFontSize(4);
-    doc.text("Scan QR", 27, qrY + 7.5, { align: 'center', angle: 45 }); // diagonal text placeholder
+    const terms = [
+        "1. Jonojivan Grocery Mart",
+        "2. Jonojivan Logistics Courier",
+        "3. Fintech All Recharge"
+    ];
+
+    doc.setFontSize(6.5);
+    doc.setTextColor(50);
+    doc.setFont("helvetica", "bold");
+    terms.forEach(term => {
+        doc.text(term, 27, backY, { align: 'center' });
+        backY += 3.5;
+    });
+
+    backY += 2;
+
+    // 2. Membership Terms
+    addSectionHeader("MEMBERSHIP RULES");
+
+    doc.setFontSize(5.5);
+    doc.setTextColor(60);
+    doc.setFont("helvetica", "normal");
+    const mTerms = [
+        "Carry this ID card at all times during working hours.",
+        "This card is strictly for official use only."
+    ];
+    mTerms.forEach(term => {
+        doc.text(term, 27, backY, { align: 'center' });
+        backY += 3;
+    });
+
+    backY += 2;
+    // Divider
+    doc.setDrawColor(...primaryColor); // Colored divider
+    doc.setLineWidth(0.2);
+    doc.line(10, backY, 44, backY);
+    backY += 4;
+
+    // 3. Contact Info
+    addSectionHeader("CONTACT INFORMATION");
+
+    doc.setFontSize(7);
+    doc.setTextColor(0); // Black for name
+    doc.setFont("helvetica", "bold");
+    doc.text("Jonojivan Gramin Vikash Foundation", 27, backY, { align: 'center' });
+    backY += 3.5;
+
+    doc.setFontSize(6);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(60);
+    
+    // Address Box
+    doc.text("Uttar Khatowal Rupahihat", 27, backY, { align: 'center' });
+    backY += 3;
+    doc.text("Nagaon, Assam - 782124", 27, backY, { align: 'center' });
+    backY += 4;
+
+    // Contact Details
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...primaryColor);
+    doc.text("Ph: 9435266783", 27, backY, { align: 'center' });
+    backY += 3;
+    doc.text("Email: help@jonojivan.com", 27, backY, { align: 'center' });
+    
+    backY += 5;
+
+    // 4. Working Hours
+    addSectionHeader("WORKING HOURS");
+    
+    doc.setFontSize(6);
+    doc.setTextColor(40);
+    doc.setFont("helvetica", "bold");
+    
+    doc.text("Mon - Fri: 9:00 AM - 6:00 PM", 27, backY, { align: 'center' });
+    backY += 3;
+    doc.text("Sat: 9:00 AM - 1:00 PM", 27, backY, { align: 'center' });
+    backY += 3;
+    doc.setTextColor(200, 0, 0); // Red for closed
+    doc.text("Sun: Closed (Emergency Only)", 27, backY, { align: 'center' });
 
     // Footer - Copyright
     doc.setFillColor(...primaryColor);
