@@ -7,10 +7,6 @@ import { cookies } from "next/headers";
 import userModels from "@/models/userModels";
 import connectDB from "@/lib/dbConnect";
 
-
-
-
-
 export const POST = async (req) => {
   try {
     await connectDB();
@@ -162,31 +158,52 @@ export const POST = async (req) => {
   }
 };
 
-
-
-
 export const GET = async (req) => {
   try {
-    console.log("Connecting to the database...");
     await connectDB();
-    console.log("Connected to the database.");
+    
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page')) || 1;
+    const limit = parseInt(searchParams.get('limit')) || 10;
+    const search = searchParams.get('search') || '';
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const order = searchParams.get('order') || 'desc';
 
-    // Fetch all products and populate the 'category' field
-    const products = await productModels
-      .find()
+    const query = {};
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { status: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const skip = (page - 1) * limit;
+
+    const products = await productModels.find(query)
       .populate("category", "name")
-      .populate("users") // This will populate the entire user object        
+      .populate("users") 
+      .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
+      .skip(skip)
+      .limit(limit)
       .exec();
 
-    console.log("Fetched products with populated categories:", products);
+    const total = await productModels.countDocuments(query);
 
-    return NextResponse.json(products, { status: 200 });
+    return NextResponse.json({
+      success: true,
+      data: products,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    }, { status: 200 });
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json(
-      { msg: "Error fetching products", error: error.message },
+      { success: false, msg: "Error fetching products", error: error.message },
       { status: 500 }
     );
   }
 };
-
