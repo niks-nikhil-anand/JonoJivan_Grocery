@@ -163,12 +163,13 @@ export const generateRationCardPDF = (card) => {
     
     // --- Body Content (Back) ---
     let backY = 16;
+    const leftMargin = 4;
 
     const addSectionHeader = (text) => {
         doc.setFontSize(8);
         doc.setTextColor(...primaryColor);
         doc.setFont("helvetica", "bold");
-        doc.text(text, 27, backY, { align: 'center' });
+        doc.text(text, leftMargin, backY);
         backY += 4;
     };
     
@@ -183,9 +184,9 @@ export const generateRationCardPDF = (card) => {
 
     doc.setFontSize(6.5);
     doc.setTextColor(50);
-    doc.setFont("helvetica", "bold");
+    doc.setFont("helvetica");
     terms.forEach(term => {
-        doc.text(term, 27, backY, { align: 'center' });
+        doc.text(term, leftMargin, backY);
         backY += 3.5;
     });
 
@@ -202,15 +203,16 @@ export const generateRationCardPDF = (card) => {
         "This card is strictly for official use only."
     ];
     mTerms.forEach(term => {
-        doc.text(term, 27, backY, { align: 'center' });
-        backY += 3;
+        const wrapped = doc.splitTextToSize(term, 46);
+        doc.text(wrapped, leftMargin, backY);
+        backY += (wrapped.length * 2.5) + 1;
     });
 
-    backY += 2;
+    backY += 1;
     // Divider
     doc.setDrawColor(...primaryColor); // Colored divider
     doc.setLineWidth(0.2);
-    doc.line(10, backY, 44, backY);
+    doc.line(leftMargin, backY, 50, backY);
     backY += 4;
 
     // 3. Contact Info
@@ -219,7 +221,7 @@ export const generateRationCardPDF = (card) => {
     doc.setFontSize(7);
     doc.setTextColor(0); // Black for name
     doc.setFont("helvetica", "bold");
-    doc.text("Jonojivan Gramin Vikash Foundation", 27, backY, { align: 'center' });
+    doc.text("Jonojivan Gramin Vikash Foundation", leftMargin, backY);
     backY += 3.5;
 
     doc.setFontSize(6);
@@ -227,17 +229,17 @@ export const generateRationCardPDF = (card) => {
     doc.setTextColor(60);
     
     // Address Box
-    doc.text("Uttar Khatowal Rupahihat", 27, backY, { align: 'center' });
+    doc.text("Uttar Khatowal Rupahihat", leftMargin, backY);
     backY += 3;
-    doc.text("Nagaon, Assam - 782124", 27, backY, { align: 'center' });
+    doc.text("Nagaon, Assam - 782124", leftMargin, backY);
     backY += 4;
 
     // Contact Details
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...primaryColor);
-    doc.text("Ph: 9435266783", 27, backY, { align: 'center' });
+    doc.text("Ph: 9435266783", leftMargin, backY);
     backY += 3;
-    doc.text("Email: help@jonojivan.com", 27, backY, { align: 'center' });
+    doc.text("Email: help@jonojivan.com", leftMargin, backY);
     
     backY += 5;
 
@@ -248,12 +250,12 @@ export const generateRationCardPDF = (card) => {
     doc.setTextColor(40);
     doc.setFont("helvetica", "bold");
     
-    doc.text("Mon - Fri: 9:00 AM - 6:00 PM", 27, backY, { align: 'center' });
+    doc.text("Mon - Fri: 9:00 AM - 6:00 PM", leftMargin, backY);
     backY += 3;
-    doc.text("Sat: 9:00 AM - 1:00 PM", 27, backY, { align: 'center' });
+    doc.text("Sat: 9:00 AM - 1:00 PM", leftMargin, backY);
     backY += 3;
     doc.setTextColor(200, 0, 0); // Red for closed
-    doc.text("Sun: Closed (Emergency Only)", 27, backY, { align: 'center' });
+    doc.text("Sun: Closed (Emergency Only)", leftMargin, backY);
 
     // Footer - Copyright
     doc.setFillColor(...primaryColor);
