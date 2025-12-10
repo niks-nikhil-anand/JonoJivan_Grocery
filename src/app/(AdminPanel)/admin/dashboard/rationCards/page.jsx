@@ -67,11 +67,17 @@ const RationCardsPage = () => {
     setEditFormData({
         name: card.name,
         fatherName: card.fatherName,
+        dob: card.dob ? card.dob.split('T')[0] : '', // Format for date input
         whatsappNo: card.whatsappNo,
         email: card.email,
         address: card.address,
         state: card.state,
-        pincode: card.pincode
+        pincode: card.pincode,
+        aadhaarCardNumber: card.aadhaarCardNumber,
+        panCardNumber: card.panCardNumber,
+        bankName: card.bankDetails?.bankName || card.bankName,
+        accountNumber: card.bankDetails?.accountNumber || card.accountNumber,
+        ifscCode: card.bankDetails?.ifscCode || card.ifscCode
     });
     setIsEditOpen(true);
   };
@@ -301,22 +307,40 @@ const RationCardsPage = () => {
                      initial={{ opacity: 0, scale: 0.95 }} 
                      animate={{ opacity: 1, scale: 1 }} 
                      exit={{ opacity: 0, scale: 0.95 }}
-                     className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden"
+                     className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col"
                  >
                      <div className="p-6 border-b flex justify-between items-center">
                          <h2 className="text-xl font-bold text-gray-800">Edit Application</h2>
                          <button onClick={() => setIsEditOpen(false)} className="text-gray-500 hover:text-gray-700 text-2xl"><IoMdClose /></button>
                      </div>
-                     <form onSubmit={handleUpdate} className="p-6 space-y-4">
+                     <form onSubmit={handleUpdate} className="p-6 space-y-4 overflow-y-auto">
                         <InputGroup label="Full Name" name="name" value={editFormData.name} onChange={(e) => setEditFormData({...editFormData, name: e.target.value})} />
                         <InputGroup label="Father Name" name="fatherName" value={editFormData.fatherName} onChange={(e) => setEditFormData({...editFormData, fatherName: e.target.value})} />
                         <div className="grid grid-cols-2 gap-4">
-                            <InputGroup label="WhatsApp" name="whatsappNo" value={editFormData.whatsappNo} onChange={(e) => setEditFormData({...editFormData, whatsappNo: e.target.value})} />
-                            <InputGroup label="Email" name="email" value={editFormData.email} onChange={(e) => setEditFormData({...editFormData, email: e.target.value})} />
+                           <InputGroup label="DOB" type="date" name="dob" value={editFormData.dob} onChange={(e) => setEditFormData({...editFormData, dob: e.target.value})} />
+                           <InputGroup label="WhatsApp" name="whatsappNo" value={editFormData.whatsappNo} onChange={(e) => setEditFormData({...editFormData, whatsappNo: e.target.value})} />
                         </div>
-                        <InputGroup label="Address" name="address" value={editFormData.address} onChange={(e) => setEditFormData({...editFormData, address: e.target.value})} />
+                        <InputGroup label="Email" name="email" value={editFormData.email} onChange={(e) => setEditFormData({...editFormData, email: e.target.value})} />
                         
-                        <div className="pt-4 flex justify-end gap-3">
+                        <div className="grid grid-cols-2 gap-4">
+                            <InputGroup label="Aadhaar No." name="aadhaarCardNumber" value={editFormData.aadhaarCardNumber} onChange={(e) => setEditFormData({...editFormData, aadhaarCardNumber: e.target.value})} />
+                            <InputGroup label="PAN No." name="panCardNumber" value={editFormData.panCardNumber} onChange={(e) => setEditFormData({...editFormData, panCardNumber: e.target.value})} />
+                        </div>
+
+                        <InputGroup label="Address" name="address" value={editFormData.address} onChange={(e) => setEditFormData({...editFormData, address: e.target.value})} />
+                         <div className="grid grid-cols-2 gap-4">
+                            <InputGroup label="State" name="state" value={editFormData.state} onChange={(e) => setEditFormData({...editFormData, state: e.target.value})} />
+                            <InputGroup label="Pincode" name="pincode" value={editFormData.pincode} onChange={(e) => setEditFormData({...editFormData, pincode: e.target.value})} />
+                        </div>
+
+                        <h4 className="font-semibold text-gray-700 mt-2">Bank Details</h4>
+                        <InputGroup label="Bank Name" name="bankName" value={editFormData.bankName} onChange={(e) => setEditFormData({...editFormData, bankName: e.target.value})} />
+                         <div className="grid grid-cols-2 gap-4">
+                            <InputGroup label="Account No." name="accountNumber" value={editFormData.accountNumber} onChange={(e) => setEditFormData({...editFormData, accountNumber: e.target.value})} />
+                            <InputGroup label="IFSC Code" name="ifscCode" value={editFormData.ifscCode} onChange={(e) => setEditFormData({...editFormData, ifscCode: e.target.value})} />
+                        </div>
+
+                        <div className="pt-4 flex justify-end gap-3 border-t mt-4">
                             <button type="button" onClick={() => setIsEditOpen(false)} className="px-4 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
                             <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
                                 <FaSave /> Save Changes
@@ -340,11 +364,11 @@ const InfoRow = ({ label, value }) => (
     </div>
 );
 
-const InputGroup = ({ label, name, value, onChange }) => (
+const InputGroup = ({ label, name, value, onChange, type = "text" }) => (
     <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
         <input 
-            type="text" 
+            type={type} 
             name={name} 
             value={value || ''} 
             onChange={onChange}
