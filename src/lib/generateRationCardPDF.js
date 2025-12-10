@@ -31,89 +31,110 @@ export const generateRationCardPDF = (card) => {
     doc.setFont("helvetica", "bold");
     doc.text("Jonojivan grocery distribution", 27, 6.5, { align: 'center' });
 
-    // Photo (Centered)
-    const photoW = 20;
-    const photoH = 24;
-    const photoX = (53.98 - photoW) / 2;
-    const photoY = 12; // Just below header
+    // --- Photo (Circular) ---
+    const photoRadius = 11;
+    const photoCX = 27; // Center X
+    const photoCY = 23; // Just below header (approx Y=12 start + 11 radius)
     
+    // Draw white circle background/border
     doc.setDrawColor(200);
     doc.setFillColor(...white);
-    doc.rect(photoX, photoY, photoW, photoH, 'FD');
+    doc.circle(photoCX, photoCY, photoRadius, 'FD');
 
     if (card.profilePicture) {
         try {
-            doc.addImage(card.profilePicture, 'JPEG', photoX + 0.5, photoY + 0.5, photoW - 1, photoH - 1);
+            // Create circular clipping path
+            doc.saveGraphicsState();
+            doc.beginPath();
+            doc.arc(photoCX, photoCY, photoRadius - 0.5, 0, 2 * Math.PI, false);
+            doc.clip();
+            // Draw image slightly larger to fill circle
+            doc.addImage(card.profilePicture, 'JPEG', photoCX - photoRadius, photoCY - photoRadius, photoRadius * 2, photoRadius * 2, undefined, 'FAST');
+            doc.restoreGraphicsState();
         } catch (error) {
              doc.setFontSize(5);
              doc.setTextColor(150);
-             doc.text("Photo", 27, photoY + 12, { align: 'center' });
+             doc.text("No Photo", photoCX, photoCY, { align: 'center' });
         }
     } else {
          doc.setFontSize(5);
          doc.setTextColor(150);
-         doc.text("No Photo", 27, photoY + 12, { align: 'center' });
+         doc.text("No Photo", photoCX, photoCY, { align: 'center' });
     }
 
-    // Name & ID Section
-    let textY = 39;
-    doc.setTextColor(0);
+    // --- Name & ID Section ---
+    let textY = 36;
     
     // Name
     doc.setFontSize(9);
+    doc.setTextColor(0);
     doc.setFont("helvetica", "bold");
     doc.text(card.name, 27, textY, { align: 'center' });
     textY += 3.5;
     
-    // Unique ID Box
-    doc.setFillColor(230);
-    doc.roundedRect(12, textY - 2.5, 30, 3.5, 1, 1, 'F');
-    doc.setFontSize(7);
+    // Unique ID (Pill Style)
+    doc.setFillColor(230); // Light gray pill
+    doc.roundedRect(14, textY - 2.8, 26, 3.8, 1.5, 1.5, 'F');
+    doc.setFontSize(7.5);
     doc.setTextColor(0);
     doc.setFont("helvetica", "bold");
-    doc.text(`ID: ${card.uniqueNumber}`, 27, textY, { align: 'center' }); 
-    textY += 4.5;
+    doc.text(card.uniqueNumber, 27, textY, { align: 'center' });
+    textY += 3.5;
 
     // Divider
-    doc.setDrawColor(200);
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(0.3);
     doc.line(6, textY - 1, 48, textY - 1);
     
-    // Details Grid (Dense)
-    const startX = 5;
-    const valX = 22;
-    const lineHeight = 3.2; // Compact spacing
-    doc.setFontSize(5.5);
-    doc.setTextColor(80);
-
-    const addDetail = (label, value, isAccented = false) => {
+    // --- Detailed Grid (Single Column) ---
+    doc.setTextColor(50);
+    const col1X = 6; 
+    const valX = 22; 
+    const rowSpacing = 3.8; // Compact spacing
+    
+    const drawRow = (label, value) => {
+        // Label
+        doc.setFontSize(5); // Smaller Label
         doc.setFont("helvetica", "normal");
-        doc.setTextColor(80);
-        doc.text(label, startX, textY);
-        
+        doc.setTextColor(80); 
+        doc.text(label, col1X, textY);
+
+        // Value
+        doc.setFontSize(6); // Smaller Value
         doc.setFont("helvetica", "bold");
-        if(isAccented) doc.setTextColor(...primaryColor);
-        else doc.setTextColor(0);
+        doc.setTextColor(0); 
         
-        doc.text(value || '-', valX, textY);
-        textY += lineHeight;
+        let displayVal = value || '-';
+        
+        const maxWidth = 28; 
+        const lines = doc.splitTextToSize(displayVal, maxWidth);
+        
+        doc.text(lines, valX, textY);
+        
+        const lineCount = lines.length;
+        if(lineCount > 1) {
+            textY += (lineCount * 2.5) + 1.5; 
+        } else {
+            textY += rowSpacing;
+        }
     };
 
-    addDetail("Father/Husband:", card.fatherName);
-    addDetail("Date of Birth:", card.dob ? format(new Date(card.dob), 'dd-MM-yyyy') : '-');
-    addDetail("Mobile No:", card.whatsappNo);
-    
-    textY += 1; // spacer
-    
-    // Bank Details Section
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0);
-    doc.text("Bank Details:", startX, textY);
-    textY += 3;
-    
-    addDetail("Bank Name:", card.bankName || card.bankDetails?.bankName);
-    addDetail("Account No:", card.accountNumber || card.bankDetails?.accountNumber, true);
-    addDetail("IFSC Code:", card.ifscCode || card.bankDetails?.ifscCode);
+    drawRow("Father:", card.fatherName);
 
+    const fullAddress = `${card.address || ''}, ${card.state || ''} - ${card.pincode || ''}`;
+    drawRow("Address:", fullAddress);
+
+    drawRow("DOB:", card.dob ? format(new Date(card.dob), 'dd-MM-yyyy') : '-');
+    drawRow("Mobile:", card.whatsappNo);
+    drawRow("Aadhaar:", card.aadhaarCardNumber);
+    drawRow("PAN:", card.panCardNumber);
+    
+    textY += 0.5; 
+
+    drawRow("Bank:", card.bankName || card.bankDetails?.bankName);
+    drawRow("A/C No:", card.accountNumber || card.bankDetails?.accountNumber);
+    drawRow("IFSC:", card.ifscCode || card.bankDetails?.ifscCode);
+    
     // Footer - Copyright
     doc.setFillColor(...primaryColor);
     doc.rect(0, 81.6, 53.98, 4, 'F');
