@@ -95,14 +95,14 @@ export const generateRationCardPDF = async (card) => {
     }
 
     // --- Name & ID Section ---
-    let textY = 36;
+    let textY = 38; // Increased from 36 for Top Padding
     
     // Name - Normal weight
     doc.setFontSize(9);
     doc.setTextColor(0);
     doc.setFont("helvetica", "normal"); 
     doc.text(card.name, 27, textY, { align: 'center' });
-    textY += 3.5;
+    textY += 6; // Increased from 3.5 for Bottom Padding
     
     // Unique ID (Pill Style)
     doc.setFillColor(230); // Light gray pill
