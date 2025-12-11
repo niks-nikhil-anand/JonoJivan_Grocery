@@ -4,9 +4,10 @@ import { format } from 'date-fns';
 const loadImageToDataUrl = (url, circular = false) => {
     return new Promise((resolve, reject) => {
         // Use our local proxy to fetch the image, ensuring CORS headers are set correctly
+        // The PDF generator asks our server, our server asks Cloudinary (server-to-server = no CORS),
+        // and our server returns it to valid origin.
         const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
         
-        console.log("Loading image via proxy:", proxyUrl);
         const img = new Image();
         img.crossOrigin = 'Anonymous'; 
         
