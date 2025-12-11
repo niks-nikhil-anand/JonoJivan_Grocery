@@ -257,7 +257,7 @@ export const generateRationCardPDF = async (card) => {
     doc.setFontSize(7);
     doc.setTextColor(0); // Black for name
     doc.setFont("helvetica", "normal"); 
-    doc.text("Jonojivan Gramin Vikash Foundation", leftMargin, backY);
+    doc.text("Jonojivan Grocery Distribution", leftMargin, backY);
     backY += 3.2;
 
     doc.setFontSize(6);
