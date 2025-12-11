@@ -4,13 +4,9 @@ import { motion } from "framer-motion";
 import Loader from "@/components/loader/loader";
 import waveSvg from "../../../../../public/frontend/SvgAssets/wave-white.svg";
 import Image from "next/image";
-import DOMPurify from "dompurify";
+
 
 const Page = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
   const COMPANY_INFO = {
     name: "JonoJivan Grocery Distribution Pvt Ltd",
     address: "UTTAR KHATOWAL RUPAHIHAT NAGAON ASSAM PIN 782124",
@@ -24,14 +20,6 @@ const Page = () => {
   const LAST_UPDATED = "September 17, 2025";
   const SERVICE_NAME = "JonoJivan Grocery";
 
-  if (error) {
-    return (
-      <div className="text-center text-red-500 text-lg p-4">Error: {error}</div>
-    );
-  }
-
-  // Sanitize the HTML content before rendering
-  const sanitizedContent = DOMPurify.sanitize(data?.content || '');
 
   return (
     <motion.div

@@ -5,11 +5,7 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
-  compiler: {
-    react: {
-      throwIfNamespace: false, // Disable the namespace warning
-    },
-  },
+
 
 };
 
