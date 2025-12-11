@@ -1,7 +1,23 @@
 import jsPDF from 'jspdf';
 import { format } from 'date-fns';
 
-export const generateRationCardPDF = (card) => {
+const getDataUri = async (url) => {
+    try {
+        const response = await fetch(url, { mode: 'cors' });
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error("Error fetching image:", error);
+        return null;
+    }
+};
+
+export const generateRationCardPDF = async (card) => {
     // ID-1 Portrait Size: 53.98 × 85.60 mm
     const doc = new jsPDF({
         orientation: 'portrait',
@@ -53,15 +69,21 @@ export const generateRationCardPDF = (card) => {
 
     if (card.profilePicture) {
         try {
-            // Create circular clipping path
-            doc.saveGraphicsState();
-            doc.beginPath();
-            doc.arc(photoCX, photoCY, photoRadius - 0.5, 0, 2 * Math.PI, false);
-            doc.clip();
-            // Draw image slightly larger to fill circle
-            doc.addImage(card.profilePicture, 'JPEG', photoCX - photoRadius, photoCY - photoRadius, photoRadius * 2, photoRadius * 2, undefined, 'FAST');
-            doc.restoreGraphicsState();
+             const imgData = await getDataUri(card.profilePicture);
+             if (imgData) {
+                // Create circular clipping path
+                doc.saveGraphicsState();
+                doc.beginPath();
+                doc.arc(photoCX, photoCY, photoRadius - 0.5, 0, 2 * Math.PI, false);
+                doc.clip();
+                // Draw image slightly larger to fill circle
+                doc.addImage(imgData, 'JPEG', photoCX - photoRadius, photoCY - photoRadius, photoRadius * 2, photoRadius * 2, undefined, 'FAST');
+                doc.restoreGraphicsState();
+             } else {
+                 throw new Error("Failed to load image");
+             }
         } catch (error) {
+             console.error("Image load error", error);
              doc.setFontSize(5);
              doc.setTextColor(150);
              doc.text("No Photo", photoCX, photoCY, { align: 'center' });
@@ -282,4 +304,4 @@ export const generateRationCardPDF = (card) => {
     doc.text("© JonoJivan Grocery - All Rights Reserved", 27, 84, { align: 'center' });
 
     doc.save(`RationCard_${card.uniqueNumber}.pdf`);
-  };
+};

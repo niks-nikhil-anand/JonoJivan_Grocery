@@ -168,7 +168,7 @@ const RationCardForm = () => {
         // Generate and Download PDF
         try {
             // Note: response.data.data refers to the ration card object returned by the API
-            generateRationCardPDF(response.data.data);
+            await generateRationCardPDF(response.data.data);
             toast.success("Downloading Application Receipt...");
         } catch (pdfError) {
             console.error("PDF Generation Error:", pdfError);

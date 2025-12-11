@@ -220,7 +220,7 @@ const RationCardsPage = () => {
                              <button onClick={() => handleDelete(item._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
                                 <FaTrash />
                              </button>
-                              <button onClick={() => generateRationCardPDF(item)} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Download PDF">
+                              <button onClick={async () => await generateRationCardPDF(item)} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Download PDF">
                                 <FaDownload />
                              </button>
                          </div>
