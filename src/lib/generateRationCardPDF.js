@@ -1,20 +1,59 @@
 import jsPDF from 'jspdf';
 import { format } from 'date-fns';
 
-const getDataUri = async (url) => {
-    try {
-        const response = await fetch(url, { mode: 'cors' });
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-    } catch (error) {
-        console.error("Error fetching image:", error);
-        return null;
-    }
+const loadImageToDataUrl = (url, circular = false) => {
+    return new Promise((resolve, reject) => {
+        // Use our local proxy to fetch the image, ensuring CORS headers are set correctly
+        const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+        
+        console.log("Loading image via proxy:", proxyUrl);
+        const img = new Image();
+        img.crossOrigin = 'Anonymous'; 
+        
+        const joinChar = proxyUrl.includes('?') ? '&' : '?';
+        img.src = `${proxyUrl}${joinChar}t=${Date.now()}`;
+
+        img.onload = () => {
+             try {
+                const canvas = document.createElement('canvas');
+                const size = Math.min(img.width, img.height);
+                
+                // If circular, we square the canvas to the smallest dimension
+                canvas.width = circular ? size : img.width;
+                canvas.height = circular ? size : img.height;
+                
+                const ctx = canvas.getContext('2d');
+                
+                if (circular) {
+                    // Create circular clipping path
+                    ctx.beginPath();
+                    ctx.arc(size/2, size/2, size/2, 0, 2 * Math.PI);
+                    ctx.closePath();
+                    ctx.clip();
+                    
+                    // Draw image centered and cropped
+                    const x = (img.width - size) / 2;
+                    const y = (img.height - size) / 2;
+                    ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
+                } else {
+                    ctx.drawImage(img, 0, 0);
+                }
+                
+                // Use PNG to preserve transparency for the circular crop
+                const type = circular ? 'image/png' : 'image/jpeg';
+                const dataUrl = canvas.toDataURL(type);
+                resolve(dataUrl);
+             } catch (e) {
+                 console.error("Canvas export failed:", e);
+                 reject(e);
+             }
+        };
+        img.onerror = (error) => {
+             // ... keep existing error handling ...
+            console.error("Image load error (proxy):", error);
+            reject(new Error("Failed to load image via proxy"));
+        };
+    });
 };
 
 export const generateRationCardPDF = async (card) => {
@@ -69,18 +108,11 @@ export const generateRationCardPDF = async (card) => {
 
     if (card.profilePicture) {
         try {
-             const imgData = await getDataUri(card.profilePicture);
+             // Load and pre-crop image to circle using canvas
+             const imgData = await loadImageToDataUrl(card.profilePicture, true);
              if (imgData) {
-                // Create circular clipping path
-                doc.saveGraphicsState();
-                doc.beginPath();
-                doc.arc(photoCX, photoCY, photoRadius - 0.5, 0, 2 * Math.PI, false);
-                doc.clip();
-                // Draw image slightly larger to fill circle
-                doc.addImage(imgData, 'JPEG', photoCX - photoRadius, photoCY - photoRadius, photoRadius * 2, photoRadius * 2, undefined, 'FAST');
-                doc.restoreGraphicsState();
-             } else {
-                 throw new Error("Failed to load image");
+                // Draw pre-cropped image
+                doc.addImage(imgData, 'PNG', photoCX - photoRadius, photoCY - photoRadius, photoRadius * 2, photoRadius * 2, undefined, 'FAST');
              }
         } catch (error) {
              console.error("Image load error", error);
