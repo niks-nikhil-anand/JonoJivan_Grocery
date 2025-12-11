@@ -240,17 +240,17 @@ export const generateRationCardPDF = async (card) => {
     const addSectionHeader = (text) => {
         // Decorative small pill for header
         doc.setFillColor(230, 240, 230);
-        doc.roundedRect(leftMargin - 1, backY - 3, 40, 4, 1, 1, 'F');
+        doc.roundedRect(leftMargin - 1, backY - 2.5, 40, 3.5, 1, 1, 'F'); // Reduced height and Y-offset
 
-        doc.setFontSize(8);
+        doc.setFontSize(7); // Reduced from 8
         doc.setTextColor(...primaryColor);
         doc.setFont("helvetica", "bold"); 
         doc.text(text, leftMargin, backY);
-        backY += 4.5; 
+        backY += 4; // Reduced from 4.5
     };
     
     // 1. Terms Section
-    addSectionHeader("TERMS & CONDITIONS");
+    addSectionHeader("Jonojivan grocery objects");
 
     const terms = [
         "Jonojivan Grocery Mart",
@@ -258,80 +258,117 @@ export const generateRationCardPDF = async (card) => {
         "Fintech All Recharge"
     ];
 
-    doc.setFontSize(6.5);
+    doc.setFontSize(5.5); // Reduced from 6.5
     doc.setTextColor(50);
     doc.setFont("helvetica", "normal"); 
     terms.forEach(term => {
         doc.text(term, leftMargin, backY);
-        backY += 3.2; 
+        backY += 2.8; // Reduced from 3.2
     });
 
-    backY += 1.5;
+    backY += 1; // Reduced from 1.5
 
     // 2. Membership Terms
-    addSectionHeader("MEMBERSHIP RULES");
+    addSectionHeader("Terms & Conditions");
 
-    doc.setFontSize(5.5);
+    doc.setFontSize(5); // Reduced from 5.5
     doc.setTextColor(60);
     doc.setFont("helvetica", "normal");
     const mTerms = [
-        "Carry this ID card at all times during working hours.",
-        "This card is strictly for official use only."
+        "Carry This ID Card At All Times During Working Hours.",
+        "This ID Card Is Strictly For Official Use Only.",
+        "The ID Card Must Not Be Shared Or Used For Any Unauthorized Purpose.",
+        "Loss Or Damage Of The ID Card Must Be Reported Immediately To The Office.",
+        "Any Misuse Of The ID Card May Lead To Disciplinary Action.",
+        "The ID Card Remains The Property Of The Organization And Must Be Returned Upon Request."
     ];
+
     mTerms.forEach(term => {
-        const wrapped = doc.splitTextToSize(term, 46);
+        const wrapped = doc.splitTextToSize(term, 48); // Increased width slightly from 46
         doc.text(wrapped, leftMargin, backY);
-        backY += (wrapped.length * 2.5) + 1;
+        backY += (wrapped.length * 2.2) + 0.8; // Reduced line spacing
     });
 
-    backY += 1;
+    backY += 0.5; // Reduced from 1
     // Divider
     doc.setDrawColor(...accentColor); 
     doc.setLineWidth(0.2);
     doc.line(leftMargin, backY, 50, backY);
-    backY += 4;
+    backY += 3.5; // Reduced from 4
 
-    // 3. Contact Info
-    addSectionHeader("CONTACT INFORMATION");
-
+    // --- Side-by-Side Section (Columns) ---
+    const rowStartY = backY;
+    const col2X = 29; // Start of right column
+    
+    // --- Left Column: Contact Info ---
+    
+    // Header (Compact Pill)
+    doc.setFillColor(230, 240, 230);
+    doc.roundedRect(leftMargin - 1, rowStartY - 2.5, 23, 3.5, 1, 1, 'F');
+    
     doc.setFontSize(7);
-    doc.setTextColor(0); // Black for name
-    doc.setFont("helvetica", "normal"); 
-    doc.text("Jonojivan Grocery Distribution", leftMargin, backY);
-    backY += 3.2;
+    doc.setTextColor(...primaryColor);
+    doc.setFont("helvetica", "bold"); 
+    doc.text("Contact Info", leftMargin, rowStartY);
+    
+    let leftY = rowStartY + 4;
 
     doc.setFontSize(6);
+    doc.setTextColor(0); 
+    doc.setFont("helvetica", "normal"); 
+    const cName = doc.splitTextToSize("Jonojivan Grocery Distribution", 23);
+    doc.text(cName, leftMargin, leftY);
+    leftY += (cName.length * 2.8) + 0.5;
+
+    doc.setFontSize(5); // Smaller address
     doc.setFont("helvetica", "normal");
     doc.setTextColor(60);
     
-    // Address Box
-    doc.text("Uttar Khatowal Rupahihat", leftMargin, backY);
-    backY += 3;
-    doc.text("Nagaon, Assam - 782124", leftMargin, backY);
-    backY += 3.5;
+    doc.text("Uttar Khatowal Rupahihat", leftMargin, leftY);
+    leftY += 2.5;
+    doc.text("Nagaon, Assam - 782124", leftMargin, leftY);
+    leftY += 3;
 
     // Contact Details
     doc.setFont("helvetica", "normal"); 
     doc.setTextColor(...primaryColor);
-    doc.text("Ph: 9435266783", leftMargin, backY);
-    backY += 3;
-    doc.text("Email: help@jonojivan.com", leftMargin, backY);
+    doc.text("Ph: 9435266783", leftMargin, leftY);
+    leftY += 2.5;
     
-    backY += 4.5;
+    const emailParts = doc.splitTextToSize("help@jonojivan.com", 23);
+    doc.text(emailParts, leftMargin, leftY);
+    leftY += 3;
 
-    // 4. Working Hours
-    addSectionHeader("WORKING HOURS");
+    // --- Right Column: Working Hours ---
     
-    doc.setFontSize(6);
+    // Header (Compact Pill)
+    doc.setFillColor(230, 240, 230);
+    doc.roundedRect(col2X - 1, rowStartY - 2.5, 23, 3.5, 1, 1, 'F');
+    
+    doc.setFontSize(7);
+    doc.setTextColor(...primaryColor);
+    doc.setFont("helvetica", "bold"); 
+    doc.text("Working Hours", col2X, rowStartY);
+    
+    let rightY = rowStartY + 4;
+    
+    doc.setFontSize(5.5);
     doc.setTextColor(40);
     doc.setFont("helvetica", "normal"); 
     
-    doc.text("Mon - Fri: 9:00 AM - 6:00 PM", leftMargin, backY);
-    backY += 3;
-    doc.text("Sat: 9:00 AM - 1:00 PM", leftMargin, backY);
-    backY += 3;
+    const days = [
+        "Mon - Fri: 9AM - 6PM",
+        "Sat: 9AM - 1PM"
+    ];
+    
+    days.forEach(d => {
+        doc.text(d, col2X, rightY);
+        rightY += 3;
+    });
+
     doc.setTextColor(200, 0, 0); // Red for closed
-    doc.text("Sun: Closed (Emergency Only)", leftMargin, backY);
+    const closedText = doc.splitTextToSize("Sun: Closed (Emergency)", 23);
+    doc.text(closedText, col2X, rightY);
 
     // Footer - Copyright
     doc.setFillColor(...primaryColor);
