@@ -112,7 +112,14 @@ export const generateRationCardPDF = async (card) => {
     doc.setFontSize(7.5);
     doc.setTextColor(...primaryColor);
     doc.setFont("helvetica", "normal"); 
-    doc.text(card.uniqueNumber, 27, textY, { align: 'center' });
+    
+    // Masked Unique ID
+    const uniqueId = card.uniqueNumber ? String(card.uniqueNumber) : '';
+    const maskedId = uniqueId.length > 4 
+        ? `${uniqueId.slice(0, 2)} **** ${uniqueId.slice(-2)}`
+        : uniqueId;
+        
+    doc.text(maskedId, 27, textY, { align: 'center' });
     textY += 3.5;
 
     // Divider
