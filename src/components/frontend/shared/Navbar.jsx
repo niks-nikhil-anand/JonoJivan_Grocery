@@ -158,6 +158,7 @@ const Navbar = () => {
             { name: "Home", link: "/" },
             { name: "Mobile & Laptops", link: "/JonoCourier" },
             { name: "All Categories", link: "/category" },
+            { name: "Ration Card", link: "/rationCard" },
             { name: "Electronics", link: "/" },
             { name: "Fashion", link: "/JonoGrocery" },
             { name: "Beauty", link: "/JonoCourier" },
@@ -205,6 +206,7 @@ const Navbar = () => {
         {[
           { name: "Home", link: "/" },
           { name: "All Categories", link: "/category" },
+          { name: "Ration Card", link: "/rationCard" },
           { name: "Mobile & Laptops", link: "/" },
           { name: "Electronics", link: "/JonoGrocery" },
           { name: "Fashion", link: "/JonoCourier" },
