@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { LuMinus, LuPlus } from "react-icons/lu";
+import { LuMinus, LuPlus, LuStar } from "react-icons/lu";
 import { useCartQuantity } from "@/lib/cartStore";
 
 const UNIT_LABEL = { Gm: "g", ML: "ml", kg: "kg", Pieces: "pcs" };
@@ -40,7 +40,17 @@ export default function ProductCard({ product, className = "" }) {
           ) : null}
         </div>
         <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-medium leading-5 text-ink">{name}</h3>
-        {unit && <p className="mt-1 text-xs text-ink-muted">{unit}</p>}
+        <div className="mt-1 flex items-center gap-2 text-xs text-ink-muted">
+          {unit && <span>{unit}</span>}
+          {/* Real ratings only — nothing is shown until a product has reviews */}
+          {product.ratings?.numberOfRatings > 0 && (
+            <span className="inline-flex items-center gap-0.5 rounded bg-brand-50 px-1.5 py-0.5 font-semibold text-brand-800">
+              <LuStar className="fill-current text-offer-500" aria-hidden />
+              {Number(product.ratings.average).toFixed(1)}
+              <span className="sr-only"> out of 5 from {product.ratings.numberOfRatings} reviews</span>
+            </span>
+          )}
+        </div>
       </Link>
 
       <div className="mt-3 flex items-end justify-between gap-2">
