@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "node -e \"const fs=require('fs'),p='node_modules/buffer-equal-constant-time/index.js';if(fs.existsSync(p)){let c=fs.readFileSync(p,'utf8');if(!c.includes('|| Buffer'))fs.writeFileSync(p,c.replace(/require\\(['\\\"]buffer['\\\"]\\)\\.SlowBuffer;/, 'require(\\'buffer\\').SlowBuffer || Buffer;'));}\""
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
