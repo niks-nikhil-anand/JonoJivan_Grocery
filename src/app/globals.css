@@ -1,29 +1,42 @@
-
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300..700&family=Dancing+Script:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
 
-.font-cursive {
-  font-family: 'Dancing Script', cursive;
-}
+
 
 
 @layer base {
  
 
+  /* Plain CSS (not @apply) so this file never depends on custom theme tokens */
   body {
-    @apply font-cormorant text-[16px] tracking-[-0.03em];
+    font-family: var(--font-inter), Inter, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+    font-size: 16px;
+    color: #1F2937;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-body {
-  font-family: 'Roboto', 'Arial', sans-serif;
-}
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-poppins), Poppins, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 
 
   a {
