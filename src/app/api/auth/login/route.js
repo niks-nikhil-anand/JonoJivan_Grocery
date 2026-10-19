@@ -12,7 +12,7 @@ export const POST = async (req) => {
 
         // Parse the JSON body of the request
         const { email, password, rememberMe } = await req.json();
-        console.log('Received request with:', { email, password, rememberMe });
+        // Never log passwords.
 
         // Find the user by email
         console.log('Finding user by email:', email);
@@ -21,7 +21,7 @@ export const POST = async (req) => {
         // If user not found, return 401
         if (!user) {
             console.log('User not found:', email);
-            return NextResponse.json({ msg: "User Not Found" }, { status: 401 });
+            return NextResponse.json({ msg: "Invalid email or password" }, { status: 401 }); // same message as a wrong password
         }
 
         // Compare the provided password with the hashed password in the database
@@ -64,8 +64,6 @@ export const POST = async (req) => {
             path: '/'
         });
 
-        console.log('Response with cookie:', response);
-        console.log('Generated token:', token);
 
         return response;
 
@@ -77,6 +75,5 @@ export const POST = async (req) => {
 
 // Function to generate a JWT token
 function generateToken(user) {
-    console.log('Generating token for user:', user);
     return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1w' });
 }
