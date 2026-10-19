@@ -1,288 +1,289 @@
 "use client";
-import React, { useState } from "react";
-import { FiSearch, FiX } from "react-icons/fi";
-import { HiMenuAlt3, HiX } from "react-icons/hi";
-import { motion } from "framer-motion";
-import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // For Next.js App Router
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { LuSearch, LuShoppingCart, LuUser, LuMenu, LuSmartphone, LuChevronDown, LuTv, LuArrowRight } from "react-icons/lu";
+import { OPERATORS } from "@/config/recharge";
+import OperatorBadge from "@/components/recharge/OperatorBadge";
+import { useCartCount } from "@/lib/cartStore";
+import MenuDrawer from "./MenuDrawer";
+import logo from "../../../../public/logo/logo.png";
 
+export const NAV_LINKS = [
+  { name: "Home", href: "/" },
+  { name: "Shop all", href: "/product/shopAllProducts" },
+  { name: "Categories", href: "/category" },
+  { name: "Recharge", href: "/recharge", menu: "recharge" },
+  { name: "Ration Card", href: "/rationCard" },
+  { name: "Blog", href: "/blog", desktopFrom: "xl" },
+];
 
-const Navbar = () => {
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); // State for mobile search modal
-  const router = useRouter(); // Initialize router
+const POPULAR_SEARCHES = ["Rice", "Atta", "Dal", "Onion", "Potato", "Milk", "Cooking oil", "Tea", "Detergent", "Biscuits"];
 
+function SearchBox({ autoFocus = false, onDone }) {
+  const router = useRouter();
+  const [q, setQ] = useState("");
+  const [focused, setFocused] = useState(false);
 
-
-  // Animation variants for the menu
-  const menuVariants = {
-    open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 200 } },
-    closed: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 200 } },
+  const go = (term = q) => {
+    const t = term.trim();
+    if (!t) return;
+    router.push(`/product/search?q=${encodeURIComponent(t)}`);
+    setFocused(false);
+    onDone?.();
   };
-
-   // Updated handleSearch function
-   const handleSearch = (query = searchQuery) => {
-    if (query.trim()) {
-      // Redirect to the search results page with query parameter
-      router.push(`/product/search?q=${encodeURIComponent(query)}`);
-      setIsSearchFocused(false); // Close the popular searches dropdown
-    }
-  };
-
-  // Function to handle key press (Enter)
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
-
-  const popularSearches = [
-    "saree", "jacket", "shoes", "sweater for women",
-    "kurti", "sweater", "watch", "earring", "tshirt",
-    "winter wear for women", "lehenga", "blouse",
-    "Mobile", "Laptops", "blouse",
-  ];
 
   return (
-    <nav className="bg-black text-white px-6 py-3 flex items-center justify-between relative">
-      {/* Logo */}
-
-      {/* Hamburger Menu for Mobile */}
-      <div className="lg:hidden">
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="text-2xl focus:outline-none"
-        >
-          {isMenuOpen ? <HiX /> : <HiMenuAlt3 />}
-        </button>
-      </div>
-      <Link href={"/"}>
-      <div className="text-xl font-bold">JonoJivan</div>
-      </Link>
-      <div className="flex gap-5 md:hidden">
-        <Link href={"/auth/signIn"}>
-      <button className="text-2xl relative">
-          <FaUser />
-          </button>
-          </Link>
-        <Link href={"/product/cart"}>
-      <button className="text-2xl relative">
-          <FaShoppingCart />
-          </button>
-          </Link>
-          {/* Mobile view search  */}
-          <button
-          className="text-2xl relative"
-          onClick={() => setIsMobileSearchOpen(true)} // Open the modal
-        >
-          <FaSearch />
-        </button>
-      </div>
-
-       {/* Mobile Search Modal */}
-       {isMobileSearchOpen && (
-  <div
-    className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-    onClick={() => setIsMobileSearchOpen(false)} // Close on overlay click
-  >
-    <div
-      className="bg-gray-800 w-full max-w-md p-6 rounded-lg relative"
-      onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
-    >
-      {/* Close Icon */}
-      <button
-        className="absolute top-4 right-4 text-gray-400 hover:text-white"
-        onClick={() => setIsMobileSearchOpen(false)}
+    <div className="relative w-full">
+      <form
+        role="search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          go();
+        }}
+        className="flex h-11 items-center gap-2 rounded-xl border border-black/10 bg-cream px-3 focus-within:border-brand-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-brand-100"
       >
-        <FiX size={20} />
-      </button>
-
-      {/* Search Input & Button */}
-      <div className="relative flex items-center flex flex-col gap-5 mt-6">
+        <LuSearch className="shrink-0 text-ink-muted" aria-hidden />
         <input
-          type="text"
-          placeholder="Search..."
-          className="w-full px-4 py-2 text-white bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyPress}
-          autoFocus
-          aria-label="Search"
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setTimeout(() => setFocused(false), 150)}
+          placeholder='Search "rice", "atta", "milk"…'
+          aria-label="Search products"
           autoComplete="off"
+          autoFocus={autoFocus}
+          className="h-full w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-soft"
         />
-
-        {/* Search Button */}
-        <button
-          className="ml-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition w-full"
-          onClick={() => handleSearch(searchQuery)}
-        >
-          Search
-        </button>
-      </div>
-
-      {/* Popular Searches Dropdown */}
-      {isSearchFocused && (
-        <div className="mt-4">
-          <div className="flex flex-wrap gap-3">
-            {popularSearches.map((item, index) => (
-              <span
-                key={index}
-                onClick={() => handleSearch(item)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer hover:bg-gray-200"
+      </form>
+      {focused && !q && (
+        <div className="absolute left-0 right-0 top-full z-30 mt-2 rounded-2xl border border-black/5 bg-white p-4 shadow-lift">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">Popular searches</p>
+          <div className="flex flex-wrap gap-2">
+            {POPULAR_SEARCHES.map((term) => (
+              <button
+                key={term}
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => go(term)}
+                className="rounded-full bg-cream px-3 py-1.5 text-sm text-ink hover:bg-brand-100"
               >
-                {item}
-              </span>
+                {term}
+              </button>
             ))}
           </div>
         </div>
       )}
     </div>
-  </div>
-)}
+  );
+}
 
+function CartButton({ className = "" }) {
+  const count = useCartCount();
+  return (
+    <Link
+      href="/product/cart"
+      className={`relative flex h-11 w-11 items-center justify-center rounded-xl text-xl text-ink hover:bg-brand-50 ${className}`}
+      aria-label={`Cart${count ? `, ${count} items` : ""}`}
+    >
+      <LuShoppingCart aria-hidden />
+      {count > 0 && (
+        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-offer-500 px-1 text-[11px] font-bold text-white">
+          {count > 99 ? "99+" : count}
+        </span>
+      )}
+    </Link>
+  );
+}
 
-      {/* Navigation Links, Search, and Sign-In for Mobile */}
-      <motion.div
-        initial={false}
-        animate={isMenuOpen ? "open" : "closed"}
-        variants={menuVariants}
-        className={`lg:hidden flex-col absolute top-12 left-0 w-full bg-black p-4 space-y-4 z-20 ${
-          isMenuOpen ? "flex" : "hidden"
+/** Desktop "Recharge" item with a dropdown of operators (hover, focus or click). */
+function RechargeMenu({ active }) {
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef(null);
+  const wrapRef = useRef(null);
+  const pathname = usePathname();
+
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    const onClick = (e) => !wrapRef.current?.contains(e.target) && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("mousedown", onClick);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("mousedown", onClick);
+    };
+  }, [open]);
+
+  const show = () => {
+    clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const hide = () => {
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  return (
+    <li
+      ref={wrapRef}
+      className="relative"
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setOpen(false)}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        aria-controls="recharge-menu"
+        className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium transition-colors xl:px-3 ${
+          active || open ? "text-charge-700" : "text-ink hover:text-charge-700"
         }`}
       >
-        <ul className="flex flex-col space-y-4">
-          {[
-            { name: "Home", link: "/" },
-            { name: "Mobile & Laptops", link: "/JonoCourier" },
-            { name: "All Categories", link: "/category" },
-            { name: "Ration Card", link: "/rationCard" },
-            { name: "Electronics", link: "/" },
-            { name: "Fashion", link: "/JonoGrocery" },
-            { name: "Beauty", link: "/JonoCourier" },
-            { name: "Deals", link: "/deals" },
-          ].map((item) => (
-            <li
-              key={item.name}
-              className="hover:text-gray-400 transition-colors duration-200 cursor-pointer"
-            >
-              <a href={item.link}>{item.name}</a>
-            </li>
-          ))}
-        </ul>
-        <div className="flex flex-col space-y-3">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none w-full"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleKeyPress} // Changed from onKeyPress (deprecated)
-              onFocus={() => setIsSearchFocused(true)}
-              onBlur={() => setIsSearchFocused(false)}
-              aria-label="Search"
-              autoComplete="off"
-            />
-            <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          </div>
-          <div>
-          <Link href={"/auth/signIn"}>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md w-full">
-            Sign In
-          </button>
+        <LuSmartphone className="text-charge-600" aria-hidden />
+        Recharge
+        <LuChevronDown className={`text-xs transition-transform ${open ? "rotate-180" : ""}`} aria-hidden />
+      </button>
+
+      <div
+        id="recharge-menu"
+        className={`absolute left-1/2 top-full z-50 w-[420px] -translate-x-1/2 pt-3 transition-all duration-200 ${
+          open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_24px_60px_-12px_rgb(0_0_0/0.25)]">
+          <Link
+            href="/recharge"
+            className="group flex items-center gap-3 bg-gradient-to-r from-charge-600 to-charge-700 p-4 text-white"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-xl">
+              <LuSmartphone aria-hidden />
+            </span>
+            <span className="flex-1">
+              <span className="block font-display font-bold">Mobile recharge</span>
+              <span className="block text-xs text-charge-100">All operators · browse plans for your circle</span>
+            </span>
+            <LuArrowRight className="transition-transform group-hover:translate-x-0.5" aria-hidden />
           </Link>
-          </div>
-
+          <ul className="grid grid-cols-2 gap-1 p-2">
+            {OPERATORS.map((op) => (
+              <li key={op.slug}>
+                <Link
+                  href={`/recharge/${op.slug}`}
+                  className="flex items-center gap-3 rounded-xl p-2.5 text-sm font-semibold text-ink transition-colors hover:bg-charge-50 hover:text-charge-700"
+                >
+                  <OperatorBadge operator={op} size="sm" />
+                  {op.name} recharge
+                </Link>
+              </li>
+            ))}
+            <li className="col-span-2">
+              <span className="flex cursor-default items-center gap-3 rounded-xl p-2.5 text-sm font-semibold text-ink-soft">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-ink-soft">
+                  <LuTv aria-hidden />
+                </span>
+                DTH recharge
+                <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-ink-muted">Coming soon</span>
+              </span>
+            </li>
+          </ul>
         </div>
-      </motion.div>
-
-      {/* Navigation Links, Search, and Sign-In for Desktop */}
-      <motion.ul
-        className="hidden lg:flex items-center space-x-6"
-      >
-        {[
-          { name: "Home", link: "/" },
-          { name: "All Categories", link: "/category" },
-          { name: "Ration Card", link: "/rationCard" },
-          { name: "Mobile & Laptops", link: "/" },
-          { name: "Electronics", link: "/JonoGrocery" },
-          { name: "Fashion", link: "/JonoCourier" },
-          { name: "Beauty", link: "/JonoCourier" },
-          { name: "Deals", link: "/deals" },
-        ].map((item) => (
-          <li
-            key={item.name}
-            className="hover:text-gray-400 transition-colors duration-200 cursor-pointer"
-          >
-            <a href={item.link}>{item.name}</a>
-          </li>
-        ))}
-      </motion.ul>
-
-      <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ type: "spring", stiffness: 300 }}
-        className="hidden lg:flex items-center space-x-3"
-      >
-        <motion.div
-      initial={{ width: "150px" }}
-      animate={{ width: isSearchFocused ? "250px" : "150px" }}
-      transition={{ type: "spring", stiffness: 300 }}
-      className="relative"
-    >
-      <input
-        type="text"
-        placeholder="Search..."
-        className="w-full px-4 py-2 text-white bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleKeyPress}
-        onFocus={() => setIsSearchFocused(true)}
-        onBlur={() => setIsSearchFocused(false)}
-        aria-label="Search"
-        autoComplete="off"
-      />
-
-      <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-
-      {/* Popular Searches Dropdown */}
-      {isSearchFocused && (
-        <div className="absolute mt-4 w-full bg-gray-800 rounded-lg shadow-lg z-10 min-w-[25rem] ">
-         <div className="flex flex-wrap gap-3 py-5 px-3 ">
-        {popularSearches.map((item, index) => (
-          <span
-            key={index}
-            onClick={() => handleSearch(item)} 
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer"
-          >
-            {item}
-          </span>
-        ))}
       </div>
-        </div>
-      )}
-    </motion.div>
-        <Link href={"/auth/signIn"}>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md"
-          
+    </li>
+  );
+}
+
+const Navbar = () => {
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const menuBtnRef = useRef(null);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const isActive = (href) => (href === "/" ? pathname === "/" : !href.includes("#") && pathname.startsWith(href));
+
+  return (
+    <>
+    <header
+      className={`sticky top-0 z-40 bg-white/95 backdrop-blur transition-shadow ${scrolled ? "shadow-card" : "border-b border-black/5"}`}
+    >
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-[72px] lg:gap-6 lg:px-8">
+        {/* hamburger (phones + tablets) */}
+        <button
+          ref={menuBtnRef}
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          className="-ml-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-2xl text-ink transition hover:bg-brand-50 hover:text-brand-700 lg:hidden"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          aria-label="Open menu"
         >
-          Sign In
-        </motion.button>
+          <LuMenu aria-hidden />
+        </button>
+
+        <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="JonoJivan home">
+          <Image src={logo} alt="" width={40} height={40} className="h-9 w-9 lg:h-10 lg:w-10" priority />
+          <span className="font-display text-lg font-bold tracking-tight text-brand-800 lg:text-xl">JonoJivan</span>
         </Link>
-        <Link href={"/product/cart"}>
-      <button className="text-2xl relative">
-          <FaShoppingCart />
-          </button>
-        </Link>
-      </motion.div>
-    </nav>
+
+        {/* desktop links */}
+        <nav aria-label="Main" className="hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {NAV_LINKS.map((l) =>
+              l.menu === "recharge" ? (
+                <RechargeMenu key={l.name} active={isActive(l.href)} />
+              ) : (
+              <li key={l.name} className={l.desktopFrom === "xl" ? "hidden xl:block" : undefined}>
+                <Link
+                  href={l.href}
+                  className={`whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium transition-colors xl:px-3 ${
+                    isActive(l.href) ? "text-brand-700" : "text-ink hover:text-brand-700"
+                  }`}
+                >
+                  {l.name}
+                </Link>
+              </li>
+              )
+            )}
+          </ul>
+        </nav>
+
+        {/* search (tablet + desktop) */}
+        <div className="ml-auto hidden w-full max-w-sm sm:block lg:max-w-[240px] xl:max-w-sm">
+          <SearchBox />
+        </div>
+
+        <div className="ml-auto flex items-center gap-1 sm:ml-0">
+          <Link
+            href="/auth/signIn"
+            className="hidden h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-ink hover:bg-brand-50 sm:flex"
+          >
+            <LuUser className="text-xl" aria-hidden />
+            <span className="hidden whitespace-nowrap xl:inline">Sign in</span>
+          </Link>
+          <CartButton />
+        </div>
+      </div>
+
+      {/* mobile search row (phones) */}
+      <div className="px-4 pb-3 sm:hidden">
+        <SearchBox />
+      </div>
+
+    </header>
+    {/* Rendered outside <header>: its backdrop-blur would otherwise trap the fixed drawer */}
+    <MenuDrawer open={menuOpen} onClose={closeMenu} returnFocusRef={menuBtnRef} />
+    </>
   );
 };
 
