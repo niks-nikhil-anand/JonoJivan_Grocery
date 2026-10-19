@@ -69,3 +69,31 @@ export function useCartCount() {
   }, []);
   return count;
 }
+
+/** Remove one product; returns { item, index } so the removal can be undone. */
+export function removeFromCart(id) {
+  const cart = readCart();
+  const index = cart.findIndex((i) => i.id === id);
+  if (index === -1) return null;
+  const [item] = cart.splice(index, 1);
+  writeCart(cart);
+  return { item, index };
+}
+
+/** Put a removed item back at its old position (for "Undo"). */
+export function restoreToCart({ item, index }) {
+  const cart = readCart().filter((i) => i.id !== item.id);
+  cart.splice(Math.min(index, cart.length), 0, item);
+  writeCart(cart);
+}
+
+/** Live list of cart entries [{ id, quantity }] plus a "ready" flag (false until read). */
+export function useCartItems() {
+  const [state, setState] = useState({ items: [], ready: false });
+  useEffect(() => {
+    const sync = () => setState({ items: readCart(), ready: true });
+    sync();
+    return subscribe(sync);
+  }, []);
+  return state;
+}
