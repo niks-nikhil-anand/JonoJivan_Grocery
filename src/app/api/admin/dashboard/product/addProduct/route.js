@@ -158,8 +158,29 @@ export const POST = async (req) => {
   }
 };
 
+// Only signed-in admins or vendors may list products through this admin route.
+// The public storefront uses /api/products instead.
+const hasStaffSession = () => {
+  const store = cookies();
+  for (const name of ["adminAuthToken", "vendorAuthToken"]) {
+    const value = store.get(name)?.value;
+    if (!value) continue;
+    try {
+      jwt.verify(value, process.env.JWT_SECRET);
+      return true;
+    } catch {
+      /* invalid or expired token – try the next one */
+    }
+  }
+  return false;
+};
+
 export const GET = async (req) => {
   try {
+    if (!hasStaffSession()) {
+      return NextResponse.json({ msg: "Authentication required." }, { status: 401 });
+    }
+
     await connectDB();
     
     const { searchParams } = new URL(req.url);
@@ -181,7 +202,7 @@ export const GET = async (req) => {
 
     const products = await productModels.find(query)
       .populate("category", "name")
-      .populate("users") 
+      .populate("users", "fullName email") // never expose password hashes 
       .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
       .skip(skip)
       .limit(limit)
