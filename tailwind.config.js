@@ -6,6 +6,43 @@ export default {
   theme: {
     extend: {
       colors: {
+        // ── JonoJivan homepage design system ──────────────────────────
+        // Grocery / primary actions
+        brand: {
+          50: '#F0FDF4',
+          100: '#DCFCE7',
+          200: '#BBF7D0',
+          300: '#86EFAC',
+          500: '#22C55E',
+          600: '#16A34A',
+          700: '#15803D',
+          800: '#166534',
+          900: '#14532D',
+        },
+        // Recharge – keeps the two services visually distinct
+        charge: {
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          200: '#C7D2FE',
+          500: '#6366F1',
+          600: '#4F46E5',
+          700: '#4338CA',
+          900: '#312E81',
+        },
+        // Offers / discounts only
+        offer: {
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          500: '#F59E0B',
+          600: '#D97706',
+        },
+        cream: '#FAFAF5',
+        ink: {
+          DEFAULT: '#1F2937',
+          muted: '#6B7280',
+          soft: '#9CA3AF',
+        },
+        // ── Legacy template tokens (still referenced in globals.css) ──
         p1: '#2EF2FF',
         p2: '#3C52D9',
         p3: '#C8EA80',
@@ -22,6 +59,8 @@ export default {
         },
       },
       boxShadow: {
+        card: '0 8px 24px rgb(0 0 0 / 0.06)',
+        lift: '0 16px 40px rgb(0 0 0 / 0.10)',
         100: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 16px 24px rgba(0, 0, 0, 0.25), inset 0px 3px 6px #1959AD',
         200: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 16px 24px rgba(0, 0, 0, 0.25), inset 0px 4px 10px #3391FF',
         300: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 16px 24px rgba(0, 0, 0, 0.25), inset 0px 3px 6px #1959AD',
@@ -29,9 +68,11 @@ export default {
         500: '0px 16px 24px rgba(0, 0, 0, 0.25), 0px -14px 48px rgba(40, 51, 111, 0.7)',
       },
       fontFamily: {
+        display: ['var(--font-poppins)', 'Poppins', 'system-ui', 'sans-serif'],
+        body: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
         cormorant: ['Cormorant', 'serif'],
-        sans: ['Roboto', 'Arial', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'Arial', 'sans-serif'],
 
       },
       transitionProperty: {
@@ -60,6 +101,15 @@ export default {
         640: '640px',
         960: '960px',
         1230: '1230px',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+      },
+      animation: {
+        float: 'float 6s ease-in-out infinite',
       },
       zIndex: {
         1: '1',
