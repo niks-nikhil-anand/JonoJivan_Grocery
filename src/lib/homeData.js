@@ -7,7 +7,7 @@ import productModels from "@/models/productModels";
 import categoryModels from "@/models/categoryModels";
 
 const PRODUCT_FIELDS =
-  "name salePrice originalPrice featuredImage weight status isOnSale isHotDeal isFeaturedSale createdAt";
+  "name salePrice originalPrice featuredImage weight status isOnSale isHotDeal isFeaturedSale ratings createdAt";
 
 // Hide products the admin has switched off.
 const VISIBLE = { status: { $nin: ["Inactive"] } };
