@@ -4,7 +4,7 @@ import { LuCheckCircle2, LuLoader2, LuXCircle, LuArrowLeft, LuShoppingBasket } f
 const STATES = {
   success: {
     icon: LuCheckCircle2,
-    tone: "bg-brand-100 text-brand-700",
+    tone: "bg-blue-100 text-blue-600",
     title: "Recharge successful",
     text: "Your plan has been applied to the number. You'll also get a confirmation SMS from your operator.",
   },

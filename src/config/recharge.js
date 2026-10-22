@@ -180,3 +180,43 @@ export const GENERAL_FAQS = [
 
 export const DISCLAIMER =
   "JonoJivan is an independent service and is not affiliated with Jio, Airtel, Vi (Vodafone Idea) or BSNL. Operator names are used only to identify networks. Plans and prices are set by the operators and may change.";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DTH recharge. Customer-ID formats are deliberately lenient (digits, sensible
+// length range); the recharge provider is the final judge and failed recharges
+// are refunded automatically.
+// ─────────────────────────────────────────────────────────────────────────────
+export const DTH_OPERATORS = [
+  { slug: "tata-play", name: "Tata Play", short: "T", idLabel: "Subscriber ID", idHint: "10-digit ID shown on your Tata Play app or set-top box", idRe: /^\d{10}$/, min: 100 },
+  { slug: "airtel-digital-tv", name: "Airtel Digital TV", short: "A", idLabel: "Customer ID", idHint: "10-digit customer ID from your Airtel Digital TV app or bill", idRe: /^\d{10}$/, min: 100 },
+  { slug: "dish-tv", name: "Dish TV", short: "D", idLabel: "Viewing Card / VC number", idHint: "11-digit VC number on your set-top box", idRe: /^\d{11}$/, min: 100 },
+  { slug: "d2h", name: "d2h", short: "d", idLabel: "Customer ID", idHint: "8 to 10 digit customer ID on your d2h account", idRe: /^\d{8,10}$/, min: 100 },
+  { slug: "sun-direct", name: "Sun Direct", short: "S", idLabel: "Subscriber ID", idHint: "11-digit subscriber ID on your Sun Direct box", idRe: /^\d{11}$/, min: 100 },
+];
+
+export const getDthOperator = (slug) => DTH_OPERATORS.find((o) => o.slug === String(slug || "").toLowerCase());
+export const getDthOperatorByName = (name) => DTH_OPERATORS.find((o) => o.name.toLowerCase() === String(name || "").toLowerCase());
+
+export const MOBILE_NUMBER_RE = /^[6-9]\d{9}$/;
+export const MOBILE_AMOUNT = { min: 10, max: 10000 };
+export const DTH_AMOUNT_MAX = 20000;
+
+/** Shared by the browser and /api/recharge/order. Returns an error string or null. */
+export function validateRecharge({ type, operator, number, amount }) {
+  const amt = Number(amount);
+  if (!Number.isInteger(amt)) return "Enter a whole-rupee amount.";
+  if (type === "mobile") {
+    if (!getOperator(operator)) return "Choose a valid operator.";
+    if (!MOBILE_NUMBER_RE.test(String(number))) return "Enter a valid 10-digit mobile number.";
+    if (amt < MOBILE_AMOUNT.min || amt > MOBILE_AMOUNT.max) return `Amount must be between ₹${MOBILE_AMOUNT.min} and ₹${MOBILE_AMOUNT.max}.`;
+    return null;
+  }
+  if (type === "dth") {
+    const op = getDthOperator(operator);
+    if (!op) return "Choose a valid DTH operator.";
+    if (!op.idRe.test(String(number))) return `Enter a valid ${op.idLabel}.`;
+    if (amt < op.min || amt > DTH_AMOUNT_MAX) return `Amount must be between ₹${op.min} and ₹${DTH_AMOUNT_MAX}.`;
+    return null;
+  }
+  return "Unknown recharge type.";
+}

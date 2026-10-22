@@ -7,7 +7,7 @@ const actions = [
   { label: "Daily Needs", href: "/category", icon: LuShoppingBasket, tone: "brand" },
   { label: "Home Care", href: "/category", icon: LuSprayCan, tone: "brand" },
   { label: "Mobile Recharge", href: "/recharge", icon: LuSmartphone, tone: "charge" },
-  { label: "DTH Recharge", href: "#recharge-dth", icon: LuTv, tone: "charge" },
+  { label: "DTH Recharge", href: "/recharge/dth", icon: LuTv, tone: "charge" },
   { label: "Ration Card", href: "/rationCard", icon: LuContact, tone: "offer" },
 ];
 

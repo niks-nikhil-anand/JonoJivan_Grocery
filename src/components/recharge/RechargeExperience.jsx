@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import {
   LuSearch,
@@ -18,6 +18,7 @@ import { CIRCLES, DEFAULT_CIRCLE, OPERATORS, PLAN_CATEGORIES, RECHARGE_LIVE, get
 import OperatorBadge from "./OperatorBadge";
 import PlanCard from "./PlanCard";
 import Sheet from "./Sheet";
+import { startRechargeCheckout } from "@/lib/recharge/client";
 
 const MOBILE_RE = /^[6-9]\d{9}$/;
 const RECENT_KEY = "jj:recentRecharges";
@@ -56,6 +57,8 @@ const SORTS = [
  */
 export default function RechargeExperience({ initialOperator = null }) {
   const params = useSearchParams();
+  const router = useRouter();
+  const [paying, setPaying] = useState(false);
   const [number, setNumber] = useState("");
   const [operatorSlug, setOperatorSlug] = useState(initialOperator);
   const [circle, setCircle] = useState(DEFAULT_CIRCLE);
@@ -144,16 +147,30 @@ export default function RechargeExperience({ initialOperator = null }) {
     setReviewOpen(true);
   };
 
-  const pay = () => {
+  const pay = async () => {
     setRecents(saveRecent({ number, operator: operator.slug, circle }));
     if (!RECHARGE_LIVE) {
       setReviewOpen(false);
       toast.success("Recharge is launching soon — we've saved this number for one-tap repeat.");
       return;
     }
-    // TODO(recharge-phase-2): POST /api/recharge/order → Razorpay checkout →
-    // POST /api/recharge/verify → router.push(`/recharge/status/${txnId}`)
-    toast("Redirecting to secure payment…");
+    if (paying) return;
+    setPaying(true);
+    try {
+      const result = await startRechargeCheckout({
+        type: "mobile",
+        operator: operator.slug,
+        circle,
+        number,
+        amount: selected.price,
+        planLabel: `₹${selected.price} · ${selected.validity} · ${selected.data}`,
+      });
+      if (result.txnId) router.push(`/recharge/status/${result.txnId}`);
+    } catch (err) {
+      toast.error(err.message || "Payment failed. You have not been charged.");
+    } finally {
+      setPaying(false);
+    }
   };
 
   return (
@@ -552,9 +569,10 @@ export default function RechargeExperience({ initialOperator = null }) {
               <button
                 type="button"
                 onClick={pay}
+                disabled={paying}
                 className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-offer-500 text-base font-bold text-white shadow-lg shadow-offer-500/30 hover:bg-offer-600"
               >
-                <LuZap aria-hidden /> {RECHARGE_LIVE ? `Pay ₹${selected.price}` : `Pay ₹${selected.price} (launching soon)`}
+                <LuZap aria-hidden /> {RECHARGE_LIVE ? (paying ? "Opening payment…" : `Pay ₹${selected.price}`) : `Pay ₹${selected.price} (launching soon)`}
               </button>
               <p className="mt-2 text-center text-xs text-ink-muted">
                 Please check the number — recharges can&apos;t be moved to another number.

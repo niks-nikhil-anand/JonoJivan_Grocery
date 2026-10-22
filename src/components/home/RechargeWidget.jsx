@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { LuSmartphone, LuTv, LuZap, LuCheckCircle2, LuShieldCheck, LuClock } from "react-icons/lu";
 import { Container } from "./ui/Section";
 import { recharge } from "@/config/home";
-import { getOperatorByName } from "@/config/recharge";
+import { getOperatorByName, getDthOperatorByName } from "@/config/recharge";
 
 export const RECHARGE_PICK_EVENT = "jj:recharge-pick";
 
@@ -66,7 +66,9 @@ export default function RechargeWidget() {
       router.push(`${op ? `/recharge/${op.slug}` : "/recharge"}?${qs.toString()}`);
       return;
     }
-    toast.success("DTH recharge is launching soon — thanks for checking it out!");
+    const dth = getDthOperatorByName(operator);
+    const qs = new URLSearchParams({ number: number.trim(), amount: String(amount) });
+    router.push(`/recharge/dth${dth ? `/${dth.slug}` : ""}?${qs.toString()}`);
   };
 
   return (

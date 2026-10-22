@@ -1,4 +1,5 @@
 import StatusView from "@/components/recharge/StatusView";
+import LiveStatus from "@/components/recharge/LiveStatus";
 import { RECHARGE_LIVE } from "@/config/recharge";
 
 export const metadata = {
@@ -16,6 +17,14 @@ export default function RechargeStatusPage({ params, searchParams }) {
   const state = !RECHARGE_LIVE && ["success", "processing", "failed"].includes(searchParams?.state)
     ? searchParams.state
     : "processing";
+
+  if (RECHARGE_LIVE) {
+    return (
+      <main className="min-h-[70vh] bg-gradient-to-b from-charge-50 to-cream px-4 py-12 sm:py-16">
+        <LiveStatus txnId={params.txnId} />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-[70vh] bg-gradient-to-b from-charge-50 to-cream px-4 py-12 sm:py-16">
