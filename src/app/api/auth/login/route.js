@@ -1,79 +1,28 @@
-import connectDB from '@/lib/dbConnect';
-import userModels from '@/models/userModels';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { NextResponse } from 'next/server';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import connectDB from "@/lib/dbConnect";
+import User from "@/models/userModels";
 
-export const POST = async (req) => {
-    try {
-        console.log('Connecting to the database...');
-        await connectDB(); 
-        console.log('Database connection established.');
-
-        // Parse the JSON body of the request
-        const { email, password, rememberMe } = await req.json();
-        // Never log passwords.
-
-        // Find the user by email
-        console.log('Finding user by email:', email);
-        const user = await userModels.findOne({ email });
-
-        // If user not found, return 401
-        if (!user) {
-            console.log('User not found:', email);
-            return NextResponse.json({ msg: "Invalid email or password" }, { status: 401 }); // same message as a wrong password
-        }
-
-        // Compare the provided password with the hashed password in the database
-        console.log('Comparing passwords...');
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            console.log('Password does not match for email:', email);
-            return NextResponse.json({ msg: "Invalid email or password" }, { status: 401 });
-        }
-
-        // Check if user status is "Active"
-        console.log('Checking user status...');
-        if (user.status !== 'Active') {
-            console.log('User status is not Active:', user.status);
-            return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
-        }
-
-        // Check if the user's role matches the required role
-        console.log('Checking user role...');
-
-
-        if (user.role !== 'User') {
-            console.log('User role is not authorised:', user.role);
-            return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
-        }
-
-        // Generate a JWT token
-        console.log('Generating token...');
-        const token = generateToken({ id: user._id, email: user.email });
-
-        const response = NextResponse.json({ msg: "Login successful" }, { status: 200 });
-
-        // Set the cookie with the token
-        console.log('Setting cookie with token...');
-        response.cookies.set('userAuthToken', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', 
-            sameSite: 'strict',
-            maxAge: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 7, // 1 month if 'rememberMe', otherwise 1 week
-            path: '/'
-        });
-
-
-        return response;
-
-    } catch (error) {
-        console.error('Error processing login:', error);
-        return NextResponse.json({ msg: "Error processing login", error: error.message || error }, { status: 500 });
+export async function POST(req) {
+  try {
+    const { email, password, rememberMe } = await req.json();
+    const usePostgres = process.env.AUTH_DATABASE === "postgresql";
+    let user;
+    if (usePostgres) {
+      user = await prisma.user.findUnique({ where: { email } });
+      if (!user || !user.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) return NextResponse.json({ msg: "Invalid email or password" }, { status: 401 });
+      if (user.status !== "ACTIVE" || user.role !== "USER") return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
+    } else {
+      await connectDB();
+      user = await User.findOne({ email });
+      if (!user || !(await bcrypt.compare(password, user.password))) return NextResponse.json({ msg: "Invalid email or password" }, { status: 401 });
+      if (user.status !== "Active" || user.role !== "User") return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
     }
-};
-
-// Function to generate a JWT token
-function generateToken(user) {
-    return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1w' });
+    const token = jwt.sign({ id: String(user.id || user._id), email: user.email }, process.env.JWT_SECRET, { expiresIn: "1w" });
+    const response = NextResponse.json({ msg: "Login successful" });
+    response.cookies.set("userAuthToken", token, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", maxAge: rememberMe ? 2592000 : 604800, path: "/" });
+    return response;
+  } catch (error) { return NextResponse.json({ msg: "Error processing login", error: error.message || error }, { status: 500 }); }
 }
