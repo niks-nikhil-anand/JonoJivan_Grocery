@@ -8,7 +8,8 @@ import bcrypt from "bcrypt";
 export const POST = async (req) => {
   try {
     console.log("Connecting to the database...");
-    await connectDB();
+    const usePostgres = process.env.AUTH_DATABASE === "postgresql";
+    if (!usePostgres) await connectDB();
     console.log("Connected to the database.");
 
     const formData = await req.formData();
@@ -70,7 +71,9 @@ export const POST = async (req) => {
     console.log("Formatted mobile number:", mobileNumber);
 
     // Check if the email or mobile number already exists
-    const existingUser = await userModels.findOne({ $or: [{ email }, { mobileNumber }] });
+    const existingUser = usePostgres
+      ? await (await import("@/lib/prisma")).default.user.findFirst({ where: { OR: [{ email }, { mobileNumber }] } })
+      : await userModels.findOne({ $or: [{ email }, { mobileNumber }] });
     if (existingUser) {
       console.log("Validation failed: User already exists with the provided email or mobile number.");
       return NextResponse.json({ msg: "User with this email or mobile number already exists." }, { status: 400 });
@@ -108,22 +111,41 @@ const shopPhotoUrl = shopPhoto && shopPhoto !== 'null' ? await uploadImage(shopP
       shopPhoto: shopPhotoUrl?.secure_url || '',
     };
 
-    const vendor = new vendorModels(vendorData);
-    await vendor.save();
-    console.log("Vendor saved to the database:", vendor);
-
-    const userData = {
-      fullName,
-      email,
-      mobileNumber,
-      password: hashedPassword,
-      vendor: vendor._id,
-      role: "Vendor",
-    };
-
-    const user = new userModels(userData);
-    await user.save();
-    console.log("User saved to the database:", user);
+    if (usePostgres) {
+      await (await import("@/lib/prisma")).default.user.create({
+        data: {
+          fullName,
+          email,
+          mobileNumber,
+          passwordHash: hashedPassword,
+          role: "VENDOR",
+          status: "ACTIVE",
+          vendorProfile: {
+            create: {
+              businessName,
+              businessAddress,
+              aadhaarCardUrl: adhaarCardUrl?.secure_url || null,
+              panCardUrl: panCardUrl?.secure_url || null,
+              bankPassbookUrl: bankPassbookUrl?.secure_url || null,
+              msmeCertificateUrl: msmsCertificateUrl?.secure_url || null,
+              gstCertificateUrl: gstCertificateUrl?.secure_url || null,
+              tradeLicenceUrl: tradeLicenceUrl?.secure_url || null,
+              shopPhotoUrl: shopPhotoUrl?.secure_url || null,
+              dateOfBirth: dob ? new Date(dob) : null,
+              gender: gender || null,
+              employeeCount: noOfEmployee ? Number(noOfEmployee) : null,
+              status: "PENDING",
+            },
+          },
+        },
+      });
+    } else {
+      const vendor = new vendorModels(vendorData);
+      await vendor.save();
+      const userData = { fullName, email, mobileNumber, password: hashedPassword, vendor: vendor._id, role: "Vendor" };
+      const user = new userModels(userData);
+      await user.save();
+    }
 
     return NextResponse.json({ msg: "Account created successfully" }, { status: 200 });
   } catch (error) {
