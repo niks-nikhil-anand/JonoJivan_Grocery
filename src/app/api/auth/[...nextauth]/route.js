@@ -1,11 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook"; // Missing FacebookProvider import
-import userModels from "@/models/userModels";
-import connectDB from "@/lib/dbConnect";
-
-// Connect to MongoDB once
-connectDB();
+import { findOrCreateOAuthUser } from "@/lib/authAccount";
 
 const authOptions = {
   providers: [
@@ -28,17 +24,8 @@ const authOptions = {
       }
 
       try {
-        let existingUser = await userModels.findOne({ email: user.email });
-
-        if (!existingUser) {
-          // Create a new user if not found in the database
-          existingUser = await userModels.create({
-            fullName: user.name,
-            email: user.email,
-          });
-        }
-
-        user._id = existingUser._id;
+        const account = await findOrCreateOAuthUser({ name: user.name, email: user.email });
+        user._id = account.id;
         return true;
       } catch (error) {
         console.error("Error in signIn callback:", error);
