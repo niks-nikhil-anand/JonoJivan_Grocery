@@ -10,7 +10,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const POST = async (req) => {
   try {
     console.log("Connecting to the database...");
-    await connectDB();
+    const usePostgres = process.env.AUTH_DATABASE === "postgresql";
+    if (!usePostgres) await connectDB();
     console.log("Connected to the database.");
 
     const formData = await req.formData();
@@ -40,7 +41,9 @@ export const POST = async (req) => {
     console.log("Formatted mobile number:", mobileNumber);
 
     // Check if the email or mobile number already exists
-    const existingUser = await userModels.findOne({ $or: [{ email }, { mobileNumber }] });
+    const existingUser = usePostgres
+      ? await (await import("@/lib/prisma")).default.user.findFirst({ where: { OR: [{ email }, { mobileNumber }] } })
+      : await userModels.findOne({ $or: [{ email }, { mobileNumber }] });
     if (existingUser) {
       console.log("Validation failed: User already exists with the provided email or mobile number.");
       return NextResponse.json({ msg: "User with this email or mobile number already exists." }, { status: 400 });
@@ -56,19 +59,28 @@ export const POST = async (req) => {
       password: hashedPassword,
     };
 
-    const user = new userModels(userData);
-    await user.save();
-    console.log("User saved to the database:", user);
+    let createdUser;
+    if (usePostgres) {
+      createdUser = await (await import("@/lib/prisma")).default.user.create({
+        data: { fullName, email, mobileNumber, passwordHash: hashedPassword, role: "USER", status: "ACTIVE" },
+      });
+    } else {
+      createdUser = new userModels(userData);
+      await createdUser.save();
+    }
+    console.log("User saved to the database:", createdUser.id || createdUser._id);
     
 
 
-    await resend.emails.send({
-      from: 'no-reply@JonoJivan.com',
-      to: email,
-      subject: 'Welcome to JonoJivan',
-      react: <WelcomeEmail fullName={fullName} />,
-    });
-    console.log("Welcome email sent to:", email);
+    if (process.env.AUTH_TEST_SKIP_EMAIL !== "true") {
+      await resend.emails.send({
+        from: 'no-reply@JonoJivan.com',
+        to: email,
+        subject: 'Welcome to JonoJivan',
+        react: <WelcomeEmail fullName={fullName} />,
+      });
+      console.log("Welcome email sent to:", email);
+    }
 
     return NextResponse.json({ msg: "Account created successfully" }, { status: 200 });
   } catch (error) {
