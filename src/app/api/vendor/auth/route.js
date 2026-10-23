@@ -7,8 +7,8 @@ import { NextResponse } from 'next/server';
 export const POST = async (req) => {
     try {
         console.log('Connecting to the database...');
-        await connectDB(); // Connect to the database
-        console.log('Database connection established.');
+        const usePostgres = process.env.AUTH_DATABASE === 'postgresql';
+        if (!usePostgres) await connectDB(); // Connect to the database
 
         // Parse the JSON body of the request
         const { email, password, rememberMe } = await req.json();
@@ -16,7 +16,9 @@ export const POST = async (req) => {
 
         // Find the user by email
         console.log('Finding user by email:', email);
-        const user = await userModels.findOne({ email });
+        const user = usePostgres
+            ? await (await import('@/lib/prisma')).default.user.findUnique({ where: { email } })
+            : await userModels.findOne({ email });
 
         // If user not found, return 401
         if (!user) {
@@ -26,7 +28,7 @@ export const POST = async (req) => {
 
         // Compare the provided password with the hashed password in the database
         console.log('Comparing passwords...');
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, usePostgres ? user.passwordHash : user.password);
         if (!isMatch) {
             console.log('Password does not match for email:', email);
             return NextResponse.json({ msg: "Invalid email or password" }, { status: 401 });
@@ -34,7 +36,7 @@ export const POST = async (req) => {
 
         // Check if user status is "Active"
         console.log('Checking user status...');
-        if (user.status !== 'Active') {
+        if ((usePostgres && user.status !== 'ACTIVE') || (!usePostgres && user.status !== 'Active')) {
             console.log('User status is not Active:', user.status);
             return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
         }
@@ -43,14 +45,14 @@ export const POST = async (req) => {
         console.log('Checking user role...');
 
 
-        if (user.role !== 'Vendor') {
+        if ((usePostgres && user.role !== 'VENDOR') || (!usePostgres && user.role !== 'Vendor')) {
             console.log('User role is not authorised:', user.role);
             return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
         }
 
         // Generate a JWT token
         console.log('Generating token...');
-        const token = generateToken({ id: user._id, email: user.email });
+        const token = generateToken({ id: String(user.id || user._id), email: user.email });
 
         const response = NextResponse.json({ msg: "Login successful" }, { status: 200 });
 
