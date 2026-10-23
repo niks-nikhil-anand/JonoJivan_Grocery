@@ -1,15 +1,26 @@
 import { NextResponse } from 'next/server';
 import { parse } from 'cookie';
 import { getToken } from "next-auth/jwt";
+import { jwtVerify } from "jose";
+
+async function verifyCustomToken(value) {
+  if (!value || !process.env.JWT_SECRET) return null;
+  try {
+    const { payload } = await jwtVerify(value, new TextEncoder().encode(process.env.JWT_SECRET), { algorithms: ["HS256"] });
+    return typeof payload.id === "string" && typeof payload.email === "string" ? payload : null;
+  } catch {
+    return null;
+  }
+}
 
 export async function middleware(req) {
   const cookieHeader = req.headers.get('cookie');
   const cookies = parse(cookieHeader || '');
-  const userAuthToken = cookies.userAuthToken;
-  const adminAuthToken = cookies.adminAuthToken;
-  const vendorAuthToken = cookies.vendorAuthToken;
+  const userAuthToken = await verifyCustomToken(cookies.userAuthToken);
+  const adminAuthToken = await verifyCustomToken(cookies.adminAuthToken);
+  const vendorAuthToken = await verifyCustomToken(cookies.vendorAuthToken);
 
-  const token = await getToken({ req });
+  const token = await getToken({ req }).catch(() => null);
   const { pathname } = req.nextUrl;
 
   const isAuthPage = pathname === '/auth/register';
@@ -17,13 +28,12 @@ export async function middleware(req) {
 
   // Redirect logged-in users away from auth pages
   if (token && (isAuthPage || isSignInPage)) {
-    console.log(token)
     return NextResponse.redirect(new URL(`/users/${token._id}`, req.nextUrl.origin));
   }
 
   // Redirect user to their profile if they are already logged in
   if (userAuthToken && (isAuthPage || isSignInPage)) {
-    return NextResponse.redirect(new URL(`/users/${userAuthToken?.id}`, req.nextUrl.origin));
+    return NextResponse.redirect(new URL(`/users/${userAuthToken.id}`, req.nextUrl.origin));
   }
 
   
