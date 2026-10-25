@@ -1,5 +1,3 @@
-import connectDB from '@/lib/dbConnect';
-import userModels from '@/models/userModels';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
@@ -7,8 +5,6 @@ import { NextResponse } from 'next/server';
 export const POST = async (req) => {
     try {
         console.log('Connecting to the database...');
-        const usePostgres = process.env.AUTH_DATABASE === 'postgresql';
-        if (!usePostgres) await connectDB(); // Connect to the database
 
         // Parse the JSON body of the request
         const { email, password, rememberMe } = await req.json();
@@ -16,19 +12,17 @@ export const POST = async (req) => {
 
         // Find the user by email
         console.log('Finding user by email:', email);
-        const user = usePostgres
-            ? await (await import('@/lib/prisma')).default.user.findUnique({ where: { email } })
-            : await userModels.findOne({ email });
+        const user = await (await import('@/lib/prisma')).default.user.findUnique({ where: { email } });
 
         // If user not found, return 401
-        if (!user) {
+        if (!user || !user.passwordHash) {
             console.log('User not found:', email);
             return NextResponse.json({ msg: "User Not Found" }, { status: 401 });
         }
 
         // Compare the provided password with the hashed password in the database
         console.log('Comparing passwords...');
-        const isMatch = await bcrypt.compare(password, usePostgres ? user.passwordHash : user.password);
+        const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch) {
             console.log('Password does not match for email:', email);
             return NextResponse.json({ msg: "Invalid email or password" }, { status: 401 });
@@ -36,7 +30,7 @@ export const POST = async (req) => {
 
         // Check if user status is "Active"
         console.log('Checking user status...');
-        if ((usePostgres && user.status !== 'ACTIVE') || (!usePostgres && user.status !== 'Active')) {
+        if (user.status !== 'ACTIVE') {
             console.log('User status is not Active:', user.status);
             return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
         }
@@ -45,7 +39,7 @@ export const POST = async (req) => {
         console.log('Checking user role...');
 
 
-        if ((usePostgres && user.role !== 'SUPER_ADMIN') || (!usePostgres && user.role !== 'SuperAdmin')) {
+        if (user.role !== 'SUPER_ADMIN') {
             console.log('User role is not authorised:', user.role);
             return NextResponse.json({ msg: "Not Authorised" }, { status: 403 });
         }
