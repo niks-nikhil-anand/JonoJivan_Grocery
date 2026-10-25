@@ -13,9 +13,8 @@ import Faq from "@/components/home/Faq";
 import Section from "@/components/home/ui/Section";
 import { getCategories, getDeals, getJustAdded } from "@/lib/homeData";
 
-// Re-generate the page at most every 5 minutes so new products/prices appear
-// without a redeploy, while visitors still get a fast cached page.
-export const revalidate = 300;
+// Load current storefront data at request time; builds do not query the database.
+export const dynamic = "force-dynamic";
 
 /*
  * Story arc: Hook → Ease → Choice → Trust → Habit
