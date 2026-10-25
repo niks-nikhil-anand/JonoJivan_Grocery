@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import connectDB from "@/lib/dbConnect";
 import uploadImage from "@/lib/uploadImages";
 import productModels from "@/models/productModels";
@@ -42,6 +44,7 @@ export const POST = async (req) => {
 
     // Creating a new subSubCategory
     const subSubCategory = {
+      subCategory,
       name,
       image: imageUrl,
     };
