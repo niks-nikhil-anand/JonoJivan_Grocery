@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -60,7 +61,7 @@ const News = () => {
                 className="p-4 bg-white rounded-lg shadow-md cursor-pointer w-full sm:w-1/2 md:w-[45%] mt-5" // Responsive width classes
                 onClick={() => handleCardClick(article._id)}
               >
-                <img src={article.featuredImage} alt={article.title} className="w-full h-48 object-cover rounded-t-lg mb-4"/>
+                <Image width={640} height={360} sizes="(max-width: 768px) 100vw, 50vw" src={article.featuredImage} alt={article.title} className="w-full h-48 object-cover rounded-t-lg mb-4"/>
                 <h3 className="text-xl md:text-2xl font-semibold textColor hover:underline">{article.title}</h3>
                 <p className="text-gray-600">{article.subtitle}</p>
                 <div className="text-sm text-gray-500 mt-2">By {article.author} in {article.category}</div>
