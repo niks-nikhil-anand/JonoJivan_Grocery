@@ -1,19 +1,3 @@
-import mongoose from "mongoose";
+import { createModel } from "../lib/prismaModel";
 
-
-const paymentSchema = new mongoose.Schema({
-  razorpay_order_id: {
-    type: String,
-    required: true,
-  },
-  razorpay_payment_id: {
-    type: String,
-    required: true,
-  },
-  razorpay_signature: {
-    type: String,
-    required: true,
-  },
-});
-
-export default mongoose.models.Payment || mongoose.model('Payment', paymentSchema);
+export default createModel("Payment");
