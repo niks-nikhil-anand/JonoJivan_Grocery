@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import connectDB from "@/lib/dbConnect";
 import cartModels from "@/models/cartModels";
 import { NextResponse } from "next/server";
