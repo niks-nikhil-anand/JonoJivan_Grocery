@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import Image from "next/image";
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { IoIosSearch, IoMdRefresh } from "react-icons/io";
@@ -26,7 +27,7 @@ const ProductsPage = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await axios.get('/api/admin/dashboard/product/addProduct', {
@@ -41,11 +42,11 @@ const ProductsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, debouncedSearch]);
 
   useEffect(() => {
     fetchData();
-  }, [pagination.page, debouncedSearch]);
+  }, [fetchData]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
@@ -160,7 +161,7 @@ const ProductsPage = () => {
                     <tr key={product._id} className="hover:bg-gray-50/50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                           <img src={product.featuredImage} alt="" className="w-10 h-10 rounded-lg object-cover border" />
+                           <Image width={40} height={40} sizes="40px" src={product.featuredImage} alt="" className="w-10 h-10 rounded-lg object-cover border" />
                            <span className="font-medium text-gray-800 text-sm truncate max-w-[150px]" title={product.name}>{truncateName(product.name)}</span>
                         </div>
                       </td>
