@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loader from '@/components/loader/loader';
@@ -96,7 +97,7 @@ const OrderHistory = () => {
       >
         {/* Order Information */}
         <div className="flex flex-col md:flex-row md:items-center md:space-x-4  ">
-          <img
+          <Image width={96} height={96} sizes="(max-width: 768px) 100vw, 96px"
             src={order.cartItems[0]?.featuredImage || "/placeholder-image.png"} // Add a fallback image
             alt="Product"
             className="w-full md:w-24 h-24 object-cover rounded"
