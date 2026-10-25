@@ -1,124 +1,63 @@
-// Public, read-only product queries for the storefront.
-// Used by the shop page (server component) and the public /api/products routes.
-// Only returns fields a shopper needs — never user data.
-import mongoose from "mongoose";
-import connectDB from "@/lib/dbConnect";
-import productModels from "@/models/productModels";
-import categoryModels from "@/models/categoryModels";
+// Public storefront queries backed by Neon PostgreSQL.
+import prisma from "@/lib/prisma";
+import { Prisma } from "../generated/prisma/client";
+import { present } from "@/lib/prismaModel";
 import { PAGE_SIZE, PRICE_RANGES } from "@/lib/shopOptions";
 
-export const PUBLIC_FIELDS = {
-  name: 1,
-  salePrice: 1,
-  originalPrice: 1,
-  featuredImage: 1,
-  weight: 1,
-  status: 1,
-  isOnSale: 1,
-  isHotDeal: 1,
-  category: 1,
-  ratings: 1,
-  createdAt: 1,
-};
-
 export { PAGE_SIZE, PRICE_RANGES };
-
-const SORT_STAGES = {
-  newest: { createdAt: -1 },
-  "price-asc": { salePrice: 1, createdAt: -1 },
-  "price-desc": { salePrice: -1, createdAt: -1 },
-  discount: { discountPct: -1, createdAt: -1 },
-};
-
-const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const toPlain = (v) => JSON.parse(JSON.stringify(v));
-
-/** Normalise raw search params (strings) into a safe filter object. */
+const SORTS = { newest: { createdAt: "desc" }, "price-asc": { salePrice: "asc" }, "price-desc": { salePrice: "desc" }, discount: { createdAt: "desc" } };
+const validId = value => typeof value === "string" && /^[a-zA-Z0-9_-]{1,128}$/.test(value);
 export function parseShopParams(sp = {}) {
-  const get = (k) => (typeof sp.get === "function" ? sp.get(k) : sp[k]) ?? "";
-  const page = Math.max(1, parseInt(get("page"), 10) || 1);
-  const limit = Math.min(48, Math.max(1, parseInt(get("limit"), 10) || PAGE_SIZE));
-  const sort = SORT_STAGES[get("sort")] ? get("sort") : "newest";
-  const q = String(get("q")).trim().slice(0, 60);
-  const category = mongoose.isValidObjectId(get("category")) ? String(get("category")) : "";
-  const price = PRICE_RANGES.some((r) => r.id === get("price")) ? String(get("price")) : "";
-  const onSale = get("onSale") === "1";
-  const inStock = get("inStock") === "1";
-  return { page, limit, sort, q, category, price, onSale, inStock };
+  const get = k => (typeof sp.get === "function" ? sp.get(k) : sp[k]) ?? "";
+  return {
+    page: Math.max(1, parseInt(get("page"), 10) || 1),
+    limit: Math.min(48, Math.max(1, parseInt(get("limit"), 10) || PAGE_SIZE)),
+    sort: Object.hasOwn(SORTS, get("sort")) ? get("sort") : "newest",
+    q: String(get("q")).trim().slice(0, 60),
+    category: validId(get("category")) ? get("category") : "",
+    price: PRICE_RANGES.some(r => r.id === get("price")) ? get("price") : "",
+    onSale: get("onSale") === "1", inStock: get("inStock") === "1",
+  };
 }
-
-function buildMatch({ q, category, price, onSale, inStock }) {
-  const match = { status: { $nin: ["Inactive"] } };
-  if (inStock) match.status = { $nin: ["Inactive", "Out of stock"] };
-  if (category) match.category = new mongoose.Types.ObjectId(category);
-  if (onSale) match.$or = [{ isOnSale: true }, { isHotDeal: true }, { $expr: { $gt: ["$originalPrice", "$salePrice"] } }];
-  if (q) {
-    const rx = new RegExp(escapeRegex(q), "i");
-    const textOr = [{ name: rx }, { tags: rx }];
-    match.$and = [...(match.$and || []), { $or: textOr }];
-  }
-  if (price) {
-    const r = PRICE_RANGES.find((x) => x.id === price);
-    match.salePrice = r.max == null ? { $gte: r.min } : { $gte: r.min, $lt: r.max };
-  }
-  return match;
+export function buildWhere({ q, category, price, onSale, inStock }) {
+  const where = { status: { notIn: inStock ? ["INACTIVE", "OUT_OF_STOCK"] : ["INACTIVE"] } };
+  if (category) where.categoryId = category;
+  if (q) where.AND = [{ OR: [{ name: { contains: q, mode: "insensitive" } }, { tags: { has: q } }] }];
+  if (onSale) where.OR = [{ isOnSale: true }, { isHotDeal: true }, { originalPrice: { gt: prisma.product.fields.salePrice } }];
+  const range = PRICE_RANGES.find(r => r.id === price);
+  if (range) where.salePrice = { gte: range.min, ...(range.max == null ? {} : { lt: range.max }) };
+  return where;
 }
-
-/** Aggregation pipeline for a shop query (exported for testing). */
-export function buildPipeline(params) {
-  const { page, limit, sort } = params;
-  return [
-      { $match: buildMatch(params) },
-      {
-        $addFields: {
-          discountPct: {
-            $cond: [
-              { $gt: ["$originalPrice", 0] },
-              { $divide: [{ $subtract: ["$originalPrice", "$salePrice"] }, "$originalPrice"] },
-              0,
-            ],
-          },
-        },
-      },
-      { $sort: SORT_STAGES[sort] },
-      {
-        $facet: {
-          items: [{ $skip: (page - 1) * limit }, { $limit: limit }, { $project: PUBLIC_FIELDS }],
-          total: [{ $count: "n" }],
-        },
-      },
-  ];
-}
-
-/** Paginated, filtered, sorted product list. Never throws; returns an empty result on failure. */
 export async function queryProducts(params) {
   const { page, limit } = params;
   try {
-    await connectDB();
-    const [result] = await productModels.aggregate(buildPipeline(params));
-    const total = result?.total?.[0]?.n || 0;
-    return { products: toPlain(result?.items || []), total, page, limit, totalPages: Math.max(1, Math.ceil(total / limit)) };
+    const where = buildWhere(params);
+    const total = await prisma.product.count({ where });
+    let rows;
+    if (params.sort === "discount") {
+      const conditions = [Prisma.sql`"status" <> 'INACTIVE'`];
+      if (params.inStock) conditions.push(Prisma.sql`"status" <> 'OUT_OF_STOCK'`);
+      if (params.category) conditions.push(Prisma.sql`"categoryId" = ${params.category}`);
+      if (params.q) conditions.push(Prisma.sql`(strpos(lower("name"), lower(${params.q})) > 0 OR ${params.q} = ANY("tags"))`);
+      if (params.onSale) conditions.push(Prisma.sql`("isOnSale" OR "isHotDeal" OR "originalPrice" > "salePrice")`);
+      const range = PRICE_RANGES.find(r => r.id === params.price);
+      if (range) { conditions.push(Prisma.sql`"salePrice" >= ${range.min}`); if (range.max != null) conditions.push(Prisma.sql`"salePrice" < ${range.max}`); }
+      rows = await prisma.$queryRaw(Prisma.sql`SELECT * FROM "Product" WHERE ${Prisma.join(conditions, " AND ")} ORDER BY CASE WHEN "originalPrice" > 0 THEN ("originalPrice" - "salePrice") / "originalPrice" ELSE 0 END DESC, "createdAt" DESC, "id" ASC LIMIT ${limit} OFFSET ${(page - 1) * limit}`);
+    } else rows = await prisma.product.findMany({ where, orderBy: [SORTS[params.sort] || SORTS.newest, { id: "asc" }], skip: (page - 1) * limit, take: limit });
+    return { products: rows.map(row => present("Product", row)), total, page, limit, totalPages: Math.max(1, Math.ceil(total / limit)) };
   } catch (error) {
     console.error("[productQuery] queryProducts failed:", error?.message || error);
     return { products: [], total: 0, page, limit, totalPages: 1, error: true };
   }
 }
-
-/** Products by id, in the order requested. Missing ids are simply absent. */
 export async function productsByIds(ids = []) {
-  const valid = [...new Set(ids)].filter((id) => mongoose.isValidObjectId(id)).slice(0, 100);
+  const valid = [...new Set(ids)].filter(validId).slice(0, 100);
   if (!valid.length) return [];
-  await connectDB();
-  const docs = await productModels.find({ _id: { $in: valid } }, PUBLIC_FIELDS).lean();
-  return toPlain(docs);
+  const rows = await prisma.product.findMany({ where: { id: { in: valid } } });
+  const byId = new Map(rows.map(row => [row.id, present("Product", row)]));
+  return valid.map(id => byId.get(id)).filter(Boolean);
 }
-
 export async function listCategories() {
-  try {
-    await connectDB();
-    return toPlain(await categoryModels.find({}, "name image").sort({ createdAt: 1 }).lean());
-  } catch (error) {
-    console.error("[productQuery] listCategories failed:", error?.message || error);
-    return [];
-  }
+  try { return (await prisma.category.findMany({ orderBy: { createdAt: "asc" } })).map(row => present("Category", row)); }
+  catch (error) { console.error("[productQuery] listCategories failed:", error?.message || error); return []; }
 }
