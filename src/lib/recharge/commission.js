@@ -24,4 +24,4 @@ export function commissionFor(slug, amount) {
 
 // Every operator we sell must have both an OpId and a commission entry.
 export const missingOperatorConfig = () =>
-  Object.keys(OPERATOR_CODES).filter((slug) => !COMMISSION[slug] || OPERATOR_CODES[slug] === "TODO");
+  Object.keys(OPERATOR_CODES).filter((slug) => !COMMISSION[slug] || !OPERATOR_CODES[slug] || OPERATOR_CODES[slug] === "TODO");

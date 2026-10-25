@@ -20,17 +20,21 @@ const config = () => ({
   baseUrl: (env("LINERPAY_BASE_URL") || "https://linerpay.in/api").replace(/\/+$/, ""),
 });
 
-// OpId codes from LinerPay's operator list. BSNL uses "BSNL Topup" (3);
-// "BSNL Special" (4) is not used. Any of these can be overridden with
-// LINERPAY_OP_<SLUG> (e.g. LINERPAY_OP_TATA_PLAY). A slug set to "TODO" is
-// refused before any request is sent.
+// OpId codes are configured only through the environment. Missing, blank,
+// or "TODO" values are refused before any request is sent.
 export const OPERATOR_CODES = {
-  jio: "5", airtel: "1", vi: "2", bsnl: "3",
-  "tata-play": "12", "airtel-digital-tv": "7",
-  "dish-tv": "9", d2h: "20", "sun-direct": "11",
+  get jio() { return env("LINERPAY_OP_JIO").trim(); },
+  get airtel() { return env("LINERPAY_OP_AIRTEL").trim(); },
+  get vi() { return env("LINERPAY_OP_VI").trim(); },
+  get bsnl() { return env("LINERPAY_OP_BSNL").trim(); },
+  get "tata-play"() { return env("LINERPAY_OP_TATA_PLAY").trim(); },
+  get "airtel-digital-tv"() { return env("LINERPAY_OP_AIRTEL_DIGITAL_TV").trim(); },
+  get "dish-tv"() { return env("LINERPAY_OP_DISH_TV").trim(); },
+  get d2h() { return env("LINERPAY_OP_D2H").trim(); },
+  get "sun-direct"() { return env("LINERPAY_OP_SUN_DIRECT").trim(); },
 };
 const operatorCode = (slug) => {
-  const code = process.env[`LINERPAY_OP_${String(slug).toUpperCase().replace(/-/g, "_")}`] || OPERATOR_CODES[slug];
+  const code = Object.hasOwn(OPERATOR_CODES, slug) ? OPERATOR_CODES[slug] : null;
   return code && code !== "TODO" ? code : null;
 };
 
