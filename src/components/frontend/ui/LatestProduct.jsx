@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -94,7 +95,7 @@ const LatestProducts = () => {
             {/* Product Image */}
             <div className="flex px-5">
               <div>
-                <img
+                <Image width={112} height={112} sizes="112px"
                   src={featuredImage}
                   alt={name}
                   className="w-28 h-28 object-contain flex-shrink-0 mb-4"
