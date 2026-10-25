@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -107,7 +108,7 @@ const ProductDetail = () => {
 <div className="w-full lg:w-1/3 flex flex-col items-center gap-4">
   {/* Main Product Image */}
   <div className="w-full h-[18rem] lg:h-[28rem] bg-white flex justify-center items-center rounded-lg border shadow-md">
-    <img
+    <Image width={640} height={640} sizes="(max-width: 1024px) 100vw, 33vw"
       src={currentImage}
       alt={name}
       className="object-contain w-full h-full cursor-pointer"
@@ -124,7 +125,7 @@ const ProductDetail = () => {
           currentImageIndex === index ? 'border-purple-600' : ''
         }`}
       >
-        <img
+        <Image width={64} height={64} sizes="64px"
           src={image}
           alt={`Thumbnail ${index + 1}`}
           className="w-full h-full object-contain cursor-pointer"
@@ -238,7 +239,7 @@ const ProductDetail = () => {
         {isFullScreen && (
       <motion.div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
         <div className="relative bg-white p-2 rounded-lg" style={{ width: '80vw', height: '80vh' }}>
-          <img src={currentImage} alt="Full Size Product" className="object-contain w-full h-full" />
+          <Image width={1200} height={1200} sizes="80vw" src={currentImage} alt="Full Size Product" className="object-contain w-full h-full" />
           <AiOutlineClose className="absolute top-2 right-2 text-2xl text-gray-600 cursor-pointer" onClick={toggleFullScreen} />
           
           {/* Navigation Controls */}
