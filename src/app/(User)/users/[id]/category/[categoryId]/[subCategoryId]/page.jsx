@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { FaRegHeart } from "react-icons/fa";
@@ -150,7 +151,7 @@ const Page = () => {
               </button>
 
               {/* Product Image */}
-              <img
+              <Image width={112} height={112} sizes="112px"
                 src={featuredImage}
                 alt={name}
                 className="w-28 h-28 object-contain mb-4"
