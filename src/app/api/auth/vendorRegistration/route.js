@@ -1,15 +1,10 @@
-import connectDB from "@/lib/dbConnect";
 import uploadImage from "@/lib/uploadImages";
-import userModels from "@/models/userModels";
-import vendorModels from "@/models/vendorModels";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 export const POST = async (req) => {
   try {
     console.log("Connecting to the database...");
-    const usePostgres = process.env.AUTH_DATABASE === "postgresql";
-    if (!usePostgres) await connectDB();
     console.log("Connected to the database.");
 
     const formData = await req.formData();
@@ -71,9 +66,7 @@ export const POST = async (req) => {
     console.log("Formatted mobile number:", mobileNumber);
 
     // Check if the email or mobile number already exists
-    const existingUser = usePostgres
-      ? await (await import("@/lib/prisma")).default.user.findFirst({ where: { OR: [{ email }, { mobileNumber }] } })
-      : await userModels.findOne({ $or: [{ email }, { mobileNumber }] });
+    const existingUser = await (await import("@/lib/prisma")).default.user.findFirst({ where: { OR: [{ email }, { mobileNumber }] } });
     if (existingUser) {
       console.log("Validation failed: User already exists with the provided email or mobile number.");
       return NextResponse.json({ msg: "User with this email or mobile number already exists." }, { status: 400 });
@@ -92,26 +85,7 @@ const tradeLicenceUrl = tradeLicence && tradeLicence !== 'null' ? await uploadIm
 const shopPhotoUrl = shopPhoto && shopPhoto !== 'null' ? await uploadImage(shopPhoto) : null;
 
 
-    const vendorData = {
-      fullName,
-      email,
-      mobileNumber,
-      password: hashedPassword,
-      dob,
-      gender,
-      businessName,
-      numberOfEmployees: noOfEmployee,
-      businessAddress,
-      adhaarCard: adhaarCardUrl?.secure_url || '',
-      panCard: panCardUrl?.secure_url || '',
-      bankPassbook: bankPassbookUrl?.secure_url || '',
-      msmsCertificate: msmsCertificateUrl?.secure_url || '',
-      gstCertificate: gstCertificateUrl?.secure_url || '',
-      tradeLicence: tradeLicenceUrl?.secure_url || '',
-      shopPhoto: shopPhotoUrl?.secure_url || '',
-    };
-
-    if (usePostgres) {
+    {
       await (await import("@/lib/prisma")).default.user.create({
         data: {
           fullName,
@@ -139,12 +113,6 @@ const shopPhotoUrl = shopPhoto && shopPhoto !== 'null' ? await uploadImage(shopP
           },
         },
       });
-    } else {
-      const vendor = new vendorModels(vendorData);
-      await vendor.save();
-      const userData = { fullName, email, mobileNumber, password: hashedPassword, vendor: vendor._id, role: "Vendor" };
-      const user = new userModels(userData);
-      await user.save();
     }
 
     return NextResponse.json({ msg: "Account created successfully" }, { status: 200 });
