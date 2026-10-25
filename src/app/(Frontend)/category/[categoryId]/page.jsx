@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Loader from '@/components/loader/loader';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -76,7 +77,7 @@ const Page = () => {
                             onClick={() => router.push(`/category/${data._id}/${subcategory.name}`)} // Update the URL
                         >
                             {/* Subcategory Image */}
-                            <img
+                            <Image width={64} height={64} sizes="(max-width: 768px) 48px, 64px"
                                 src={subcategory.image}
                                 alt={subcategory.name}
                                 className="w-12 h-12 sm:w-16 sm:h-16 rounded-full shadow-md"
