@@ -3,8 +3,8 @@ import { reconcile } from "@/lib/recharge/service";
 
 export const dynamic = "force-dynamic";
 
-// Call every ~5 min from a cron (Vercel Cron, cron-job.org…) with
-//   Authorization: Bearer $CRON_SECRET
+// Vercel invokes this daily on the Hobby plan (see vercel.json), sending
+// Authorization: Bearer $CRON_SECRET from the Production environment.
 export async function GET(req) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
