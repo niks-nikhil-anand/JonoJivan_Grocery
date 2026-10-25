@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 import { FaEye, FaTrash } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -130,7 +131,7 @@ const Products = () => {
             {currentProducts.map((product) => (
               <tr key={product._id} className="hover:bg-gray-100">
                 <td className="border px-2 py-1 text-center flex justify-center">
-                  <img
+                  <Image width={48} height={48} sizes="48px"
                     src={product.featuredImage}
                     alt={product.name}
                     className="w-12 h-12 object-cover rounded-2xl"
