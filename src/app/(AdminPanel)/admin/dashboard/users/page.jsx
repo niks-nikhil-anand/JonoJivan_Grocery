@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { IoIosSearch, IoMdRefresh, IoMdClose } from "react-icons/io";
@@ -26,7 +26,7 @@ const UsersPage = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await axios.get('/api/admin/dashboard/users/allUsers', {
@@ -41,11 +41,11 @@ const UsersPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, debouncedSearch]);
 
   useEffect(() => {
     fetchData();
-  }, [pagination.page, debouncedSearch]);
+  }, [fetchData]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
