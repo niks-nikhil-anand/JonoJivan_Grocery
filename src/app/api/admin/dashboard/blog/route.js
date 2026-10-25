@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import connectDB from "@/lib/dbConnect";
 import uploadImage from "@/lib/uploadImages";
 import { Blog } from "@/models/blogModels";
