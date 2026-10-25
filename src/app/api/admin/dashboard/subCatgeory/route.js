@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import connectDB from "@/lib/dbConnect";
 import uploadImage from "@/lib/uploadImages";
 import categoryModels from "@/models/categoryModels";
@@ -56,6 +58,7 @@ export const POST = async (req) => {
 
       subCategoriesData.push({
         name,
+        category,
         image: imageResult.secure_url,
       });
     }
