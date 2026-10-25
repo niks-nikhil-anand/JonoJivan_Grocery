@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import connectDB from "@/lib/dbConnect";
 import { cookies } from "next/headers";
 import jwt from 'jsonwebtoken';
