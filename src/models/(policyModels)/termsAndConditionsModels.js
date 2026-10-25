@@ -1,19 +1,3 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+import { createModel } from "../../lib/prismaModel";
 
-// Define the schema for Terms and Conditions
-const termsAndConditionsSchema = new Schema({
-content: {
-    type: mongoose.Schema.Types.Mixed,
-    required: true,
-  } 
-} , 
-{
-    timestamps: true
-});
-
-
-
-
-
-export default mongoose.models.TermsAndConditions || mongoose.model('TermsAndConditions' , termsAndConditionsSchema)
+export default createModel("TermsAndConditions");
