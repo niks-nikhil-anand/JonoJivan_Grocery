@@ -2,16 +2,12 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { Resend } from "resend";
 import WelcomeEmail from "@/emails/welcomeEmail";
-import userModels from "@/models/userModels";
-import connectDB from "@/lib/dbConnect";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const POST = async (req) => {
   try {
     console.log("Connecting to the database...");
-    const usePostgres = process.env.AUTH_DATABASE === "postgresql";
-    if (!usePostgres) await connectDB();
     console.log("Connected to the database.");
 
     const formData = await req.formData();
@@ -41,9 +37,7 @@ export const POST = async (req) => {
     console.log("Formatted mobile number:", mobileNumber);
 
     // Check if the email or mobile number already exists
-    const existingUser = usePostgres
-      ? await (await import("@/lib/prisma")).default.user.findFirst({ where: { OR: [{ email }, { mobileNumber }] } })
-      : await userModels.findOne({ $or: [{ email }, { mobileNumber }] });
+    const existingUser = await (await import("@/lib/prisma")).default.user.findFirst({ where: { OR: [{ email }, { mobileNumber }] } });
     if (existingUser) {
       console.log("Validation failed: User already exists with the provided email or mobile number.");
       return NextResponse.json({ msg: "User with this email or mobile number already exists." }, { status: 400 });
@@ -52,22 +46,9 @@ export const POST = async (req) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Password hashed successfully.");
 
-    const userData = {
-      fullName,
-      email,
-      mobileNumber,
-      password: hashedPassword,
-    };
-
-    let createdUser;
-    if (usePostgres) {
-      createdUser = await (await import("@/lib/prisma")).default.user.create({
-        data: { fullName, email, mobileNumber, passwordHash: hashedPassword, role: "USER", status: "ACTIVE" },
-      });
-    } else {
-      createdUser = new userModels(userData);
-      await createdUser.save();
-    }
+    const createdUser = await (await import("@/lib/prisma")).default.user.create({
+      data: { fullName, email, mobileNumber, passwordHash: hashedPassword, role: "USER", status: "ACTIVE" },
+    });
     console.log("User saved to the database:", createdUser.id || createdUser._id);
     
 
