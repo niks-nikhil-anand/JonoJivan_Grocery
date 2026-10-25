@@ -122,7 +122,7 @@ const ProductForm = () => {
 
   useEffect(() => {
     const fetchSubSubcategories = async () => {
-      if (selectedCategory) {
+      if (selectedCategory && selectedSubCategory) {
         try {
           // Fetch subcategories based on selectedCategory
           const subCategoryResponse = await fetch(`/api/admin/dashboard/subCatgeory/${selectedSubCategory}`);
@@ -163,7 +163,7 @@ const ProductForm = () => {
   
     fetchSubSubcategories(); // Call the function to fetch subcategories
   
-  }, [selectedSubCategory]);
+  }, [selectedCategory, selectedSubCategory]);
 
  
 
