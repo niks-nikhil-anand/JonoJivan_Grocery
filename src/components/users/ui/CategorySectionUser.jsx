@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -75,11 +76,15 @@ const CategorySectionUser = () => {
     >
       {/* Circular Image Container */}
       <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center mb-4 shadow-md">
-        <img
+        <Image width={112} height={112} sizes="112px"
           src={category.image}
           alt={category.name}
           className="object-cover w-full h-full transition-transform duration-300 ease-in-out transform hover:scale-110"
-          onError={(e) => (e.target.src = "/path/to/fallback-image.jpg")}
+          onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.srcset = "";
+                e.currentTarget.src = "/IconHub/grocery.png";
+              }}
         />
       </div>
       {/* Category Name Below the Image */}
