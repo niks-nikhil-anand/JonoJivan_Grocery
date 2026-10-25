@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
@@ -444,7 +445,7 @@ const CheckoutPage = () => {
             {products.map((product) => (
               <tr key={product.id} className="border-b">
                 <td className="flex items-center py-2">
-                  <img src={product.featuredImage} alt={product.name} className="w-12 md:w-16 h-12 md:h-16 object-cover mr-2 md:mr-4 rounded-lg hover:cursor-pointer" />
+                  <Image width={64} height={64} sizes="(max-width: 768px) 48px, 64px" src={product.featuredImage} alt={product.name} className="w-12 md:w-16 h-12 md:h-16 object-cover mr-2 md:mr-4 rounded-lg hover:cursor-pointer" />
                   <div className="flex flex-col">
                     <h3 className="text-xs md:text-base">{product.name}</h3>
                     <p className="text-xs md:text-sm text-gray-500">₹{product.salePrice}</p>
