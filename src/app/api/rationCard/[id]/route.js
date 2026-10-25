@@ -1,56 +1,8 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import RationCard from '@/models/rationCardModel';
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
-export async function GET(req, { params }) {
-  try {
-    await dbConnect();
-    const { id } = params;
-    const rationCard = await RationCard.findById(id);
+const present = (card) => card && ({ ...card, _id: card.id, profilePicture: card.profilePictureUrl, whatsappNo: card.whatsappNumber, aadhaarCardNumber: card.aadhaarNumber, panCardNumber: card.panNumber, dob: card.dateOfBirth, pincode: card.postalCode, bankDetails: { accountNumber: card.bankAccountNumber, ifscCode: card.bankIfscCode, bankName: card.bankName } });
 
-    if (!rationCard) {
-      return NextResponse.json({ success: false, message: 'Ration Card not found' }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, data: rationCard }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-  }
-}
-
-export async function PUT(req, { params }) {
-  try {
-    await dbConnect();
-    const { id } = params;
-    const updateData = await req.json();
-
-    const rationCard = await RationCard.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!rationCard) {
-      return NextResponse.json({ success: false, message: 'Ration Card not found' }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, data: rationCard, message: "Updated successfully" }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-  }
-}
-
-export async function DELETE(req, { params }) {
-  try {
-    await dbConnect();
-    const { id } = params;
-    const rationCard = await RationCard.findByIdAndDelete(id);
-
-    if (!rationCard) {
-      return NextResponse.json({ success: false, message: 'Ration Card not found' }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, message: 'Ration Card deleted successfully' }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-  }
-}
+export async function GET(_req, { params }) { try { const card = await prisma.rationCard.findUnique({ where: { id: params.id } }); return card ? NextResponse.json({ success: true, data: present(card) }) : NextResponse.json({ success: false, message: "Ration Card not found" }, { status: 404 }); } catch (error) { return NextResponse.json({ success: false, message: error.message }, { status: 500 }); } }
+export async function PUT(req, { params }) { try { const old = await prisma.rationCard.findUnique({ where: { id: params.id } }); if (!old) return NextResponse.json({ success: false, message: "Ration Card not found" }, { status: 404 }); const b = await req.json(); const card = await prisma.rationCard.update({ where: { id: params.id }, data: { name: b.name ?? undefined, fatherName: b.fatherName ?? undefined, whatsappNumber: b.whatsappNo ?? undefined, email: b.email ?? undefined, address: b.address ?? undefined, state: b.state ?? undefined, postalCode: b.pincode ?? undefined, aadhaarNumber: b.aadhaarCardNumber ?? undefined, panNumber: b.panCardNumber ?? undefined } }); return NextResponse.json({ success: true, data: present(card), message: "Updated successfully" }); } catch (error) { return NextResponse.json({ success: false, message: error.message }, { status: 500 }); } }
+export async function DELETE(_req, { params }) { try { const result = await prisma.rationCard.deleteMany({ where: { id: params.id } }); return result.count ? NextResponse.json({ success: true, message: "Ration Card deleted successfully" }) : NextResponse.json({ success: false, message: "Ration Card not found" }, { status: 404 }); } catch (error) { return NextResponse.json({ success: false, message: error.message }, { status: 500 }); } }

@@ -15,9 +15,11 @@
 
 # production
 /build
+/backups/
 
 # misc
 .DS_Store
+NUL
 *.pem
 
 # debug
@@ -37,3 +39,9 @@ next-env.d.ts
 
 # env files (secrets)
 .env
+
+/src/generated/prisma
+
+.claude
+.agents
+.windsurf
