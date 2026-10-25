@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Loader from '@/components/loader/loader';
 import React, { useEffect, useState } from 'react';
 import { FaStar, FaCartPlus } from "react-icons/fa";
@@ -79,7 +80,7 @@ const ProductCard = ({ product, handleCardClick }) => {
         onClick={() => handleCardClick(product._id)}
       >
         <div className="overflow-hidden h-[15rem] flex justify-center">
-          <img
+          <Image width={320} height={320} sizes="(max-width: 768px) 50vw, 320px"
             src={product.featuredImage}
             alt={product.name}
             className="object-contain h-full w-full transition-transform duration-300 ease-in-out transform group-hover:scale-105"
