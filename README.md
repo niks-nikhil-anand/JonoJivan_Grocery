@@ -1,5 +1,44 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Database
+
+The application uses Neon PostgreSQL through Prisma. Set `DATABASE_URL` in `.env`;
+MongoDB configuration and the legacy `AUTH_DATABASE` selector are not used by the app.
+Mongoose is retained only as a development dependency for historical import/backup scripts.
+Those scripts are never run during installation, builds, or normal application requests.
+
+`npm install` and `npm run build` automatically generate the Prisma client. Apply saved
+schema migrations with `npm run db:deploy`. Run repository checks with
+`npm run test:prisma-repositories` and read-only connection checks with
+`npm run db:check-neon`.
+
+Run `npm run test:recharge-neon` to test mobile and DTH order creation, payment
+verification, operator environment mappings, refunds, status polling, callbacks,
+and reconciliation against a temporary schema on the configured Neon database.
+The test uses the real Prisma repositories and route handlers. It substitutes
+payment/provider responses, blocks unexpected external calls, and removes its
+schema and test transactions afterward. No live payments or recharges are sent.
+The database role needs permission to create and drop the temporary schema.
+
+## Recharge reconciliation on Vercel
+
+The `jonojivan_grocery` project uses Vercel Hobby. `vercel.json` schedules
+`/api/recharge/reconcile` once daily at 00:00 UTC (approximately 05:30–06:29 IST,
+since Hobby schedules can run anywhere within the scheduled hour).
+
+Set `CRON_SECRET` in Vercel's **Production** environment to the generated value
+in your local `.env`, then deploy this repository configuration. Vercel sends
+`Authorization: Bearer <CRON_SECRET>` automatically. The route returns HTTP 401
+when the header is missing or incorrect; keep the secret out of `vercel.json`.
+
+Cron registration occurs on production deployment. Local builds do not activate
+the hosted schedule. Verify the deployed job under the project's Settings →
+Cron Jobs. Run `npm run test:recharge-cron` to check the configured schedule and
+authentication without processing transactions.
+
+References: [Vercel cron authentication](https://vercel.com/docs/cron-jobs/manage-cron-jobs#securing-cron-jobs),
+[Vercel Hobby scheduling limits](https://vercel.com/docs/cron-jobs/usage-and-pricing#hobby-scheduling-limits).
+
 ## Getting Started
 
 First, run the development server:
