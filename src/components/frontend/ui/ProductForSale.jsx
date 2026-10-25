@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -80,7 +81,7 @@ const ProductCard = () => {
                             </div>
     
                             {/* Product Image */}
-                            <img
+                            <Image width={320} height={144} sizes="(max-width: 768px) 50vw, 320px"
                                 src={featuredImage}
                                 alt={name}
                                 className="w-full h-36 object-contain mb-3"
