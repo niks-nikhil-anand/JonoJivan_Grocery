@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -75,7 +76,7 @@ const TwoCategories = () => {
         className=" relative flex items-center border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow cursor-pointer p-4"
         onClick={() => handleCardClick(_id)}
       >
-        <img
+        <Image width={96} height={96} sizes="96px"
           src={featuredImage}
           alt={name}
           className="w-24 h-24 object-contain rounded-lg mr-4"
