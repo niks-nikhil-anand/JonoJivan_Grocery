@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import Image from "next/image";
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { IoIosSearch, IoMdRefresh, IoMdClose } from "react-icons/io";
@@ -30,7 +31,7 @@ const RationCardsPage = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await axios.get('/api/rationCard', {
@@ -45,11 +46,11 @@ const RationCardsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, debouncedSearch]);
 
   useEffect(() => {
     fetchData();
-  }, [pagination.page, debouncedSearch]);
+  }, [fetchData]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
@@ -180,7 +181,7 @@ const RationCardsPage = () => {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                            {item.profilePicture ? (
-                             <img src={item.profilePicture} alt="" className="w-8 h-8 rounded-full object-cover border" />
+                             <Image width={32} height={32} sizes="32px" src={item.profilePicture} alt="" className="w-8 h-8 rounded-full object-cover border" />
                            ) : (
                              <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">
                                {item.name?.charAt(0)}
@@ -263,7 +264,7 @@ const RationCardsPage = () => {
                         <div className="p-6 overflow-y-auto space-y-6">
                             <div className="flex items-center gap-4">
                                 {selectedCard.profilePicture ? (
-                                    <img src={selectedCard.profilePicture} className="w-20 h-20 rounded-xl object-cover border" />
+                                    <Image alt={selectedCard.name ? `${selectedCard.name} profile photo` : "Applicant profile photo"} width={80} height={80} sizes="80px" src={selectedCard.profilePicture} className="w-20 h-20 rounded-xl object-cover border" />
                                 ) : (
                                     <div className="w-20 h-20 bg-gray-200 rounded-xl flex items-center justify-center text-3xl font-bold text-gray-500">{selectedCard.name?.charAt(0)}</div>
                                 )}
