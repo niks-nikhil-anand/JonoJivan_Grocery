@@ -82,7 +82,7 @@ export const POST = async (request, { params }) => {
     await newAddress.save();
 
     // Update User Address Reference
-    await userModels.findByIdAndUpdate(id, { $push: { address: newAddress._id } });
+    // The address userId foreign key links it to the user.
 
     // Generate JWT Token
     const token = generateToken({
