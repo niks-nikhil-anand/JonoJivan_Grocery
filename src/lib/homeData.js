@@ -1,5 +1,5 @@
 // Server-side data for the homepage.
-// Fetched directly from MongoDB inside the Server Component so the HTML ships
+// Fetched directly from Neon PostgreSQL inside the Server Component so the HTML ships
 // with real content (no client spinners, better SEO and LCP).
 // Every function fails soft: if the DB is unreachable the section just hides.
 import connectDB from "@/lib/dbConnect";
