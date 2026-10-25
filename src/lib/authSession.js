@@ -12,14 +12,13 @@ export class SessionAuthError extends Error {
   }
 }
 
-function mongoCompatibleUser(user) {
+function presentUser(user) {
   return {
     _id: user.id,
     id: user.id,
     fullName: user.fullName,
     email: user.email,
     mobileNumber: user.mobileNumber,
-    password: user.passwordHash,
     isVerified: user.isVerified,
     isVerifiedExpires: user.verificationExpiresAt,
     resetPasswordToken: user.resetPasswordToken || "",
@@ -64,7 +63,7 @@ async function findPostgresUser({ id, email }) {
   if (user.status !== "ACTIVE" || user.role !== "USER") {
     throw new SessionAuthError("Not Authorised", 403);
   }
-  return mongoCompatibleUser(user);
+  return presentUser(user);
 }
 
 export async function getCurrentUserFromCookie(cookieValue) {
