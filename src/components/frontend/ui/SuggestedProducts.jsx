@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Loader from '@/components/loader/loader';
 import { useRouter, useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -65,7 +66,7 @@ const ProductCard = ({ product, onClick }) => {
     >
       {/* Product Image */}
       <div className="overflow-hidden h-48 w-full flex justify-center mb-4">
-        <img
+        <Image width={320} height={320} sizes="(max-width: 768px) 50vw, 320px"
           src={product.featuredImage}
           alt={product.name}
           className="object-contain h-full w-full transition-transform duration-300 ease-in-out hover:scale-105"
