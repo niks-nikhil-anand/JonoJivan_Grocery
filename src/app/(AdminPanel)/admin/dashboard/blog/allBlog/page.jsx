@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import Image from "next/image";
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { IoIosSearch, IoMdRefresh } from "react-icons/io";
@@ -23,7 +24,7 @@ const NewsPage = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await axios.get('/api/admin/dashboard/blog', {
@@ -38,11 +39,11 @@ const NewsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, debouncedSearch]);
 
   useEffect(() => {
     fetchData();
-  }, [pagination.page, debouncedSearch]);
+  }, [fetchData]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
@@ -127,7 +128,7 @@ const NewsPage = () => {
                   data.map((blog) => (
                     <tr key={blog._id} className="hover:bg-gray-50/50 transition-colors">
                       <td className="px-6 py-4">
-                           <img src={blog.featuredImage} alt="" className="w-12 h-12 rounded-lg object-cover border" />
+                           <Image width={48} height={48} sizes="48px" src={blog.featuredImage} alt="" className="w-12 h-12 rounded-lg object-cover border" />
                       </td>
                       <td className="px-6 py-4 font-medium text-gray-800">{blog.title}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{blog.category}</td>
