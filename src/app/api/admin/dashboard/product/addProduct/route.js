@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import uploadImage from "@/lib/uploadImages";
 import productModels from "@/models/productModels";
 import { NextResponse } from "next/server";
