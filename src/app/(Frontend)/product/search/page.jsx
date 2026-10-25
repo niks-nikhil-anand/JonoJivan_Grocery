@@ -1,4 +1,5 @@
 "use client"; // Required for useSearchParams
+import Image from "next/image";
 import { motion } from 'framer-motion';
 import { FaStar, FaCartPlus } from 'react-icons/fa';
 import { useSearchParams } from "next/navigation";
@@ -61,7 +62,7 @@ const ProductCard = ({ product }) => {
     >
       {/* Product Image */}
       <div className="overflow-hidden h-48 w-full flex justify-center mb-4">
-        <img
+        <Image width={320} height={320} sizes="(max-width: 768px) 50vw, 320px"
           src={product.featuredImage}
           alt={product.name}
           className="object-contain h-full w-full transition-transform duration-300 ease-in-out hover:scale-105"
