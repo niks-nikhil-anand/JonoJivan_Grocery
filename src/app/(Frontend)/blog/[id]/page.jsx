@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -58,7 +59,7 @@ const Page = () => {
                 transition={{ duration: 0.5 }}
             >
                 <h2 className="text-xl md:text-2xl font-semibold mb-4">{data.title}</h2>
-                <img src={data.featuredImage} alt={data.title} className="w-full h-auto rounded-lg mb-6"/>
+                <Image width={1200} height={675} sizes="(max-width: 1280px) 100vw, 1200px" src={data.featuredImage} alt={data.title} className="w-full h-auto rounded-lg mb-6"/>
                 <div
                     className="prose prose-sm md:prose-lg mx-auto"
                     dangerouslySetInnerHTML={{ __html: data.subtitle }}
