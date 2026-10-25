@@ -1,4 +1,5 @@
 'use client';
+import Image from "next/image";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
@@ -53,9 +54,9 @@ export default function AboutPageOne() {
               </p>
             </div>
             <div className="md:w-1/3 w-full">
-              <img
+              <Image width={500} height={333} sizes="(max-width: 768px) 100vw, 500px"
                 src="https://plus.unsplash.com/premium_photo-1686285539314-fd401f48fa61?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1pbi1zYW1lLXNlcmllc3w4fHx8ZW58MHx8fHx8"
-                className="max-w-full rounded-lg object-cover"
+                className="max-w-full h-auto rounded-lg object-cover"
                 alt="Grocery and fresh products"
               />
             </div>
@@ -81,9 +82,9 @@ export default function AboutPageOne() {
           We aim to make grocery shopping an enjoyable and hassle-free experience. From fresh produce to household essentials, JonoJivan offers a wide variety of quality products you can trust.
         </p>
         <div className="w-full md:w-1/2">
-          <img
+          <Image width={500} height={333} sizes="(max-width: 768px) 100vw, 500px"
             src="https://plus.unsplash.com/premium_photo-1686285541215-015dfccebe27?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHZlZ2V0YWJsZXN8ZW58MHx8MHx8fDA%3D"
-            className="w-full rounded-lg object-cover shadow-md"
+            className="w-full h-auto rounded-lg object-cover shadow-md"
             alt="Convenient grocery shopping"
           />
         </div>
