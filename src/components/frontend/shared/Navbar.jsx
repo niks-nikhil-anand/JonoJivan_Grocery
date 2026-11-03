@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { LuSearch, LuShoppingCart, LuUser, LuMenu, LuSmartphone, LuChevronDown, LuTv, LuArrowRight } from "react-icons/lu";
 import { OPERATORS } from "@/config/recharge";
+import { BILL_SERVICES } from "@/config/billPayments";
 import OperatorBadge from "@/components/recharge/OperatorBadge";
 import { useCartCount } from "@/lib/cartStore";
 import MenuDrawer from "./MenuDrawer";
@@ -98,7 +99,7 @@ function CartButton({ className = "" }) {
   );
 }
 
-/** Desktop "Recharge" item with a dropdown of operators (hover, focus or click). */
+/** Desktop payment menu with direct access to every recharge and bill service. */
 function RechargeMenu({ active }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef(null);
@@ -145,13 +146,13 @@ function RechargeMenu({ active }) {
         }`}
       >
         <LuSmartphone className="text-charge-600" aria-hidden />
-        Recharge
+        Recharge &amp; bills
         <LuChevronDown className={`text-xs transition-transform ${open ? "rotate-180" : ""}`} aria-hidden />
       </button>
 
       <div
         id="recharge-menu"
-        className={`absolute left-1/2 top-full z-50 w-[420px] -translate-x-1/2 pt-3 transition-all duration-200 ${
+        className={`absolute left-1/2 top-full z-50 w-[520px] -translate-x-1/2 pt-3 transition-all duration-200 ${
           open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
         }`}
       >
@@ -181,16 +182,14 @@ function RechargeMenu({ active }) {
                 </Link>
               </li>
             ))}
-            <li className="col-span-2">
-              <span className="flex cursor-default items-center gap-3 rounded-xl p-2.5 text-sm font-semibold text-ink-soft">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-ink-soft">
-                  <LuTv aria-hidden />
-                </span>
-                DTH recharge
-                <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-ink-muted">Coming soon</span>
-              </span>
-            </li>
+            <li className="col-span-2"><Link href="/recharge/dth" className="flex items-center gap-3 rounded-xl p-2.5 text-sm font-semibold text-ink transition-colors hover:bg-charge-50 hover:text-charge-700"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-charge-100 text-charge-700"><LuTv aria-hidden /></span>DTH recharge</Link></li>
           </ul>
+          <div className="border-t border-black/5 p-3">
+            <div className="mb-2 flex items-center justify-between px-1"><span className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Bills &amp; utilities</span><Link href="/recharge/bills" className="text-xs font-bold text-charge-700 hover:text-charge-900">View all</Link></div>
+            <ul className="grid grid-cols-3 gap-1">
+              {BILL_SERVICES.map((service) => <li key={service.slug}><Link href={`/recharge/bills/${service.slug}`} className="block rounded-lg px-2 py-2 text-xs font-semibold text-ink transition hover:bg-brand-50 hover:text-brand-800">{service.name}</Link></li>)}
+            </ul>
+          </div>
         </div>
       </div>
     </li>

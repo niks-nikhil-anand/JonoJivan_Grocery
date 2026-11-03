@@ -22,14 +22,11 @@ export const dynamic = "force-dynamic";
  *  ⑥ Recharge plans  ⑦ How it works  ⑧ Why us  ⑨ Just added
  *  ⑩ Cross-sell  ⑪ Reviews  ⑫ WhatsApp  ⑬ FAQ
  */
-export default async function Home() {
+async function StorefrontContent() {
   const [categories, deals, justAdded] = await Promise.all([getCategories(), getDeals(), getJustAdded()]);
 
   return (
-    <main className="bg-cream">
-      <Hero />
-      <QuickActions />
-      <RechargeWidget />
+    <>
       <Categories categories={categories} />
 
       {deals.length > 0 && (
@@ -65,6 +62,29 @@ export default async function Home() {
       <Reviews />
       <StayConnected />
       <Faq />
+    </>
+  );
+}
+
+function StorefrontFallback() {
+  return (
+    <div className="space-y-8 px-4 py-12 sm:px-6 lg:px-8" aria-label="Loading store content" role="status">
+      <div className="mx-auto h-64 max-w-7xl animate-pulse rounded-3xl bg-white" />
+      <div className="mx-auto h-48 max-w-7xl animate-pulse rounded-3xl bg-white" />
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <main className="bg-cream">
+      <Hero />
+      <QuickActions />
+      <RechargeWidget />
+      <Suspense fallback={<StorefrontFallback />}>
+        <StorefrontContent />
+      </Suspense>
     </main>
   );
 }
+import { Suspense } from "react";

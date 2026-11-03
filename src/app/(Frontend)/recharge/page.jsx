@@ -3,6 +3,7 @@ import RechargeExperience from "@/components/recharge/RechargeExperience";
 import OperatorCards from "@/components/recharge/OperatorCards";
 import RechargeSteps from "@/components/recharge/RechargeSteps";
 import RechargeFaq from "@/components/recharge/RechargeFaq";
+import BillPaymentsHub from "@/components/recharge/BillPaymentsHub";
 import { DISCLAIMER, GENERAL_FAQS } from "@/config/recharge";
 
 export const metadata = {
@@ -18,6 +19,7 @@ export default function RechargePage() {
       <Suspense fallback={<div className="h-[640px] bg-charge-700" aria-hidden />}>
         <RechargeExperience />
       </Suspense>
+      <BillPaymentsHub compact />
       <OperatorCards />
       <RechargeSteps />
       <RechargeFaq items={GENERAL_FAQS} />

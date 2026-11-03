@@ -24,6 +24,10 @@ export const metadata = {
     "JonoJivan, grocery, online grocery, vegetables, fruits, daily needs, mobile recharge, DTH recharge, household essentials",
   authors: [{ name: "JonoJivan Team" }],
   robots: "index, follow",
+  icons: {
+    icon: [{ url: "/logo/logo.png", type: "image/png", sizes: "500x500" }],
+    apple: [{ url: "/logo/logo.png", type: "image/png", sizes: "500x500" }],
+  },
   openGraph: {
     title: "JonoJivan — Groceries & Mobile Recharge",
     type: "website",

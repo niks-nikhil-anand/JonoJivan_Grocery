@@ -24,10 +24,19 @@ import {
   LuStore,
   LuWallet,
   LuCreditCard,
+  LuZap,
+  LuCar,
+  LuFlame,
+  LuCalendarDays,
+  LuShieldCheck,
+  LuWifi,
+  LuDroplets,
+  LuTv,
 } from "react-icons/lu";
 import { useCartCount } from "@/lib/cartStore";
 import { business } from "@/config/home";
 import { OPERATORS } from "@/config/recharge";
+import { BILL_SERVICES } from "@/config/billPayments";
 import OperatorBadge from "@/components/recharge/OperatorBadge";
 import logo from "../../../../public/logo/logo.png";
 
@@ -52,6 +61,8 @@ const POLICY_LINKS = [
   { name: "Shipping", href: "/shippingPolicy" },
   { name: "Terms", href: "/termsAndConditions" },
 ];
+
+const billIcons = { bolt: LuZap, car: LuCar, phone: LuPhone, flame: LuFlame, calendar: LuCalendarDays, shield: LuShieldCheck, wifi: LuWifi, droplets: LuDroplets, tv: LuTv };
 
 function SectionTitle({ children, tone = "text-ink-muted" }) {
   return <p className={`px-1 pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] ${tone}`}>{children}</p>;
@@ -247,8 +258,17 @@ export default function MenuDrawer({ open, onClose, returnFocusRef }) {
                 </ul>
               </motion.div>
 
-              {/* Help */}
+              {/* Bills & utilities */}
               <motion.div className="mt-6" {...item(SHOP_LINKS.length + 1)}>
+                <div className="flex items-center justify-between"><SectionTitle tone="text-brand-700">Bills &amp; utilities</SectionTitle><Link href="/recharge/bills" onClick={onClose} className="pb-2 text-xs font-bold text-charge-700">View all</Link></div>
+                <Link href="/recharge/bills" onClick={onClose} className="group flex items-center gap-3 rounded-2xl bg-brand-700 p-3.5 text-white shadow-lg shadow-brand-700/20 transition hover:-translate-y-0.5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-xl"><LuCreditCard aria-hidden /></span><span className="flex-1 leading-tight"><span className="block font-display font-bold">Pay bills &amp; utilities</span><span className="block text-xs text-brand-100">Electricity, LPG, broadband and more</span></span><LuChevronRight aria-hidden /></Link>
+                <ul className="mt-2.5 grid grid-cols-3 gap-2">
+                  {BILL_SERVICES.map((service) => { const Icon = billIcons[service.icon] || LuWallet; return <li key={service.slug}><Link href={`/recharge/bills/${service.slug}`} onClick={onClose} className={`flex min-h-[76px] flex-col items-center justify-center gap-1 rounded-2xl border bg-white p-2 text-center text-[11px] font-semibold leading-tight transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card ${pathname === `/recharge/bills/${service.slug}` ? "border-brand-500 text-brand-800" : "border-black/5 text-ink"}`}><span className="text-lg text-brand-700"><Icon aria-hidden /></span>{service.name}</Link></li>; })}
+                </ul>
+              </motion.div>
+
+              {/* Help */}
+              <motion.div className="mt-6" {...item(SHOP_LINKS.length + 2)}>
                 <SectionTitle>Help & company</SectionTitle>
                 <ul className="grid grid-cols-2 gap-2">
                   {HELP_LINKS.map(({ name, href, icon: Icon }) => (
@@ -267,7 +287,7 @@ export default function MenuDrawer({ open, onClose, returnFocusRef }) {
               </motion.div>
 
               {/* Visit / contact card */}
-              <motion.div className="mt-6" {...item(SHOP_LINKS.length + 2)}>
+              <motion.div className="mt-6" {...item(SHOP_LINKS.length + 3)}>
                 <SectionTitle>Visit or contact us</SectionTitle>
                 <div className="overflow-hidden rounded-3xl border border-black/5 bg-white shadow-card">
                   <div className="flex gap-3 p-4">

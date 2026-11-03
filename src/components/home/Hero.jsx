@@ -9,6 +9,7 @@ const trust = [
   { icon: LuShieldCheck, label: "Secure online payments" },
   { icon: LuRotateCcw, label: "Easy returns" },
 ];
+const groceryChips = ["Fruits & Veg", "Dairy", "Snacks", "Staples"];
 
 /** ① Hook — one promise, two doors. */
 export default function Hero() {
@@ -57,6 +58,10 @@ export default function Hero() {
               <LuSmartphone className="text-xl" aria-hidden />
               Recharge now
             </Link>
+          </div>
+
+          <div className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start" aria-label="Popular grocery categories">
+            {groceryChips.map((chip) => <Link key={chip} href="/category" className="rounded-full border border-brand-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-brand-800 transition hover:border-brand-400 hover:bg-brand-50">{chip}</Link>)}
           </div>
 
           <ul className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-ink-muted lg:justify-start">
