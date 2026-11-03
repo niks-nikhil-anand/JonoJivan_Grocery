@@ -1,5 +1,6 @@
 import Hero from "@/components/home/Hero";
 import QuickActions from "@/components/home/QuickActions";
+import BbpsBanner from "@/components/home/BbpsBanner";
 import RechargeWidget from "@/components/home/RechargeWidget";
 import Categories from "@/components/home/Categories";
 import ProductShelf from "@/components/home/ProductShelf";
@@ -80,6 +81,7 @@ export default function Home() {
     <main className="bg-cream">
       <Hero />
       <QuickActions />
+      <BbpsBanner />
       <RechargeWidget />
       <Suspense fallback={<StorefrontFallback />}>
         <StorefrontContent />
