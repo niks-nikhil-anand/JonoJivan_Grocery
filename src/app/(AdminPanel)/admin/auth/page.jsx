@@ -1,129 +1,190 @@
 "use client";
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import toast from "react-hot-toast";
 
-const LoginForm = () => {
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import {
+  LuArrowRight,
+  LuEye,
+  LuEyeOff,
+  LuLeaf,
+  LuLock,
+  LuMail,
+  LuShieldCheck,
+  LuStore,
+} from "react-icons/lu";
+
+export default function AdminSignInPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState('vendor'); 
+  const [role, setRole] = useState("admin");
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const isAdmin = role === "admin";
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
     setLoading(true);
 
     try {
-      const loginUrl = role === 'vendor' ? '/api/vendor/auth' : '/api/admin/auth';
-      const response = await axios.post(loginUrl, {
-        email,
-        password,
-        rememberMe,
-      });
-
-      if (response.status === 200) {
-        setEmail('');
-        setPassword('');
-        setRememberMe(false);
-        toast.success("Login successful! Redirecting...");
-        const redirectUrl = role === 'vendor' ? '/vendor/dashboard' : '/admin/dashboard';
-        router.push(redirectUrl);
-      }
+      const endpoint = isAdmin ? "/api/admin/auth" : "/api/vendor/auth";
+      await axios.post(endpoint, { email, password, rememberMe });
+      setPassword("");
+      toast.success("Signed in successfully. Welcome back!");
+      router.push(isAdmin ? "/admin/dashboard" : "/vendor/dashboard");
     } catch (error) {
-      console.error(error);
-      toast.error("Login failed! Please check your credentials.");
+      toast.error(
+        error.response?.data?.msg || "We couldn’t sign you in. Check your details and try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center bg-green-50 px-6 md:px-4 w-full flex-col">
-  <div className="w-full md:w-2/3 lg:w-1/2 md:pl-6 my-5">
-    <motion.h2
-      className="text-xl sm:text-xl md:text-2xl lg:text-3xl font-extrabold mb-6 text-center md:text-left text-green-800 mt-8 tracking-wide"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-    >
-      Welcome Back to JonoJivan Grocery
-    </motion.h2>
+    <main className="relative isolate overflow-hidden bg-[#fafaf5] px-4 py-10 sm:px-6 sm:py-14 lg:py-20">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-24 top-16 h-64 w-64 rounded-full bg-brand-100/70 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-offer-100/70 blur-3xl" />
 
-        <div className="flex justify-center mb-6">
-          <button
-            onClick={() => setRole('vendor')}
-            className={`px-4 py-2 ${role === 'vendor' ? 'bg-green-700 text-white' : 'bg-gray-200 text-gray-800'} rounded-l-2xl text-sm md:text-base`}
-          >
-            Sign In as Vendor
-          </button>
-          <button
-            onClick={() => setRole('admin')}
-            className={`px-4 py-2 ${role === 'admin' ? 'bg-green-700 text-white' : 'bg-gray-200 text-gray-800'} rounded-r-2xl text-sm md:text-base`}
-          >
-            Sign In as Admin
-          </button>
-        </div>
+      <div className="relative mx-auto grid min-h-[610px] w-full max-w-6xl overflow-hidden rounded-[2rem] border border-black/[0.06] bg-white shadow-[0_24px_80px_-36px_rgba(20,83,45,0.28)] lg:grid-cols-[1.02fr_0.98fr]">
+        <section className="relative flex min-h-[250px] flex-col justify-between overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 px-6 py-7 text-white sm:min-h-[300px] sm:px-10 sm:py-9 lg:min-h-full lg:px-12 lg:py-12">
+          <div aria-hidden="true" className="absolute -right-16 -top-16 h-64 w-64 rounded-full border border-white/10" />
+          <div aria-hidden="true" className="absolute -right-5 -top-5 h-44 w-44 rounded-full border border-white/10" />
+          <div aria-hidden="true" className="absolute -bottom-28 -left-16 h-72 w-72 rounded-full bg-white/[0.06]" />
 
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm md:text-base"
-              required
-            />
+          <Link href="/" className="relative z-10 inline-flex w-fit items-center gap-3 rounded-full bg-white px-3 py-2 text-brand-900 shadow-card" aria-label="JonoJivan home">
+            <Image src="/logo/logo.png" alt="" width={38} height={38} className="h-9 w-9 rounded-full object-contain" />
+            <span className="pr-2 font-display text-lg font-bold tracking-tight">JonoJivan</span>
+          </Link>
+
+          <div className="relative z-10 mt-9 max-w-lg lg:mt-0">
+            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-brand-50">
+              <LuLeaf aria-hidden="true" className="text-base" /> GOOD THINGS, EVERY DAY
+            </span>
+            <h1 className="font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-[2.7rem]">
+              Fresh essentials.<br />A smoother way to serve.
+            </h1>
+            <p className="mt-4 max-w-md text-sm leading-6 text-brand-50/85 sm:text-base sm:leading-7">
+              Sign in to manage your JonoJivan store and keep the everyday essentials your customers count on moving.
+            </p>
           </div>
 
-          <div className="mb-4 relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm md:text-base"
-              required
-            />
-            <div
-              className="absolute inset-y-0 right-3 flex items-center text-sm cursor-pointer"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FaEye /> : <FaEyeSlash />}
+          <div className="relative z-10 mt-8 hidden items-center gap-3 text-sm text-brand-50/90 lg:flex">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg"><LuShieldCheck aria-hidden="true" /></span>
+            <span>Private, secure access for your team</span>
+          </div>
+        </section>
+
+        <section className="flex items-center justify-center px-5 py-9 sm:px-10 sm:py-12 lg:px-12">
+          <div className="w-full max-w-md">
+            <div className="mb-7">
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-brand-700">Your workspace</p>
+              <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+                {isAdmin ? "Welcome back" : "Vendor sign in"}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-ink-muted">Sign in to continue to your JonoJivan {isAdmin ? "admin" : "vendor"} account.</p>
             </div>
+
+            <div className="mb-6 grid grid-cols-2 rounded-2xl bg-[#f4f6f2] p-1" role="group" aria-label="Choose account type">
+              <button
+                type="button"
+                onClick={() => setRole("admin")}
+                aria-pressed={isAdmin}
+                className={`flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 ${isAdmin ? "bg-white text-brand-800 shadow-sm" : "text-ink-muted hover:text-ink"}`}
+              >
+                <LuShieldCheck aria-hidden="true" className="text-base" /> Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole("vendor")}
+                aria-pressed={!isAdmin}
+                className={`flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 ${!isAdmin ? "bg-white text-brand-800 shadow-sm" : "text-ink-muted hover:text-ink"}`}
+              >
+                <LuStore aria-hidden="true" className="text-base" /> Vendor
+              </button>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label htmlFor="signin-email" className="mb-2 block text-sm font-semibold text-ink">Email address</label>
+                <div className="flex h-12 items-center gap-3 rounded-xl border border-black/10 bg-white px-3.5 transition focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100">
+                  <LuMail aria-hidden="true" className="shrink-0 text-lg text-ink-soft" />
+                  <input
+                    id="signin-email"
+                    type="email"
+                    name="email"
+                    autoComplete="username"
+                    inputMode="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    required
+                    className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-soft"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="signin-password" className="mb-2 block text-sm font-semibold text-ink">Password</label>
+                <div className="flex h-12 items-center gap-3 rounded-xl border border-black/10 bg-white px-3.5 transition focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100">
+                  <LuLock aria-hidden="true" className="shrink-0 text-lg text-ink-soft" />
+                  <input
+                    id="signin-password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    required
+                    className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-soft"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg text-ink-muted transition hover:bg-brand-50 hover:text-brand-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600"
+                  >
+                    {showPassword ? <LuEyeOff aria-hidden="true" /> : <LuEye aria-hidden="true" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 pt-1">
+                <label className="inline-flex min-h-8 cursor-pointer items-center gap-2 text-sm text-ink-muted">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(event) => setRememberMe(event.target.checked)}
+                    className="h-4 w-4 rounded border-black/20 accent-brand-700 focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
+                  />
+                  Keep me signed in
+                </label>
+                <span className="text-xs text-ink-soft">Secure access</span>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="group mt-2 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-5 text-sm font-bold text-white shadow-[0_8px_18px_-8px_rgba(21,128,61,0.75)] transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Signing you in…" : `Sign in as ${isAdmin ? "admin" : "vendor"}`}
+                {!loading && <LuArrowRight aria-hidden="true" className="text-lg transition-transform group-hover:translate-x-1" />}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-xs leading-5 text-ink-soft">
+              Need help accessing your account? <Link href="/contactUs" className="font-semibold text-brand-800 underline decoration-brand-200 underline-offset-4 hover:decoration-brand-700">Contact our team</Link>
+            </p>
           </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 mt-2 text-white rounded-2xl ${loading ? 'bg-gray-400' : 'bg-green-700 hover:bg-green-600'} text-sm md:text-base`}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </motion.button>
-        </form>
-
-        <div className="flex justify-between mt-4 text-sm md:text-base">
-          <a href="#" className="text-green-700 hover:underline">Forgot password?</a>
-          <Link href={"/auth/register"} className="text-green-700 hover:underline">Create an account</Link>
-        </div>
-
-        <div className="flex items-center justify-between my-6">
-          <span className="border-t border-gray-300 flex-grow"></span>
-          <span className="mx-4 text-gray-600">JonoJivan Grocery</span>
-          <span className="border-t border-gray-300 flex-grow"></span>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
-};
-
-export default LoginForm;
+}

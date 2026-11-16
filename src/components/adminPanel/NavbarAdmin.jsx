@@ -7,7 +7,7 @@ import { FiLogOut } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
 
-const Navbar = () => {
+const Navbar = ({ onMenuClick }) => {
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -31,8 +31,8 @@ const Navbar = () => {
     <nav className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between">
       {/* Left: Mobile Toggle & Title/Search */}
       <div className="flex items-center gap-4 flex-1">
-        <button className="lg:hidden text-2xl text-gray-600 hover:text-green-600 transition-colors">
-          <IoIosMenu />
+        <button type="button" onClick={onMenuClick} aria-label="Open admin menu" className="rounded-lg p-2 text-2xl text-gray-600 transition-colors hover:bg-brand-50 hover:text-brand-700 lg:hidden">
+          <IoIosMenu aria-hidden="true" />
         </button>
         
         {/* Search Bar - Hidden on small mobile */}

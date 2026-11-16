@@ -1,9 +1,5 @@
-import React from 'react'
+import AdminDemoListPage from "@/components/adminPanel/AdminDemoListPage";
 
-const page = () => {
-  return (
-    <div>page</div>
-  )
+export default function CategoriesPage() {
+  return <AdminDemoListPage type="categories" />;
 }
-
-export default page

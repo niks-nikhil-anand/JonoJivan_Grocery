@@ -1,19 +1,18 @@
-import 'tailwindcss/tailwind.css';
-import '@/app/globals.css';
-import NavbarAdmin from '@/components/adminPanel/NavbarAdmin';
-import SidebarAdmin from '@/components/adminPanel/SidebarAdmin';
+"use client";
 
-const Layout = ({ children }) => {
-  return (
-    <div className="flex w-full min-h-screen overflow-hidden">
-    <SidebarAdmin className="w-1/4 h-screen bg-gray-800" />
-    <div className="flex-1 overflow-hidden ">
-      <NavbarAdmin className="w-full" />
-      {children}
+import { useState } from "react";
+import "tailwindcss/tailwind.css";
+import "@/app/globals.css";
+import NavbarAdmin from "@/components/adminPanel/NavbarAdmin";
+import SidebarAdmin from "@/components/adminPanel/SidebarAdmin";
+
+export default function AdminDashboardLayout({ children }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  return <div className="flex min-h-screen w-full bg-[#f7f8f5]">
+    <SidebarAdmin mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+    <div className="min-w-0 flex-1 overflow-hidden">
+      <NavbarAdmin onMenuClick={() => setMobileMenuOpen(true)} />
+      <div className="min-w-0">{children}</div>
     </div>
-  </div>
-  
-  );
-};
-
-export default Layout;
+  </div>;
+}

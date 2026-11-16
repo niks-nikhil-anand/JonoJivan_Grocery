@@ -1,79 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaUserCircle } from 'react-icons/fa';
-import { Switch } from '@headlessui/react';
+import { useState } from "react";
+import { LuCircleCheck, LuSparkles, LuUserRound } from "react-icons/lu";
 
-export default function ProfileSettings() {
-  const [enabled, setEnabled] = useState(true);
-  const [twoFactor, setTwoFactor] = useState(false);
-
-  return (
-    <div className="max-w-full mx-auto p-4 bg-gray-50  rounded-lg w-full h-[90vh]  overflow-y-auto max-h-[86vh] custom-scrollbar flex flex-col ">
-      <h1 className="text-2xl font-semibold mb-4">Profile Settings</h1>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        {/* Profile Picture and Info */}
-        <div className="flex items-center space-x-6 border-b pb-4">
-          <FaUserCircle className="text-gray-500 w-20 h-20" />
-          <div>
-            <h2 className="text-lg font-semibold">Amit Kumar</h2>
-            <p className="text-gray-500">Administrator</p>
-            <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg">Change Photo</button>
-          </div>
-        </div>
-        
-        {/* Account Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-          <div>
-            <label className="block text-gray-600">Full Name</label>
-            <input type="text" value="Amit Kumar" className="w-full p-2 border rounded-lg" />
-          </div>
-          <div>
-            <label className="block text-gray-600">Email Address</label>
-            <input type="email" value="amit@cleanveda.com" className="w-full p-2 border rounded-lg" />
-          </div>
-          <div>
-            <label className="block text-gray-600">Phone Number</label>
-            <input type="text" value="+91 98765 43210" className="w-full p-2 border rounded-lg" />
-          </div>
-          <div>
-            <label className="block text-gray-600">Location</label>
-            <input type="text" value="Mumbai, India" className="w-full p-2 border rounded-lg" />
-          </div>
-        </div>
-        <motion.button whileHover={{ scale: 1.05 }} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg">Save Changes</motion.button>
-      </div>
-      
-      {/* Change Password Section */}
-      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-        <h2 className="text-lg font-semibold mb-4">Change Password</h2>
-        <div className="grid grid-cols-1 gap-4">
-          <input type="password" placeholder="Current Password" className="w-full p-2 border rounded-lg" />
-          <input type="password" placeholder="New Password" className="w-full p-2 border rounded-lg" />
-          <input type="password" placeholder="Confirm New Password" className="w-full p-2 border rounded-lg" />
-        </div>
-        <motion.button whileHover={{ scale: 1.05 }} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg">Update Password</motion.button>
-      </div>
-      
-      {/* Account Preferences */}
-      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-        <h2 className="text-lg font-semibold mb-4">Account Preferences</h2>
-        <div className="flex justify-between items-center border-b pb-4">
-          <span>Email Notifications</span>
-          <Switch checked={enabled} onChange={setEnabled} className={`${enabled ? 'bg-blue-600' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full`}>
-            <span className="sr-only">Enable notifications</span>
-            <span className={`transform transition ease-in-out duration-200 inline-block w-4 h-4 bg-white rounded-full ${enabled ? 'translate-x-6' : 'translate-x-1'}`} />
-          </Switch>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <span>Two-Factor Authentication</span>
-          <Switch checked={twoFactor} onChange={setTwoFactor} className={`${twoFactor ? 'bg-blue-600' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full`}>
-            <span className="sr-only">Enable 2FA</span>
-            <span className={`transform transition ease-in-out duration-200 inline-block w-4 h-4 bg-white rounded-full ${twoFactor ? 'translate-x-6' : 'translate-x-1'}`} />
-          </Switch>
-        </div>
-      </div>
-    </div>
-  );
+export default function AdminProfilePage() {
+  const [preview, setPreview] = useState(false);
+  return <div className="min-h-[calc(100vh-72px)] bg-[#f7f8f5] px-4 py-6 sm:px-6 lg:px-8 lg:py-8"><div className="mx-auto max-w-4xl space-y-6">
+    <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">Workspace</p><h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">Admin profile</h1><p className="mt-2 text-sm text-ink-muted">Review the sample administrator profile.</p></div><span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-charge-200 bg-charge-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-charge-700"><LuSparkles aria-hidden="true" /> Demo profile</span></header>
+    <form onSubmit={(event) => { event.preventDefault(); setPreview(true); }} className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-card sm:p-7"><div className="mb-6 flex items-center gap-4 border-b border-gray-100 pb-6"><span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-50 text-3xl text-brand-700"><LuUserRound aria-hidden="true" /></span><div><h2 className="font-semibold text-ink">Store Administrator</h2><p className="mt-1 text-sm text-ink-muted">Super Admin · JonoJivan Grocery</p></div></div><div className="grid gap-5 sm:grid-cols-2">{[["Display name", "Store Administrator"], ["Email address", "admin@example.com"], ["Role", "Super Admin"], ["Store location", "Uttar Khatowal, Assam"]].map(([label, value]) => <label key={label} className="text-sm font-semibold text-ink">{label}<input readOnly value={value} className="mt-2 h-11 w-full rounded-xl border border-black/10 bg-[#fafaf7] px-3 font-normal text-ink" /></label>)}</div><div className="mt-6 flex flex-wrap items-center gap-3"><button type="submit" className="min-h-11 rounded-xl bg-brand-700 px-5 text-sm font-bold text-white transition hover:bg-brand-800">Preview profile</button>{preview && <span role="status" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-800"><LuCircleCheck aria-hidden="true" /> Sample profile is ready. No account changes were saved.</span>}</div><p className="mt-4 text-xs text-ink-soft">Demo page only. Profile edits are not persisted.</p></form>
+  </div></div>;
 }

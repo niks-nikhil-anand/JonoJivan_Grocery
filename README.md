@@ -7,6 +7,12 @@ MongoDB configuration and the legacy `AUTH_DATABASE` selector are not used by th
 Mongoose is retained only as a development dependency for historical import/backup scripts.
 Those scripts are never run during installation, builds, or normal application requests.
 
+Authentication also requires `JWT_SECRET` to sign and verify login cookies. Generate a
+private value with `openssl rand -base64 48`, add it to local `.env`, and configure the
+same value in the hosting provider's environment variables for each deployment
+environment. Keep it out of source control. Restart the development server after
+changing it; redeploy after changing the hosted value.
+
 `npm install` and `npm run build` automatically generate the Prisma client. Apply saved
 schema migrations with `npm run db:deploy`. Run repository checks with
 `npm run test:prisma-repositories` and read-only connection checks with

@@ -1,0 +1,20 @@
+"use client";
+
+import { useState } from "react";
+import { LuCircleCheck, LuSparkles } from "react-icons/lu";
+
+const forms = {
+  product: { title: "Add product", description: "Preview a product entry using sample catalogue values.", fields: [["Product name", "text", "e.g. Assam Joha Rice · 5 kg"], ["SKU", "text", "e.g. JJ-1005"], ["Category", "select", ["Fresh produce", "Staples & grains", "Dairy & bakery", "Snacks & beverages"]], ["Price (₹)", "number", "0"], ["Stock quantity", "number", "0"], ["Description", "textarea", "Add a short product description"]] },
+  category: { title: "Add category", description: "Preview a new store category. Nothing is saved to the catalogue.", fields: [["Category name", "text", "e.g. Household essentials"], ["Parent category", "select", ["None", "Fresh produce", "Staples & grains", "Dairy & bakery"]], ["Description", "textarea", "Describe the category"]] },
+  blog: { title: "Add blog", description: "Draft a sample article for the JonoJivan store journal.", fields: [["Article title", "text", "e.g. Seasonal favourites this week"], ["Category", "select", ["Fresh produce", "Kitchen tips", "Buying guides"]], ["Author", "text", "JonoJivan Team"], ["Article content", "textarea", "Write a helpful article for your customers"]] },
+};
+
+export default function AdminDemoFormPage({ type }) {
+  const config = forms[type] || forms.product;
+  const [saved, setSaved] = useState(false);
+
+  return <div className="min-h-[calc(100vh-72px)] bg-[#f7f8f5] px-4 py-6 sm:px-6 lg:px-8 lg:py-8"><div className="mx-auto max-w-4xl space-y-6">
+    <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">Catalogue preview</p><h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{config.title}</h1><p className="mt-2 text-sm text-ink-muted">{config.description}</p></div><span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-charge-200 bg-charge-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-charge-700"><LuSparkles aria-hidden="true" /> Demo form</span></header>
+    <form onSubmit={(event) => { event.preventDefault(); setSaved(true); }} onChange={() => setSaved(false)} className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-card sm:p-7"><div className="grid gap-5 sm:grid-cols-2">{config.fields.map(([label, kind, placeholder]) => <label key={label} className={`text-sm font-semibold text-ink ${kind === "textarea" ? "sm:col-span-2" : ""}`}>{label}{kind === "select" ? <select defaultValue="" required className="mt-2 h-11 w-full rounded-xl border border-black/10 bg-white px-3 font-normal text-ink"><option value="" disabled>Select an option</option>{placeholder.map((option) => <option key={option}>{option}</option>)}</select> : kind === "textarea" ? <textarea rows={5} placeholder={placeholder} required className="mt-2 w-full resize-y rounded-xl border border-black/10 px-3 py-2.5 font-normal text-ink outline-none transition placeholder:text-ink-soft focus:border-brand-500 focus:ring-4 focus:ring-brand-100" /> : <input type={kind} min={kind === "number" ? "0" : undefined} placeholder={placeholder} required className="mt-2 h-11 w-full rounded-xl border border-black/10 px-3 font-normal text-ink outline-none transition placeholder:text-ink-soft focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />}</label>)}</div><div className="mt-6 flex flex-wrap items-center gap-3"><button type="submit" className="min-h-11 rounded-xl bg-brand-700 px-5 text-sm font-bold text-white transition hover:bg-brand-800">Preview demo entry</button>{saved && <span role="status" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-800"><LuCircleCheck aria-hidden="true" /> Preview ready. No data was saved.</span>}</div><p className="mt-4 text-xs text-ink-soft">Form values stay in this browser preview and are not sent to the server.</p></form>
+  </div></div>;
+}
