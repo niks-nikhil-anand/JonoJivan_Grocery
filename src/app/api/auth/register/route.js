@@ -3,22 +3,21 @@ import bcrypt from "bcrypt";
 import { Resend } from "resend";
 import WelcomeEmail from "@/emails/welcomeEmail";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export const POST = async (req) => {
   try {
+    if (process.env.AUTH_TEST_SKIP_EMAIL !== "true" && !process.env.RESEND_API_KEY) {
+      return NextResponse.json({ msg: "Registration is temporarily unavailable." }, { status: 503 });
+    }
     console.log("Connecting to the database...");
     console.log("Connected to the database.");
 
     const formData = await req.formData();
-    console.log("Form data received:", formData);
 
     const fullName = formData.get("fullName");
     const email = formData.get("email");
     let mobileNumber = formData.get("mobileNumber");
     const password = formData.get("password");
 
-    console.log("Received values:", { fullName, email, mobileNumber, password });
 
     if (!fullName || !email || !mobileNumber || !password) {
       console.log("Validation failed: Missing required fields.");
@@ -54,6 +53,7 @@ export const POST = async (req) => {
 
 
     if (process.env.AUTH_TEST_SKIP_EMAIL !== "true") {
+      const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: 'no-reply@JonoJivan.com',
         to: email,

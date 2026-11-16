@@ -1,12 +1,6 @@
 import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 
-// Initialize Razorpay instance with your credentials
-const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID, // Your Razorpay key ID
-  key_secret: process.env.RAZORPAY_SECRET, // Your Razorpay key secret
-});
-
 export async function POST(req) {
   try {
     console.log('Received request to create Razorpay order.');
@@ -27,6 +21,13 @@ export async function POST(req) {
         { status: 500 }
       );
     }
+
+    // Create the SDK client on demand so builds can complete without payment
+    // credentials; requests still fail closed when the keys are not configured.
+    const razorpayInstance = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_SECRET,
+    });
 
     // Prepare Razorpay order options
     const orderOptions = {

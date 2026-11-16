@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
-import Razorpay from "razorpay";
 import crypto from "crypto";
 import connectDB from "@/lib/dbConnect";
 import paymentModels from "@/models/paymentModels";
 
 
-// Initialize Razorpay instance
-const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_SECRET,
-});
-
 export async function POST(req) {
   try {
+    if (!process.env.RAZORPAY_SECRET) {
+      return NextResponse.json(
+        { message: "Payment verification is temporarily unavailable." },
+        { status: 503 }
+      );
+    }
+
     // Parse request body
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await req.json();
     

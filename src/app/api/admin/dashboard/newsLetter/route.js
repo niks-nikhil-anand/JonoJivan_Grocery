@@ -3,12 +3,11 @@ import connectDB from "@/lib/dbConnect";
 import { Resend } from "resend";
 import NewsLetterEmail from '@/emails/NewsLetterEmail';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-
-
 export async function POST(req) {
   try {
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json({ error: "Email subscriptions are temporarily unavailable." }, { status: 503 });
+    }
     console.log("Connecting to the database...");
     await connectDB();
     console.log("Connected to the database.");
@@ -32,6 +31,7 @@ export async function POST(req) {
     await newSubscription.save();
 
 
+    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: 'no-reply@cleanveda.com',
       to: email,

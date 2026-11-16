@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import "tailwindcss/tailwind.css";
-import "@/app/globals.css";
 import NavbarAdmin from "@/components/adminPanel/NavbarAdmin";
 import SidebarAdmin from "@/components/adminPanel/SidebarAdmin";
 
