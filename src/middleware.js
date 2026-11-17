@@ -51,7 +51,7 @@ export async function middleware(req) {
 
   // Protect /admin/dashboard routes and redirect to admin auth if not authenticated
   if (pathname.startsWith('/vendor/dashboard') && !vendorAuthToken) {
-    return NextResponse.redirect(new URL('/admin/auth', req.nextUrl.origin));
+    return NextResponse.redirect(new URL('/vendor/auth', req.nextUrl.origin));
   }
 
   // Allow access to the requested page if all conditions pass
