@@ -1,0 +1,167 @@
+/* Admin pages consume the same semantic colors and controls as the vendor workspace. */
+.admin-workspace {
+  overflow-wrap: break-word;
+}
+.admin-workspace
+  :where(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+  color: var(--v-text);
+  background-color: var(--v-panel);
+  border-color: var(--v-border);
+}
+.admin-workspace :where(input, textarea)::placeholder {
+  color: var(--v-muted);
+  opacity: 1;
+}
+.admin-workspace :where(input, select, textarea):disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.admin-workspace :where(input[type="checkbox"], input[type="radio"]) {
+  accent-color: #15803d;
+}
+.admin-workspace
+  :where(input, select, button):not([type="checkbox"]):not([type="radio"]) {
+  min-height: 40px;
+}
+.admin-workspace :where(td, th) {
+  border-color: var(--v-border);
+}
+.admin-workspace .admin-menu-item {
+  display: block;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.admin-workspace .admin-menu-item[data-focus] {
+  background: var(--v-soft);
+}
+.admin-workspace .admin-page {
+  min-height: calc(100dvh - 72px);
+  padding: 24px 16px;
+}
+.admin-workspace .admin-container {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+.admin-workspace .admin-container > * + * {
+  margin-top: 24px;
+}
+.admin-workspace .admin-prose {
+  --tw-prose-body: var(--v-text);
+  --tw-prose-headings: var(--v-text);
+  --tw-prose-links: var(--v-green);
+  --tw-prose-bold: var(--v-text);
+  --tw-prose-counters: var(--v-muted);
+  --tw-prose-bullets: var(--v-muted);
+  --tw-prose-hr: var(--v-border);
+  --tw-prose-quotes: var(--v-text);
+  --tw-prose-quote-borders: var(--v-border);
+  --tw-prose-captions: var(--v-muted);
+  --tw-prose-code: var(--v-text);
+  --tw-prose-pre-bg: var(--v-soft);
+  --tw-prose-pre-code: var(--v-text);
+  --tw-prose-th-borders: var(--v-border);
+  --tw-prose-td-borders: var(--v-border);
+}
+.admin-mobile-nav :is(a, button):focus-visible {
+  outline: 2px solid #86efac;
+  outline-offset: 3px;
+}
+.admin-workspace .ql-toolbar.ql-snow {
+  border: 1px solid var(--v-border);
+  border-radius: 12px 12px 0 0;
+  background: var(--v-soft);
+  font-family: inherit;
+}
+.admin-workspace .ql-container.ql-snow {
+  border: 1px solid var(--v-border);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  background: var(--v-panel);
+  font: inherit;
+}
+.admin-workspace .ql-editor {
+  min-height: 320px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--v-text);
+  overflow-wrap: anywhere;
+}
+.admin-workspace .ql-editor.ql-blank::before {
+  color: var(--v-muted);
+}
+.admin-workspace .ql-snow .ql-stroke {
+  stroke: var(--v-text);
+}
+.admin-workspace .ql-snow .ql-fill {
+  fill: var(--v-text);
+}
+.admin-workspace .ql-snow .ql-picker {
+  color: var(--v-text);
+}
+.admin-workspace .ql-snow .ql-picker-options {
+  background: var(--v-panel);
+  border-color: var(--v-border);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+}
+.admin-workspace .ql-snow .ql-picker-item:hover,
+.admin-workspace .ql-snow .ql-picker-item.ql-selected {
+  color: var(--v-green);
+}
+.admin-workspace .ql-snow button:hover .ql-stroke,
+.admin-workspace .ql-snow button.ql-active .ql-stroke {
+  stroke: var(--v-green);
+}
+.admin-workspace .ql-snow button:hover .ql-fill,
+.admin-workspace .ql-snow button.ql-active .ql-fill {
+  fill: var(--v-green);
+}
+.admin-workspace .ql-snow .ql-tooltip {
+  max-width: min(400px, 80vw);
+  white-space: normal;
+  background: var(--v-panel);
+  color: var(--v-text);
+  border-color: var(--v-border);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+}
+.admin-workspace .ql-snow .ql-tooltip input {
+  max-width: 100%;
+  border-color: var(--v-border);
+}
+@media (min-width: 640px) {
+  .admin-workspace .admin-page {
+    padding: 24px;
+  }
+}
+@media (min-width: 1024px) {
+  .admin-workspace .admin-page {
+    padding: 32px;
+  }
+}
+@media print {
+  .admin-workspace {
+    background: white;
+    color: black;
+  }
+  .admin-workspace .admin-page {
+    padding: 0;
+  }
+}
+
+/* Connected admin demo workspace */
+.demo-toolbar { background: var(--v-soft); }
+.demo-link { color: var(--v-green); font-weight: 600; text-decoration: none; }
+.demo-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.demo-modal { background: var(--v-panel); color: var(--v-text); }
+.demo-feature-card { border-top: 3px solid var(--v-green); }
+.demo-dashboard-intro { background: var(--v-green-soft); border: 1px solid var(--v-border); }
+.demo-wallet-callout { color: #fff; background: linear-gradient(135deg, #163c2e, #26704f); }
+.demo-tile { transition: border-color .15s, transform .15s; }
+.demo-tile:hover { border-color: var(--v-green); transform: translateY(-2px); }
+.demo-table-row:hover { background: var(--v-soft); }
+.admin-workspace :is(a, button, input, select, textarea):focus-visible { outline: 2px solid var(--v-green); outline-offset: 3px; }
+@media print {
+  .admin-workspace aside, .demo-toolbar, .admin-workspace button, .admin-workspace select, .admin-workspace input, .admin-workspace nav { display: none !important; }
+  .admin-workspace .v-panel { break-inside: avoid; box-shadow: none; }
+}
+.workspace-theme.demo-modal { min-height: 0; }
