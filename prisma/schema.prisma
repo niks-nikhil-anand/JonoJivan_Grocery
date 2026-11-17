@@ -490,3 +490,48 @@ model BlogPost {
 
   @@index([category, createdAt])
 }
+
+// Vendor workspace records use the authenticated User id as their tenant key.
+model VendorTicket {
+  id        String @id @default(cuid())
+  vendorId  String
+  subject   String
+  category  String
+  status    String @default("OPEN")
+  messages  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([vendorId, createdAt])
+}
+
+model VendorLedgerEntry {
+  id        String @id @default(cuid())
+  vendorId  String
+  reference String @unique
+  label     String
+  amount    Decimal @db.Decimal(12, 2)
+  createdAt DateTime @default(now())
+  @@index([vendorId, createdAt])
+}
+
+model VendorWithdrawal {
+  id          String @id @default(cuid())
+  vendorId    String
+  amount      Decimal @db.Decimal(12, 2)
+  destination String
+  status      String @default("PENDING")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([vendorId, createdAt])
+}
+
+model VendorFulfillment {
+  id        String @id @default(cuid())
+  vendorId  String
+  orderId   String
+  status    OrderStatus @default(PROCESSING)
+  history   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([vendorId, orderId])
+}
