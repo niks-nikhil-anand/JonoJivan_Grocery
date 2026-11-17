@@ -1,102 +1,103 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { IoIosSearch, IoIosNotificationsOutline, IoIosMenu } from "react-icons/io";
-import { FaUserCircle } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-hot-toast";
-
-const Navbar = ({ onMenuClick }) => {
-  const router = useRouter();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/admin/auth/logout", {
-        method: "POST",
-      });
-      if (response.ok) {
-        toast.success("Logout successful!");
-        router.push("/");
-      } else {
-        toast.error("Logout failed");
-      }
-    } catch (error) {
-      toast.error("Logout failed");
-    }
-  };
-
+import Link from "next/link";
+import { useDemo } from "./demo/DemoProvider";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import { LuMenu, LuSearch, LuUser, LuLogOut } from "react-icons/lu";
+import { ThemePicker } from "@/components/workspace/WorkspaceTheme";
+export default function NavbarAdmin({
+  demoEnabled = false,
+  onMenuClick,
+  mobileOpen,
+  onLogout,
+  loggingOut,
+}) {
+  const demo = useDemo();
+  const displayName = demoEnabled
+    ? demo?.state?.profile.name || "Demo Administrator"
+    : "Super Admin";
+  const role = demoEnabled
+    ? demo?.state?.role || "Administrator"
+    : "Administrator";
   return (
-    <nav className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between">
-      {/* Left: Mobile Toggle & Title/Search */}
-      <div className="flex items-center gap-4 flex-1">
-        <button type="button" onClick={onMenuClick} aria-label="Open admin menu" className="rounded-lg p-2 text-2xl text-gray-600 transition-colors hover:bg-brand-50 hover:text-brand-700 lg:hidden">
-          <IoIosMenu aria-hidden="true" />
+    <header className="v-no-print sticky top-0 z-30 flex h-[72px] items-center justify-between gap-3 border-b border-[var(--v-border)] bg-[var(--v-panel)] px-4 sm:px-6">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Open admin menu"
+          aria-expanded={mobileOpen}
+          className="rounded-lg p-2 lg:hidden"
+        >
+          <LuMenu size={24} />
         </button>
-        
-        {/* Search Bar - Hidden on small mobile */}
-        <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 w-full max-w-md focus-within:ring-2 focus-within:ring-green-100 transition-all">
-          <IoIosSearch className="text-xl text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Search anything..." 
-            className="bg-transparent border-none outline-none ml-2 w-full text-sm text-gray-700 placeholder-gray-400"
+        <form
+          action="/admin/dashboard/orders/searchOrders"
+          className="hidden w-full max-w-md items-center gap-2 rounded-full px-4 py-2 v-soft md:flex"
+        >
+          <LuSearch aria-hidden className="v-muted" />
+          <input
+            type="search"
+            name="q"
+            aria-label="Search orders"
+            placeholder="Search orders…"
+            className="min-w-0 flex-1 bg-transparent py-1 text-sm outline-none"
           />
-        </div>
-      </div>
-
-      {/* Right: Actions */}
-      <div className="flex items-center gap-6">
-        {/* Notifications */}
-        <div className="relative cursor-pointer">
-          <div className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-600">
-             <IoIosNotificationsOutline className="text-2xl" />
-          </div>
-          <span className="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-white"></span>
-        </div>
-
-        {/* User Profile */}
-        <div className="relative">
-          <button 
-            onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="flex items-center gap-3 hover:bg-gray-50 rounded-full p-1 pr-4 transition-colors"
-          >
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                <FaUserCircle className="text-xl" />
-            </div>
-            <div className="hidden md:block text-left">
-                <p className="text-sm font-semibold text-gray-700">Super Admin</p>
-                <p className="text-xs text-green-600 font-medium">Administrator</p>
-            </div>
+          <button type="submit" className="text-xs v-green">
+            Search
           </button>
-
-          {/* Profile Dropdown */}
-          <AnimatePresence>
-            {isProfileOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2"
-                onMouseLeave={() => setIsProfileOpen(false)}
-              >
-                 <div className="px-4 py-2 border-b border-gray-50 md:hidden">
-                    <p className="text-sm font-semibold text-gray-800">Super Admin</p>
-                 </div>
-                 <button 
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2 transition-colors"
-                 >
-                    <FiLogOut /> Logout
-                 </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        </form>
+        <Link
+          href="/admin/dashboard/orders/searchOrders"
+          aria-label="Search orders"
+          className="rounded-lg p-2 md:hidden"
+        >
+          <LuSearch size={20} />
+        </Link>
       </div>
-    </nav>
+      <div className="flex items-center gap-2 sm:gap-5">
+        <ThemePicker />
+        <Menu>
+          <MenuButton
+            className="flex items-center gap-2 rounded-full p-1 sm:pr-3"
+            aria-label="Open admin profile menu"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full v-soft v-green">
+              <LuUser size={20} />
+            </span>
+            <span className="hidden text-left md:block">
+              <span className="block max-w-40 truncate text-sm font-semibold">
+                {displayName}
+              </span>
+              <span className="block text-xs v-green">{role}</span>
+            </span>
+          </MenuButton>
+          <MenuItems className="v-panel absolute right-4 top-16 z-40 w-56 p-2 focus:outline-none">
+            <MenuItem>
+              <Link className="admin-menu-item" href="/admin/dashboard/profile">
+                Profile
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                className="admin-menu-item"
+                href="/admin/dashboard/settings"
+              >
+                Settings
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <button
+                className="v-button danger w-full"
+                disabled={loggingOut}
+                onClick={onLogout}
+              >
+                <LuLogOut />
+                {loggingOut ? "Signing out…" : "Sign out"}
+              </button>
+            </MenuItem>
+          </MenuItems>
+        </Menu>
+      </div>
+    </header>
   );
-};
-
-export default Navbar;
+}
