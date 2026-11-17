@@ -13,7 +13,12 @@ const createClient = () =>
   });
 
 // Keep one pool while Next.js reloads server modules in development.
-const prisma = globalForPrisma.__jonojivanPrisma ?? createClient();
+// Regeneration can add models while a development server is still running.
+const cachedClient = globalForPrisma.__jonojivanPrisma;
+const prisma = cachedClient?.vendorTicket ? cachedClient : createClient();
+if (cachedClient && cachedClient !== prisma) {
+  cachedClient.$disconnect().catch(() => {});
+}
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.__jonojivanPrisma = prisma;
