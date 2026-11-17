@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound() { return <section className="v-panel space-y-4 p-10 text-center"><p className="v-green text-sm font-semibold">404 · Page not found</p><h1 className="text-2xl font-semibold">This page isn’t in your workspace.</h1><p className="v-muted">Check the link or return to your dashboard.</p><Link className="v-button" href="/vendor/dashboard">Back to dashboard</Link></section>; }
