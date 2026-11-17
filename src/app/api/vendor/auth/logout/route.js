@@ -12,7 +12,7 @@ export async function POST(req) {
 
     const response = NextResponse.json({ message: 'Logout successful' });
 
-    response.cookies.set('adminAuthToken', '', {
+    response.cookies.set('vendorAuthToken', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
