@@ -1,12 +1,11 @@
 import buffer from 'node:buffer';
+import { PHASE_DEVELOPMENT_SERVER } from 'next/constants.js';
 if (!buffer.SlowBuffer) {
   buffer.SlowBuffer = buffer.Buffer;
 }
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Keep browser-test builds separate from a running development server.
-  distDir: process.env.NEXT_BUILD_DIR || ".next",
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com' },
@@ -19,4 +18,12 @@ const nextConfig = {
 
 };
 
-export default nextConfig;
+export default function config(phase) {
+  return {
+    ...nextConfig,
+    // Dev recompilation must never overwrite production manifests and chunks.
+    // Keep explicit output-directory overrides for isolated browser tests.
+    distDir: process.env.NEXT_BUILD_DIR ||
+      (phase === PHASE_DEVELOPMENT_SERVER ? '.next-dev' : '.next'),
+  };
+}

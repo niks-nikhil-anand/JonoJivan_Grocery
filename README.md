@@ -61,6 +61,12 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+Development writes its generated files to `.next-dev`; `npm run build` and
+`npm start` use `.next`. This keeps development recompilation from overwriting
+production chunks or manifests when both modes run on the same checkout.
+`NEXT_BUILD_DIR` can still override the output directory for isolated tests;
+use the same override when building and starting that test server.
+
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.

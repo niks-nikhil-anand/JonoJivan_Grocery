@@ -41,7 +41,7 @@ Storage is browser-local, versioned, and resettable. Unavailable storage produce
 
 Run `npm run test:admin-demo` for fixture integrity, payout reservation arithmetic, duplicate submission protection, refund caps, reviewer separation, reversals, permissions, category validation, and route coverage. The tests use no database or external services.
 
-Run `npm run build` for the production build. When a development server is already running, use an isolated build directory to prevent Next.js cache collisions:
+Run `npm run build` for the production build. Development uses `.next-dev`, while production build/start use `.next`, so they can run concurrently. For a separate browser-test production build, you can additionally select an isolated output directory:
 
 ```sh
 NEXT_BUILD_DIR=.next-admin-demo-test npm run build
