@@ -1,9 +1,2 @@
-import React from 'react'
-
-const page = () => {
-  return (
-    <div>page</div>
-  )
-}
-
-export default page
+import { Reviews } from "@/components/vendorPanel/Commerce";
+export default function Page({ params }) { return <Reviews />; }
