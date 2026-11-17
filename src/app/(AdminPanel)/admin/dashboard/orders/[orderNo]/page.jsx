@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaPrint, FaDownload } from "react-icons/fa";
+import Link from "next/link";
+import { AdminPage, AdminPageHeader } from "@/components/adminPanel/AdminPage";
 import axios from "axios";
-import { toast } from 'react-hot-toast';
-
 
 const Page = () => {
   const [data, setData] = useState(null);
@@ -12,6 +11,9 @@ const Page = () => {
   const [error, setError] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState("");
   const [orderStatus, setOrderStatus] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [statusError, setStatusError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,29 +23,41 @@ const Page = () => {
         const id = urlPath.split("/").pop();
 
         // Fetch order details
-        const orderResponse = await axios.get(`/api/admin/dashboard/orders/${id}`);
+        const orderResponse = await axios.get(
+          `/api/admin/dashboard/orders/${id}`,
+        );
         const order = orderResponse.data;
 
         // Fetch the cart based on the order's cart ID
-        const cartResponse = await axios.get(`/api/users/cart/cartId/${order.cart}`);
+        const cartResponse = await axios.get(
+          `/api/users/cart/cartId/${order.cart}`,
+        );
         const fetchedCart = cartResponse.data.cart.items || [];
 
         // Fetch product details for each item in the cart
         const productDetails = await Promise.all(
           fetchedCart.map(async (item) => {
-            const productResponse = await axios.get(`/api/admin/dashboard/product/${item.productId}`);
-            return { ...productResponse.data, quantity: item.quantity || 1 };
-          })
+            const productResponse = await axios.get(
+              `/api/admin/dashboard/product/${item.productId}`,
+            );
+            return {
+              ...productResponse.data,
+              salePrice: Number(item.price ?? productResponse.data.salePrice),
+              quantity: item.quantity || 1,
+            };
+          }),
         );
 
         // Fetch shipping information
-        const addressResponse = await axios.get(`/api/savedAddress/${order.address}`);
+        const addressResponse = await axios.get(
+          `/api/savedAddress/${order.address}`,
+        );
         const shippingInfo = addressResponse.data;
 
         // Calculate totals
         const subtotal = productDetails.reduce(
           (acc, item) => acc + item.salePrice * item.quantity,
-          0
+          0,
         );
         const tips = order.tips || 0;
         const shippingCost = order.shippingCost || 0;
@@ -54,9 +68,9 @@ const Page = () => {
         const invoice = {
           paymentStatus: order.paymentStatus,
           orderStatus: order.orderStatus,
-          paymentMethod : order.paymentMethod,
-          razorpay_order_id : order.razorpay_order_id,
-          razorpay_payment_id : order.razorpay_payment_id,
+          paymentMethod: order.paymentMethod,
+          razorpay_order_id: order.razorpay_order_id,
+          razorpay_payment_id: order.razorpay_payment_id,
           invoiceNo: order.invoiceNo,
           orderDate: new Date(order.orderDate).toLocaleDateString("en-GB"),
           location: shippingInfo?.landmark || "N/A",
@@ -82,185 +96,258 @@ const Page = () => {
     fetchData();
   }, []);
 
-  if (loading) {
+  if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg font-semibold text-gray-600">Loading...</p>
-      </div>
+      <AdminPage>
+        <AdminPageHeader title="Order details" />
+        <div role="status" className="v-panel p-8">
+          <p className="v-muted">Loading order details…</p>
+          <div className="mt-5 h-64 animate-pulse rounded-xl v-soft" />
+        </div>
+      </AdminPage>
     );
-  }
 
   const handleStatusChange = async (type, value) => {
+    setSaving(true);
+    setStatusMessage("");
+    setStatusError("");
     try {
       const urlPath = window.location.pathname;
       const id = urlPath.split("/").pop();
-  
+
       const updatedData =
         type === "paymentStatus"
           ? { paymentStatus: value }
           : { orderStatus: value };
-  
+
       await axios.patch(`/api/admin/dashboard/orders/${id}`, updatedData);
-  
+
       if (type === "paymentStatus") {
         setPaymentStatus(value);
       } else {
         setOrderStatus(value);
       }
-  
+
       // Show success toast
-      toast.success(`${type === "paymentStatus" ? "Payment status" : "Order status"} updated successfully!`);
+      setStatusMessage(
+        `${type === "paymentStatus" ? "Payment status" : "Order status"} updated successfully.`,
+      );
     } catch (error) {
       console.error("Failed to update status", error);
-  
+
       // Show error toast
-      toast.error("Failed to update status. Please try again.");
+      setStatusError("Failed to update status. Please try again.");
+    } finally {
+      setSaving(false);
     }
   };
-  
 
-  if (error) {
+  if (error)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg font-semibold text-red-500">Error: {error}</p>
-      </div>
+      <AdminPage>
+        <AdminPageHeader title="Order details" />
+        <section className="v-panel space-y-4 p-6">
+          <p role="alert" className="v-error">
+            Unable to load this order. {error}
+          </p>
+          <button className="v-button" onClick={() => window.location.reload()}>
+            Try again
+          </button>{" "}
+          <Link className="v-button secondary" href="/admin/dashboard/orders">
+            Back to orders
+          </Link>
+        </section>
+      </AdminPage>
     );
-  }
-
+  const amount = (value) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(Number(value || 0));
   return (
-    <div className="bg-gray-100  p-4 max-h-[70vh">
-      <div className="p-4 border rounded-md shadow-sm bg-white">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-800">Order Details</h2>
-          <div className="flex space-x-4">
-           
+    <AdminPage>
+      <AdminPageHeader
+        title={`Order ${invoiceData?.invoiceNo || "details"}`}
+        description={`Placed ${invoiceData?.orderDate || "—"}`}
+        action={
+          <Link className="v-button secondary" href="/admin/dashboard/orders">
+            Back to orders
+          </Link>
+        }
+      />
+      {statusMessage && (
+        <p role="status" className="v-success">
+          {statusMessage}
+        </p>
+      )}
+      {statusError && (
+        <p role="alert" className="v-error">
+          {statusError}
+        </p>
+      )}
+      <section className="v-panel p-5 sm:p-6">
+        <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-center">
+          <div>
+            <h2 className="text-lg font-semibold">Order status</h2>
+            <p className="mt-1 text-sm v-muted">
+              Review payment and delivery progress.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="text-sm font-medium">
+              Payment status
+              <select
+                disabled={saving}
+                className="v-input mt-2"
+                value={paymentStatus || invoiceData?.paymentStatus || ""}
+                onChange={(e) =>
+                  handleStatusChange("paymentStatus", e.target.value)
+                }
+              >
+                <option value="" disabled>
+                  Select status
+                </option>
+                <option value="UnPaid">Unpaid</option>
+                <option value="Paid">Paid</option>
+              </select>
+            </label>
+            <label className="text-sm font-medium">
+              Order status
+              <select
+                disabled={saving}
+                className="v-input mt-2"
+                value={orderStatus || invoiceData?.orderStatus || ""}
+                onChange={(e) =>
+                  handleStatusChange("orderStatus", e.target.value)
+                }
+              >
+                <option value="" disabled>
+                  Select status
+                </option>
+                {[
+                  ["Pending", "Pending"],
+                  ["OrderPlaced", "Order placed"],
+                  ["Processing", "Processing"],
+                  ["PickedUp", "Picked up"],
+                  ["OutForDelivery", "Out for delivery"],
+                  ["Delivered", "Delivered"],
+                  ["Cancelled", "Cancelled"],
+                ].map(([value, name]) => (
+                  <option key={value} value={value}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
         </div>
+      </section>
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <section className="v-panel p-5">
+          <h2 className="font-semibold">Shipping address</h2>
+          <div className="mt-3 space-y-1 text-sm leading-6 v-muted">
+            <p>{invoiceData?.shippingInfo?.address || "Not available"}</p>
+            <p>
+              {invoiceData?.shippingInfo?.apartment}{" "}
+              {invoiceData?.shippingInfo?.landmark}
+            </p>
+            <p>
+              {invoiceData?.shippingInfo?.city}{" "}
+              {invoiceData?.shippingInfo?.state}
+            </p>
+            <p>{invoiceData?.shippingInfo?.pinCode}</p>
+          </div>
+        </section>
+        <section className="v-panel p-5">
+          <h2 className="font-semibold">Customer contact</h2>
+          <div className="mt-3 space-y-1 break-words text-sm leading-6 v-muted">
+            <p>
+              {invoiceData?.shippingInfo?.firstName}{" "}
+              {invoiceData?.shippingInfo?.lastName}
+            </p>
+            <p>{invoiceData?.shippingInfo?.email || "Email unavailable"}</p>
+            <p>
+              {invoiceData?.shippingInfo?.mobileNumber || "Phone unavailable"}
+            </p>
+          </div>
+        </section>
+        <section className="v-panel p-5">
+          <h2 className="font-semibold">Payment references</h2>
+          <dl className="mt-3 space-y-3 text-sm">
+            <div>
+              <dt className="v-muted">Razorpay order</dt>
+              <dd className="mt-1 break-all font-mono text-xs">
+                {invoiceData?.razorpay_order_id || "Not available"}
+              </dd>
+            </div>
+            <div>
+              <dt className="v-muted">Razorpay payment</dt>
+              <dd className="mt-1 break-all font-mono text-xs">
+                {invoiceData?.razorpay_payment_id || "Not available"}
+              </dd>
+            </div>
+          </dl>
+        </section>
       </div>
-
-      {/* Order Details Section */}
-      <div className="mt-6 p-6 border rounded-md shadow-sm bg-white max-h-[60vh] overflow-y-auto">
-        <div className="flex justify-between items-center border-b pb-4 mb-4">
-          <h2 className="text-lg font-semibold">
-            Invoice <span className="text-orange-600">#{invoiceData?.invoiceNo}</span>
-          </h2>
-          <div className="flex space-x-4">
-      
-          <div>
-  <label className="block text-sm font-medium text-gray-700">Payment Status</label>
-  <select
-    className="w-40 px-3 py-2 border rounded-md text-gray-700"
-    value={paymentStatus || invoiceData?.paymentStatus || ""}
-    onChange={(e) => handleStatusChange("paymentStatus", e.target.value)}
-  >
-    <option value="" disabled>
-      Select
-    </option>
-    <option value="Unpaid">Unpaid</option>
-    <option value="Paid">Paid</option>
-  </select>
-</div>
-<div>
-  <label className="block text-sm font-medium text-gray-700">Order Status</label>
-  <select
-    className="w-40 px-3 py-2 border rounded-md text-gray-700"
-    value={orderStatus || invoiceData?.orderStatus || ""}
-    onChange={(e) => handleStatusChange("orderStatus", e.target.value)}
-  >
-    <option value="" disabled>
-      Select
-    </option>
-    <option value="Pending">Pending</option>
-    <option value="OrderPlaced">Order Placed</option>
-    <option value="Processing">Processing</option>
-    <option value="PickedUp">Picked Up</option>
-    <option value="OutForDelivery">Out For Delivery</option>
-    <option value="Delivered">Delivered</option>
-    <option value="Cancelled">Cancelled</option>
-  </select>
-</div>
-
-
-          </div>
-        </div>
-
-        {/* Customer Info Section */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Shipping Address({invoiceData?.shippingInfo?.typeOfAddress})</h3>
-           
-            <p className="text-gray-500">{invoiceData?.shippingInfo?.address || "Not Available"}</p>
-            <p className="text-gray-500">{invoiceData?.shippingInfo?.apartment || "Not Available"} ,  {invoiceData?.shippingInfo?.landmark || "Not Available"}</p>
-            <p className="text-gray-500">{invoiceData?.shippingInfo?.city} {invoiceData?.shippingInfo?.state} </p>
-            <p className="text-gray-500">{invoiceData?.shippingInfo?.pinCode}</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Contact Info</h3>
-            <p className="text-gray-500">{invoiceData?.shippingInfo?.firstName || "Not Available"} {invoiceData?.shippingInfo?.lastName || "Not Available"}</p>
-            <p className="text-gray-500">{invoiceData?.shippingInfo?.email || "Not Available"}</p>
-            <p className="text-gray-500">+91 {invoiceData?.shippingInfo?.mobileNumber || "Not Available"}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Razorpay Info</h3>
-            <p className="text-gray-500">razorpay_order_id :-   {invoiceData?.razorpay_order_id || "Not Available"} </p>
-            <p className="text-gray-500">razorpay_payment_id :-   {invoiceData?.razorpay_payment_id || "Not Available"} </p>
-          </div>
-        </div>
-
-        {/* Products Table */}
-        <div className="overflow-auto mb-4">
-          <table className="min-w-full border-collapse border text-sm">
-            <thead className="bg-gray-100 text-gray-700">
+      <section className="v-panel overflow-hidden">
+        <h2 className="border-b p-5 font-semibold v-border">Order items</h2>
+        <div
+          className="overflow-x-auto"
+          tabIndex={0}
+          role="region"
+          aria-label="Order items"
+        >
+          <table className="v-table min-w-[560px]">
+            <thead>
               <tr>
-                <th className="px-4 py-2 border">S/L</th>
-                <th className="px-4 py-2 border">Products</th>
-                <th className="px-4 py-2 border">Unit Price</th>
-                <th className="px-4 py-2 border">QTY</th>
-                <th className="px-4 py-2 border">Total Price</th>
+                <th scope="col">Product</th>
+                <th scope="col">Unit price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total</th>
               </tr>
             </thead>
             <tbody>
               {invoiceData?.items?.map((item, index) => (
-                <tr key={index}>
-                  <td className="px-4 py-2 border text-center text-gray-700">{index + 1}</td>
-                  <td className="px-4 py-2 border text-gray-700">{item.name}</td>
-                  <td className="px-4 py-2 border text-center text-orange-600">{item.salePrice}</td>
-                  <td className="px-4 py-2 border text-center text-gray-700">{item.quantity}</td>
-                  <td className="px-4 py-2 border text-right text-orange-600">{item.salePrice * item.quantity}</td>
+                <tr key={item._id || index}>
+                  <td className="font-medium">{item.name}</td>
+                  <td>{amount(item.salePrice)}</td>
+                  <td>{item.quantity}</td>
+                  <td>{amount(item.salePrice * item.quantity)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
-        {/* Payment Info Section */}
-        <div className="grid grid-cols-4 gap-4">
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Payment Method</h3>
-            <p className="text-gray-700">{invoiceData?.paymentMethod}</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Logistic</h3>
-            <p className="text-gray-700">Delivery By Ekart</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Order Logs</h3>
-            <p className="px-2 py-1 bg-green-100 text-green-600 rounded">No logs found</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-right text-gray-700 mb-2">Order Summary</h3>
-            <div className="text-right">
-              <p className="text-gray-700">Sub Total: ₹{invoiceData?.subtotal}</p>
-              <p className="text-gray-700">Tips: ₹{invoiceData?.tips}</p>
-              <p className="text-gray-700">Shipping Cost: ₹{invoiceData?.shippingCost}</p>
-              <p className="font-semibold text-lg text-orange-600">Grand Total: ₹{invoiceData?.grandTotal}</p>
+      </section>
+      <div className="grid gap-5 md:grid-cols-2">
+        <section className="v-panel p-5">
+          <h2 className="font-semibold">Payment method</h2>
+          <p className="mt-3 text-sm v-muted">
+            {invoiceData?.paymentMethod || "Not available"}
+          </p>
+        </section>
+        <section className="v-panel p-5">
+          <h2 className="font-semibold">Order summary</h2>
+          <dl className="mt-4 space-y-3 text-sm">
+            {[
+              ["Subtotal", invoiceData?.subtotal],
+              ["Tips", invoiceData?.tips],
+              ["Shipping", invoiceData?.shippingCost],
+              ["Tax", invoiceData?.tax],
+            ].map(([name, value]) => (
+              <div key={name} className="flex justify-between gap-3">
+                <dt className="v-muted">{name}</dt>
+                <dd>{amount(value)}</dd>
+              </div>
+            ))}
+            <div className="flex justify-between gap-3 border-t pt-4 text-base font-bold v-border">
+              <dt>Grand total</dt>
+              <dd className="v-green">{amount(invoiceData?.grandTotal)}</dd>
             </div>
-          </div>
-        </div>
+          </dl>
+        </section>
       </div>
-    </div>
+    </AdminPage>
   );
 };
-
 export default Page;
