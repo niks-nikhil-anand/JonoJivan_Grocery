@@ -7,8 +7,8 @@ import MobileTabBar from '../frontend/shared/MobileTabBar';
 
 const EgoisticFooter = () => {
   const pathname = usePathname();
-  const isAdminPage = pathname.startsWith('/admin/dashboard');
-  const isVendorPage = pathname.startsWith('/vendor/dashboard');
+  const isAdminPage = pathname.startsWith('/admin/');
+  const isVendorPage = pathname.startsWith('/vendor/');
   const isUserPage = pathname.startsWith('/user');
 
   if (isAdminPage || isUserPage || isVendorPage) {
