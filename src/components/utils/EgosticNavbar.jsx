@@ -5,8 +5,8 @@ import Navbar from '../frontend/shared/Navbar';
 
 const EgoisticNavbar = () => {
   const pathname = usePathname();
-  const isAdminPage = pathname.startsWith('/admin/dashboard');
-  const isVendorPage = pathname.startsWith('/vendor/dashboard');
+  const isAdminPage = pathname.startsWith('/admin/');
+  const isVendorPage = pathname.startsWith('/vendor/');
   const isUserPage = pathname.startsWith('/user');
   const isGrocery = pathname.startsWith('/JonoGrocery');
 
