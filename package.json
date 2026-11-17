@@ -30,7 +30,9 @@
     "db:check-neon": "tsx scripts/check-neon-repositories.ts",
     "db:deploy": "prisma migrate deploy --config prisma7.config.ts",
     "test:recharge-neon": "tsx --tsconfig jsconfig.json scripts/test-recharge-neon.ts",
-    "test:recharge-cron": "tsx --tsconfig jsconfig.json scripts/test-recharge-cron.ts"
+    "test:recharge-cron": "tsx --tsconfig jsconfig.json scripts/test-recharge-cron.ts",
+    "test:vendor-workspace": "tsx --tsconfig jsconfig.json scripts/test-vendor-workspace.ts",
+    "test:admin-demo": "tsx scripts/test-admin-demo.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
